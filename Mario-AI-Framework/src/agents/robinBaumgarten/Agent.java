@@ -16,6 +16,19 @@ public class Agent implements MarioAgent {
     public void initialize(MarioForwardModel model, MarioTimer timer) {
         this.action = new boolean[MarioActions.numberOfActions()];
         this.tree = new AStarTree();
+
+
+        for (int i = 0; i < 1000; i++) {
+            model.clone();
+        }
+        long time = System.currentTimeMillis();
+        for (int i = 0; i < 100000; i++) {
+            model.clone();
+        }
+        long duration = System.currentTimeMillis() - time;
+        System.out.println("TIME: " + duration + " ms");
+        System.out.println("Clones per second: " + 100000 / (duration / 1000.0) + " clones");
+
     }
 
     @Override

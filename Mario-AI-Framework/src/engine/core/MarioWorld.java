@@ -95,16 +95,6 @@ public class MarioWorld {
         this.sprites.add(this.mario);
     }
 
-    public ArrayList<MarioSprite> getEnemies() {
-        ArrayList<MarioSprite> enemies = new ArrayList<>();
-        for (MarioSprite sprite : sprites) {
-            if (this.isEnemy(sprite)) {
-                enemies.add(sprite);
-            }
-        }
-        return enemies;
-    }
-
     public MarioWorld clone() {
         MarioWorld world = new MarioWorld(this.killEvents);
         world.visuals = false;
@@ -131,6 +121,16 @@ public class MarioWorld {
         world.coins = this.coins;
         world.lives = this.lives;
         return world;
+    }
+
+    public ArrayList<MarioSprite> getEnemies() {
+        ArrayList<MarioSprite> enemies = new ArrayList<>();
+        for (MarioSprite sprite : sprites) {
+            if (this.isEnemy(sprite)) {
+                enemies.add(sprite);
+            }
+        }
+        return enemies;
     }
 
     public void addEvent(EventType eventType, int eventParam) {

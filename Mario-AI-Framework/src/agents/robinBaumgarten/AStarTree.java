@@ -17,7 +17,7 @@ public class AStarTree {
     private ArrayList<boolean[]> currentActionPlan;
     int ticksBeforeReplanning = 0;
 
-    private MarioForwardModel search(MarioTimer timer) {
+    private void search(MarioTimer timer) {
         SearchNode current = bestPosition;
         boolean currentGood = false;
         int maxRight = 176;
@@ -26,7 +26,7 @@ public class AStarTree {
                 && timer.getRemainingTime() > 0) {
             current = pickBestPos(posPool);
             if (current == null) {
-                return null;
+                return;
             }
             currentGood = false;
             float realRemainingTime = current.simulatePos();
@@ -61,7 +61,6 @@ public class AStarTree {
             // Couldnt plan till end of screen, take furthest
             bestPosition = furthestPosition;
 
-        return current.sceneSnapshot;
     }
 
     private void startSearch(MarioForwardModel model, int repetitions) {
