@@ -1,9 +1,6 @@
-package forwardmodel;
+package forwardmodelslimOOP;
 
-import engine.core.MarioWorld;
 import engine.helper.SpriteType;
-import engine.sprites.Fireball;
-import engine.sprites.Shell;
 
 class BulletBillSlim extends MarioSpriteSlim {
     static final SpriteType type = SpriteType.BULLET_BILL;
@@ -12,14 +9,14 @@ class BulletBillSlim extends MarioSpriteSlim {
 
     float x;
     float y;
-    short facing;
+    byte facing;
     boolean alive = true;
     MarioWorld world;
 
     public BulletBillSlim(float x, float y, short facing) {
         this.x = x;
         this.y = y;
-        this.facing = facing;
+        this.facing = (byte) facing;
     }
 
     @Override

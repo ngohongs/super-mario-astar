@@ -1,13 +1,9 @@
-package forwardmodel;
+package forwardmodelslimOOP;
 
 import engine.helper.EventType;
 import engine.helper.MarioActions;
 import engine.helper.SpriteType;
 import engine.helper.TileFeature;
-import engine.sprites.BulletBill;
-import engine.sprites.Enemy;
-import engine.sprites.Fireball;
-import engine.sprites.Shell;
 
 public class MarioSlim extends MarioSpriteSlim {
     static final SpriteType type = SpriteType.MARIO;
@@ -25,7 +21,7 @@ public class MarioSlim extends MarioSpriteSlim {
     boolean wasOnGround, onGround, isDucking, isLarge,
             mayJump, canShoot, isFire, oldLarge, oldFire;
     float xa, ya;
-    short facing = 1;
+    byte facing = 1;
     int jumpTime = 0;
     private float xJumpSpeed, yJumpSpeed, xJumpStart;
 

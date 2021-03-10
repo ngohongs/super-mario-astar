@@ -1,8 +1,8 @@
-package forwardmodel;
+package forwardmodelslimOOP;
 
 //TODO:
-//sprite.update a collideCheck for every sprite
-//sprites, jejich x a y, typ
+//sprite.update and collideCheck for every sprite
+//sprites, their x and y, type
 
 abstract class MarioSpriteSlim {
     public abstract void update();

@@ -1,4 +1,4 @@
-package forwardmodel;
+package forwardmodelslimOOP;
 
 public class ForwardModelSlim {
 
