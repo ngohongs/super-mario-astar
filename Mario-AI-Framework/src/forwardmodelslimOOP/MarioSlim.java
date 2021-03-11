@@ -13,9 +13,6 @@ public class MarioSlim extends MarioSpriteSlim {
     static final int POWERUP_TIME = 3;
 
     int height = 24;
-    float x;
-    float y;
-    boolean alive = true;
     boolean[] actions;
     private int invulnerableTime = 0;
     boolean wasOnGround, onGround, isDucking, isLarge,
@@ -30,6 +27,12 @@ public class MarioSlim extends MarioSpriteSlim {
         this.y = y + 15;
     }
 
+    @Override
+    public SpriteType getType() {
+        return type;
+    }
+
+    @Override
     public void update() {
         if (!alive) return;
 
@@ -244,7 +247,7 @@ public class MarioSlim extends MarioSpriteSlim {
         }
     }
 
-    public void stomp(Enemy enemy) {
+    public void stomp(EnemySlim enemy) {
         if (!this.alive) {
             return;
         }
@@ -259,7 +262,7 @@ public class MarioSlim extends MarioSpriteSlim {
         invulnerableTime = 1;
     }
 
-    public void stomp(Shell shell) {
+    public void stomp(ShellSlim shell) {
         if (!this.alive) {
             return;
         }
@@ -326,7 +329,7 @@ public class MarioSlim extends MarioSpriteSlim {
         }
     }
 
-    public void kick(Shell shell) {
+    public void kick(ShellSlim shell) {
         if (!this.alive) {
             return;
         }
@@ -334,7 +337,7 @@ public class MarioSlim extends MarioSpriteSlim {
         invulnerableTime = 1;
     }
 
-    public void stomp(BulletBill bill) {
+    public void stomp(BulletBillSlim bill) {
         if (!this.alive) {
             return;
         }

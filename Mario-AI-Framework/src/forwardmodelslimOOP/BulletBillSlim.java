@@ -7,16 +7,17 @@ class BulletBillSlim extends MarioSpriteSlim {
     static final int width = 4;
     static final int height = 12;
 
-    float x;
-    float y;
     byte facing;
-    boolean alive = true;
-    MarioWorld world;
 
-    public BulletBillSlim(float x, float y, short facing) {
+    public BulletBillSlim(float x, float y, int facing) {
         this.x = x;
         this.y = y;
         this.facing = (byte) facing;
+    }
+
+    @Override
+    public SpriteType getType() {
+        return type;
     }
 
     @Override
@@ -25,8 +26,10 @@ class BulletBillSlim extends MarioSpriteSlim {
         x += facing * 4f;
     }
 
+    @Override
     public void collideCheck() {
         if (!alive) return;
+
         float xMarioD = world.mario.x - x;
         float yMarioD = world.mario.y - y;
         if (xMarioD > -16 && xMarioD < 16) {
@@ -42,26 +45,28 @@ class BulletBillSlim extends MarioSpriteSlim {
         }
     }
 
-    public boolean fireballCollideCheck(Fireball fireball) {
+    @Override
+    public boolean fireballCollideCheck(FireballSlim fireball) {
         if (!alive) return false;
 
         float xD = fireball.x - x;
         float yD = fireball.y - y;
 
         if (xD > -16 && xD < 16)
-            return yD > -height && yD < fireball.height;
+            return yD > -height && yD < FireballSlim.height;
         else
             return false;
     }
 
-    public boolean shellCollideCheck(Shell shell) {
+    @Override
+    public boolean shellCollideCheck(ShellSlim shell) {
         if (!alive) return false;
 
         float xD = shell.x - x;
         float yD = shell.y - y;
 
         if (xD > -16 && xD < 16) {
-            if (yD > -height && yD < shell.height) {
+            if (yD > -height && yD < ShellSlim.height) {
                 //this.world.addEvent(EventType.SHELL_KILL, this.type.getValue());
                 this.world.removeSprite(this);
                 return true;

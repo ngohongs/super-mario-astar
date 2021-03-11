@@ -9,18 +9,21 @@ public class MushroomSlim extends MarioSpriteSlim {
     static final int width = 4;
     static final int height = 12;
 
-    float x, y, xa, ya;
+    float xa, ya;
     byte facing;
-    boolean alive;
     private boolean onGround = false;
     private int life;
-    MarioWorldSlim world;
 
     public MushroomSlim(float x, float y) {
         this.x = x;
         this.y = y;
         this.facing = 1;
         this.life = 0;
+    }
+
+    @Override
+    public SpriteType getType() {
+        return type;
     }
 
     @Override
@@ -38,6 +41,7 @@ public class MushroomSlim extends MarioSpriteSlim {
         return null;
     }
 
+    @Override
     public void collideCheck() {
         if (!this.alive) {
             return;
@@ -63,6 +67,7 @@ public class MushroomSlim extends MarioSpriteSlim {
         return world.level.isBlocking(x, y, xa, ya);
     }
 
+    @Override
     public void bumpCheck(int xTile, int yTile) {
         if (!this.alive) {
             return;

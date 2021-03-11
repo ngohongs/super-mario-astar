@@ -10,9 +10,8 @@ public class ShellSlim extends MarioSpriteSlim {
     static final int height = 12;
 
     private boolean onGround = false;
-    MarioWorldSlim world;
 
-    float x, y, xa, ya;
+    float xa, ya;
     byte facing;
 
     public ShellSlim(float x, float y) {
@@ -21,6 +20,11 @@ public class ShellSlim extends MarioSpriteSlim {
 
         this.facing = 0;
         this.ya = -5;
+    }
+
+    @Override
+    public SpriteType getType() {
+        return type;
     }
 
     @Override
@@ -38,6 +42,8 @@ public class ShellSlim extends MarioSpriteSlim {
 
     @Override
     public void update() {
+        if (!this.alive) return;
+
         float sideWaysSpeed = 11f;
 
         if (xa > 2) {
@@ -71,7 +77,10 @@ public class ShellSlim extends MarioSpriteSlim {
         }
     }
 
+    @Override
     public boolean fireballCollideCheck(FireballSlim fireball) {
+        if (!this.alive) return false;
+
         float xD = fireball.x - x;
         float yD = fireball.y - y;
 
@@ -89,7 +98,10 @@ public class ShellSlim extends MarioSpriteSlim {
         return false;
     }
 
+    @Override
     public void collideCheck() {
+        if (!this.alive) return;
+
         float xMarioD = world.mario.x - x;
         float yMarioD = world.mario.y - y;
         if (xMarioD > -16 && xMarioD < 16) {
@@ -216,14 +228,20 @@ public class ShellSlim extends MarioSpriteSlim {
         return blocking;
     }
 
+    @Override
     public void bumpCheck(int xTile, int yTile) {
+        if (!this.alive) return;
+
         if (x + width > xTile * 16 && x - width < xTile * 16 + 16 && yTile == (int) ((y - 1) / 16)) {
             facing = -world.mario.facing;
             ya = -10;
         }
     }
 
+    @Override
     public boolean shellCollideCheck(ShellSlim shell) {
+        if (!this.alive) return false;
+
         float xD = shell.x - x;
         float yD = shell.y - y;
 

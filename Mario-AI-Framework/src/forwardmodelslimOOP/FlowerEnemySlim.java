@@ -6,11 +6,9 @@ public class FlowerEnemySlim extends MarioSpriteSlim {
     static final SpriteType type = SpriteType.ENEMY_FLOWER;
     static final int width = 2;
 
-    MarioWorldSlim world;
     private float yStart;
     private int tick, waitTime;
-    private boolean alive = true;
-    private float x, y, ya;
+    private float ya;
 
     public FlowerEnemySlim(float x, float y) {
         this.x = x;
@@ -21,6 +19,11 @@ public class FlowerEnemySlim extends MarioSpriteSlim {
         for (int i = 0; i < 4; i++) {
             this.update();
         }
+    }
+
+    @Override
+    public SpriteType getType() {
+        return type;
     }
 
     @Override

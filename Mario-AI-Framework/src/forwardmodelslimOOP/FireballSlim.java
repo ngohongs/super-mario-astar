@@ -9,10 +9,8 @@ public class FireballSlim extends MarioSpriteSlim {
     static final int width = 4;
     static final int height = 8;
 
-    float x, y, xa, ya;
-    private boolean alive = true;
+    float xa, ya;
     byte facing;
-    MarioWorldSlim world;
     private boolean onGround = false;
 
     public FireballSlim(float x, float y, int facing) {
@@ -20,6 +18,11 @@ public class FireballSlim extends MarioSpriteSlim {
         this.y = y;
         this.facing = (byte) facing;
         this.ya = 4;
+    }
+
+    @Override
+    public SpriteType getType() {
+        return type;
     }
 
     @Override

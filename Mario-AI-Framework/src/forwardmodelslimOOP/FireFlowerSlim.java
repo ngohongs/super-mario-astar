@@ -7,14 +7,17 @@ public class FireFlowerSlim extends MarioSpriteSlim {
     private static final int height = 12;
     private static final SpriteType type = SpriteType.FIRE_FLOWER;
 
-    private float x, y;
     private int life;
-    MarioWorldSlim world;
 
     public FireFlowerSlim(float x, float y) {
         this.x = x;
         this.y = y;
         this.life = 0;
+    }
+
+    @Override
+    public SpriteType getType() {
+        return type;
     }
 
     @Override
@@ -33,6 +36,10 @@ public class FireFlowerSlim extends MarioSpriteSlim {
 
     @Override
     public void collideCheck() {
+        if (!this.alive) {
+            return;
+        }
+
         float xMarioD = world.mario.x - x;
         float yMarioD = world.mario.y - y;
         if (xMarioD > -16 && xMarioD < 16) {
@@ -46,6 +53,10 @@ public class FireFlowerSlim extends MarioSpriteSlim {
 
     @Override
     public void update() {
+        if (!this.alive) {
+            return;
+        }
+
        life++;
         if (life < 9) {
             this.y--;
