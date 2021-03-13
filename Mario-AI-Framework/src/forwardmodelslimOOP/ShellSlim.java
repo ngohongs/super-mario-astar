@@ -233,7 +233,7 @@ public class ShellSlim extends MarioSpriteSlim {
         if (!this.alive) return;
 
         if (x + width > xTile * 16 && x - width < xTile * 16 + 16 && yTile == (int) ((y - 1) / 16)) {
-            facing = -world.mario.facing;
+            facing = (byte) -world.mario.facing;
             ya = -10;
         }
     }

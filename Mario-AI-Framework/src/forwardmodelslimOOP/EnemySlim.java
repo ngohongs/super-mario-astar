@@ -76,20 +76,15 @@ public class EnemySlim extends  MarioSpriteSlim {
                         ya = 0;
                     } else {
                         if (type == SpriteType.GREEN_KOOPA || type == SpriteType.GREEN_KOOPA_WINGED) {
-                            this.world.addSprite(new Shell(this.graphics != null, x, y, 1, this.initialCode));
+                            this.world.addSprite(new ShellSlim(x, y));
                         } else if (type == SpriteType.RED_KOOPA || type == SpriteType.RED_KOOPA_WINGED) {
-                            this.world.addSprite(new Shell(this.graphics != null, x, y, 0, this.initialCode));
-                        } else if (type == SpriteType.GOOMBA || type == SpriteType.GOOMBA_WINGED) {
-                            //if (this.graphics != null) {
-                                //this.world.addEffect(new SquishEffect(this.x, this.y - 7));
-                            }
+                            this.world.addSprite(new ShellSlim(x, y));
                         }
-                        this.world.addEvent(EventType.STOMP_KILL, this.type.getValue());
                         this.world.removeSprite(this);
                     }
-            } else {
-                this.world.addEvent(EventType.HURT, this.type.getValue());
-                world.mario.getHurt();
+                } else {
+                    world.mario.getHurt();
+                }
             }
         }
     }

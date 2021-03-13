@@ -98,7 +98,7 @@ public class MarioSlim extends MarioSpriteSlim {
         }
 
         if (actions[MarioActions.SPEED.getValue()] && canShoot && isFire && world.fireballsOnScreen < 2) {
-            world.addSprite(new Fireball(this.graphics != null, x + facing * 6, y - 20, facing));
+            world.addSprite(new FireballSlim(x + facing * 6, y - 20, facing));
         }
 
         canShoot = !actions[MarioActions.SPEED.getValue()];
@@ -113,7 +113,6 @@ public class MarioSlim extends MarioSpriteSlim {
         move(xa, 0);
         move(0, ya);
         if (!wasOnGround && onGround && this.xJumpStart >= 0) {
-            this.world.addEvent(EventType.LAND, 0);
             this.xJumpStart = -100;
         }
 
@@ -138,10 +137,6 @@ public class MarioSlim extends MarioSpriteSlim {
         if (!onGround) {
             ya += 3;
         }
-
-        if (this.graphics != null) {
-            this.updateGraphics();
-        }
     }
 
     private boolean isBlocking(float _x, float _y, float xa, float ya) {
@@ -154,7 +149,6 @@ public class MarioSlim extends MarioSpriteSlim {
         int block = world.level.getBlock(xTile, yTile);
 
         if (TileFeature.getTileType(block).contains(TileFeature.PICKABLE)) {
-            this.world.addEvent(EventType.COLLECT, block);
             this.collectCoin();
             world.level.setBlock(xTile, yTile, 0);
         }
@@ -353,7 +347,7 @@ public class MarioSlim extends MarioSpriteSlim {
         invulnerableTime = 1;
     }
 
-    private void collect1Up() {
+    void collect1Up() {
         if (!this.alive) {
             return;
         }
@@ -361,7 +355,7 @@ public class MarioSlim extends MarioSpriteSlim {
         this.world.lives++;
     }
 
-    private void collectCoin() {
+    void collectCoin() {
         if (!this.alive) {
             return;
         }

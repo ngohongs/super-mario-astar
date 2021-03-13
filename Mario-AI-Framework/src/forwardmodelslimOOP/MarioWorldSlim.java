@@ -24,6 +24,7 @@ public class MarioWorldSlim {
     public MarioSlim mario;
     public MarioLevel level;
     public int currentTick;
+    int coins, lives;
 
     private ArrayList<MarioSpriteSlim> sprites;
     private ArrayList<ShellSlim> shellsToCheck;
