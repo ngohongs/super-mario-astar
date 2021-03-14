@@ -22,7 +22,7 @@ public class MarioWorldSlim {
     public float cameraX;
     public float cameraY;
     public MarioSlim mario;
-    public MarioLevel level;
+    public MarioLevelSlim level;
     public int currentTick;
     int coins, lives;
 
@@ -179,7 +179,6 @@ public class MarioWorldSlim {
                 this.fireballsOnScreen += 1;
             }
         }
-        this.level.update((int) cameraX, (int) cameraY);
 
         for (int x = (int) cameraX / 16 - 1; x <= (int) (cameraX + marioGameWidth) / 16 + 1; x++) {
             for (int y = (int) cameraY / 16 - 1; y <= (int) (cameraY + marioGameHeight) / 16 + 1; y++) {
@@ -189,27 +188,13 @@ public class MarioWorldSlim {
                 if (x * 16 + 8 < mario.x - 16)
                     dir = 1;
 
-                SpriteType type = level.getSpriteType(x, y);
-                if (type != SpriteType.NONE) {
-                    String spriteCode = level.getSpriteCode(x, y);
-                    boolean found = false;
-                    for (MarioSpriteSlim sprite : sprites) {
-                        if (sprite.initialCode.equals(spriteCode)) {
-                            found = true;
-                            break;
-                        }
-                    }
-                    if (!found) {
-                        if (this.level.getLastSpawnTick(x, y) != this.currentTick - 1) {
-                            //TODO: rewrite spawnSprite (also probably rename) to spawn slim sprites
-                            //TODO: check for similar stuff from helper classes etc., maybe rewrite helper classes?
-                            MarioSpriteSlim sprite = type.spawnSprite(x, y, dir);
-                            sprite.initialCode = spriteCode;
-                            this.addSprite(sprite);
-                        }
-                    }
-                    this.level.setLastSpawnTick(x, y, this.currentTick);
+                SpriteType spriteType = level.getSpriteType(x, y);
+                if (spriteType != SpriteType.NONE && SpriteType.IsEnemy(spriteType)) {
+                    MarioSpriteSlim newSprite = this.spawnEnemy(spriteType, x, y, dir);
+                    this.addSprite(newSprite);
+                    level.setBlock(x, y, 0); // remove sprite when it is spawned
                 }
+                //TODO: check helper classes etc., maybe rewrite them?
 
                 if (dir != 0) {
                     ArrayList<TileFeature> features = TileFeature.getTileType(this.level.getBlock(x, y));
@@ -264,6 +249,13 @@ public class MarioWorldSlim {
         removedSprites.clear();
     }
 
+    private MarioSpriteSlim spawnEnemy(SpriteType type, int x, int y, int dir) {
+        if (type == SpriteType.ENEMY_FLOWER)
+            return new FlowerEnemySlim(x * 16 + 17, y * 16 + 18);
+        else
+            return new EnemySlim(x * 16 + 8, y * 16 + 15, dir, type);
+    }
+
     public void bump(int xTile, int yTile, boolean canBreakBricks) {
         int block = this.level.getBlock(xTile, yTile);
         ArrayList<TileFeature> features = TileFeature.getTileType(block);
@@ -271,7 +263,6 @@ public class MarioWorldSlim {
         if (features.contains(TileFeature.BUMPABLE)) {
             bumpInto(xTile, yTile - 1);
             level.setBlock(xTile, yTile, 14);
-            level.setShiftIndex(xTile, yTile, 4);
 
             if (features.contains(TileFeature.SPECIAL)) {
                 if (!this.mario.isLarge) {
@@ -288,11 +279,8 @@ public class MarioWorldSlim {
 
         if (features.contains(TileFeature.BREAKABLE)) {
             bumpInto(xTile, yTile - 1);
-            if (canBreakBricks) {
+            if (canBreakBricks)
                 level.setBlock(xTile, yTile, 0);
-            } else {
-                level.setShiftIndex(xTile, yTile, 4);
-            }
         }
     }
 

@@ -51,4 +51,20 @@ public enum SpriteType {
         }
         return new Enemy(visuals, xTile * 16 + 8, yTile * 16 + 15, dir, this);
     }
+
+    public static SpriteType getSpriteType(int value) {
+        for (SpriteType spriteType : SpriteType.values()) {
+            if (spriteType.value == value)
+                return spriteType;
+        }
+        throw new IllegalArgumentException();
+    }
+
+    public static boolean IsEnemy(SpriteType spriteType) {
+        return spriteType == SpriteType.SPIKY || spriteType == SpriteType.SPIKY_WINGED
+                || spriteType == SpriteType.GOOMBA ||  spriteType == SpriteType.GOOMBA_WINGED
+                || spriteType == SpriteType.GREEN_KOOPA || spriteType == SpriteType.GREEN_KOOPA_WINGED
+                || spriteType == SpriteType.RED_KOOPA || spriteType == SpriteType.RED_KOOPA_WINGED
+                ||  spriteType == SpriteType.ENEMY_FLOWER;
+    }
 }

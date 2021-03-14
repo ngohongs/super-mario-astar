@@ -1,10 +1,12 @@
 package forwardmodelslimOOP;
 
 import engine.core.MarioLevel;
+import engine.helper.SpriteType;
 import engine.helper.TileFeature;
 
 import java.util.ArrayList;
-
+// TODO: spriteTemplates probably had only enemies, other sprites like coin were a tile, needs fix
+// TODO: to correctly return tiles on getBlock etc. and sprites on getSpriteType etc.
 public class MarioLevelSlim {
     public int width;
     public int tileWidth;
@@ -80,7 +82,7 @@ public class MarioLevelSlim {
         if (yTile < 0 || yTile > this.tileHeight - 1) {
             return 0;
         }
-        return LevelPart.getValue(this.levelParts[xTile][yTile]);
+        return LevelPart.getBlock(this.levelParts[xTile][yTile]);
     }
 
     public void setBlock(int xTile, int yTile, int index) {
@@ -90,12 +92,12 @@ public class MarioLevelSlim {
         this.levelParts[xTile][yTile] = LevelPart.getLevelPart(index, true);
     }
 
-    /*public SpriteType getSpriteType(int xTile, int yTile) {
+    SpriteType getSpriteType(int xTile, int yTile) {
         if (xTile < 0 || yTile < 0 || xTile >= this.tileWidth || yTile >= this.tileHeight) {
             return SpriteType.NONE;
         }
-        return this.spriteTemplates[xTile][yTile];
-    }*/
+        return LevelPart.getSpriteType(this.levelParts[xTile][yTile]);
+    }
 
     /*public int getLastSpawnTick(int xTile, int yTile) {
         if (xTile < 0 || yTile < 0 || xTile > this.tileWidth - 1 || yTile > this.tileHeight - 1) {

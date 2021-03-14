@@ -1,4 +1,7 @@
 package forwardmodelslimOOP;
+
+import engine.helper.SpriteType;
+
 // TODO: can this be byte, not int?
 public enum LevelPart {
     // sprites - multiplied by -1 to avoid collisions with tiles
@@ -67,8 +70,22 @@ public enum LevelPart {
         throw new IllegalArgumentException();
     }
 
-    static int getValue(LevelPart levelPart) {
-        return levelPart.value;
+    static int getBlock(LevelPart levelPart) {
+        int value = levelPart.value;
+        if (value < 0 || value == 42 || value == 31)
+            return 0;
+        else
+            return value;
+    }
+
+    static SpriteType getSpriteType(LevelPart levelPart) {
+        int value = levelPart.value;
+        if (value != 42 && value != 31 && value >= 0)
+            return SpriteType.NONE;
+        else {
+            value *= -1;
+            return SpriteType.getSpriteType(value);
+        }
     }
 
     public MarioSpriteSlim spawnSprite(int x, int y, int dir) {
