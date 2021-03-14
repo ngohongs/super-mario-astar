@@ -18,8 +18,8 @@ public class MarioLevel {
     public int totalCoins = 0;
     public int marioTileX, marioTileY, exitTileX, exitTileY;
 
-    private int[][] levelTiles;
-    private SpriteType[][] spriteTemplates;
+    public int[][] levelTiles;
+    public SpriteType[][] spriteTemplates;
     private int[][] lastSpawnTime;
     private MarioTilemap graphics;
     private MarioImage flag;
