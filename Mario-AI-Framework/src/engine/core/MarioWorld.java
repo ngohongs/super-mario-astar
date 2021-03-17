@@ -354,6 +354,16 @@ public class MarioWorld {
                 if (x * 16 + 8 < mario.x - 16)
                     dir = 1;
 
+                SpriteType spriteType = level.getSpriteType(x, y);
+                if (spriteType != SpriteType.NONE) {
+                    String spriteCode = level.getSpriteCode(x, y);
+                    MarioSprite newSprite = spriteType.spawnSprite(this.visuals, x, y, dir);
+                    newSprite.initialCode = spriteCode;
+                    this.addSprite(newSprite);
+                    this.level.setSpriteType(x, y, SpriteType.NONE);
+                }
+
+                /*
                 SpriteType type = level.getSpriteType(x, y);
                 if (type != SpriteType.NONE) {
                     String spriteCode = level.getSpriteCode(x, y);
@@ -373,6 +383,7 @@ public class MarioWorld {
                     }
                     this.level.setLastSpawnTick(x, y, this.currentTick);
                 }
+                */
 
                 if (dir != 0) {
                     ArrayList<TileFeature> features = TileFeature.getTileType(this.level.getBlock(x, y));
