@@ -59,12 +59,4 @@ public enum SpriteType {
         }
         throw new IllegalArgumentException();
     }
-
-    public static boolean IsEnemy(SpriteType spriteType) {
-        return spriteType == SpriteType.SPIKY || spriteType == SpriteType.SPIKY_WINGED
-                || spriteType == SpriteType.GOOMBA ||  spriteType == SpriteType.GOOMBA_WINGED
-                || spriteType == SpriteType.GREEN_KOOPA || spriteType == SpriteType.GREEN_KOOPA_WINGED
-                || spriteType == SpriteType.RED_KOOPA || spriteType == SpriteType.RED_KOOPA_WINGED
-                ||  spriteType == SpriteType.ENEMY_FLOWER;
-    }
 }

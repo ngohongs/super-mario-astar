@@ -5,10 +5,7 @@ import engine.helper.SpriteType;
 // TODO: can this be byte, not int?
 public enum LevelPart {
     // sprites - multiplied by -1 to avoid collisions with tiles
-    NONE(0),
-    UNDEF(42),
-    MARIO(31),
-    FIREBALL(-16),
+    // only sprites that are a part of the level layout
     GOOMBA(-2),
     GOOMBA_WINGED(-3),
     RED_KOOPA(-4),
@@ -17,42 +14,37 @@ public enum LevelPart {
     GREEN_KOOPA_WINGED(-7),
     SPIKY(-8),
     SPIKY_WINGED(-9),
-    BULLET_BILL(-10),
-    ENEMY_FLOWER(-11), // also means PIPE_MULTI_0 //TODO: take care
-    MUSHROOM(-12),
-    FIRE_FLOWER(-13),
-    SHELL(-14),
-    LIFE_MUSHROOM(-15),
+    ENEMY_FLOWER(-11), // also means PIPE_TOP_LEFT //TODO: take care
 
     // tiles
-    FLOOR(1),
+    EMPTY(0),
+    GROUND_BLOCK(1),
     PYRAMID_BLOCK(2),
-    JUMP_THROUGH_BLOCK_0(43),
-    JUMP_THROUGH_BLOCK_1(44),
-    JUMP_THROUGH_BLOCK_2(45),
-    JUMP_THROUGH_BLOCK_3(46),
-    JUMP_THROUGH_BLOCK_BACKGROUND(47),
-    BULLET_BILL_HEAD(3),
-    BULLET_BILL_1(4),
-    BULLET_BILL_2(5),
-    MUSHROOM_QUESTION_BLOCK(8),
+    BULLET_BILL_CANNON(3),
+    BULLET_BILL_BASE(4),
+    BULLET_BILL_COLUMN(5),
+    NORMAL_BRICK_BLOCK(6),
+    COIN_BRICK_BLOCK(7),
+    POWER_UP_QUESTION_BLOCK(8),
     COIN_QUESTION_BLOCK(11),
-    INVISIBLE_UP_BLOCK(48),
-    INVISIBLE_COIN_BLOCK(49),
     USED(14),
-    NORMAL_BLOCK(6),
-    COIN_BLOCK(7),
-    MUSHROOM_BLOCK(50),
-    UP_BLOCK(51),
     COIN(15),
-    PIPE_SINGLE_0(52),
-    PIPE_SINGLE_1(53),
-    PIPE_SINGLE_2(54),
-    PIPE_SINGLE_3(55),
-    PIPE_MULTI_0(18),
-    PIPE_MULTI_1(19),
-    PIPE_MULTI_2(20),
-    PIPE_MULTI_3(21);
+    PIPE_TOP_LEFT(18), // ENEMY_FLOWER might be here
+    PIPE_TOP_RIGHT(19),
+    PIPE_BODY_LEFT(20),
+    PIPE_BODY_RIGHT(21),
+    JUMP_THROUGH_BLOCK_ALONE(43),
+    JUMP_THROUGH_BLOCK_LEFT(44),
+    JUMP_THROUGH_BLOCK_RIGHT(45),
+    JUMP_THROUGH_BLOCK_CENTER(46),
+    JUMP_THROUGH_BLOCK_BACKGROUND(47),
+    INVISIBLE_HEALTH_UP_BLOCK(48),
+    INVISIBLE_COIN_BLOCK(49),
+    POWER_UP_BRICK_BLOCK(50),
+    HEALTH_UP_BRICK_BLOCK(51),
+    PIPE_SINGLE_TOP(52),
+    PIPE_SINGLE_BODY(53);
+
 
     private int value;
 
@@ -70,25 +62,20 @@ public enum LevelPart {
         throw new IllegalArgumentException();
     }
 
-    static int getBlock(LevelPart levelPart) {
-        int value = levelPart.value;
-        if (value < 0 || value == 42 || value == 31)
+    static int getLevelBlock(LevelPart levelPart) {
+        if (levelPart.value < 0)
             return 0;
         else
-            return value;
+            return levelPart.value;
     }
 
-    static SpriteType getSpriteType(LevelPart levelPart) {
+    static SpriteType getLevelSprite(LevelPart levelPart) {
         int value = levelPart.value;
-        if (value != 42 && value != 31 && value >= 0)
+        if (value >= 0)
             return SpriteType.NONE;
         else {
             value *= -1;
             return SpriteType.getSpriteType(value);
         }
-    }
-
-    public MarioSpriteSlim spawnSprite(int x, int y, int dir) {
-        return null; //TODO
     }
 }

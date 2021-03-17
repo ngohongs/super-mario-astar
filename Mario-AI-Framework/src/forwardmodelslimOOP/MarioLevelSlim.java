@@ -5,8 +5,8 @@ import engine.helper.SpriteType;
 import engine.helper.TileFeature;
 
 import java.util.ArrayList;
-// TODO: spriteTemplates probably had only enemies, other sprites like coin were a tile, needs fix
-// TODO: to correctly return tiles on getBlock etc. and sprites on getSpriteType etc.
+// TODO: removed magic numbers?
+// TODO: make static and dynamic parts of the level
 public class MarioLevelSlim {
     public int width;
     public int tileWidth;
@@ -16,7 +16,6 @@ public class MarioLevelSlim {
     public int exitTileX, exitTileY;
 
     private LevelPart[][] levelParts;
-    //private int[][] lastSpawnTime;
 
     public MarioLevelSlim(MarioLevel level) {
         this.width = level.width;
@@ -82,7 +81,7 @@ public class MarioLevelSlim {
         if (yTile < 0 || yTile > this.tileHeight - 1) {
             return 0;
         }
-        return LevelPart.getBlock(this.levelParts[xTile][yTile]);
+        return LevelPart.getLevelBlock(this.levelParts[xTile][yTile]);
     }
 
     public void setBlock(int xTile, int yTile, int index) {
@@ -96,7 +95,7 @@ public class MarioLevelSlim {
         if (xTile < 0 || yTile < 0 || xTile >= this.tileWidth || yTile >= this.tileHeight) {
             return SpriteType.NONE;
         }
-        return LevelPart.getSpriteType(this.levelParts[xTile][yTile]);
+        return LevelPart.getLevelSprite(this.levelParts[xTile][yTile]);
     }
 
     /*public int getLastSpawnTick(int xTile, int yTile) {

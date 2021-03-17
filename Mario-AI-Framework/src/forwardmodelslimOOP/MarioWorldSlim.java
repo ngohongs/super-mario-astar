@@ -189,12 +189,11 @@ public class MarioWorldSlim {
                     dir = 1;
 
                 SpriteType spriteType = level.getSpriteType(x, y);
-                if (spriteType != SpriteType.NONE && SpriteType.IsEnemy(spriteType)) {
+                if (spriteType != SpriteType.NONE) {
                     MarioSpriteSlim newSprite = this.spawnEnemy(spriteType, x, y, dir);
                     this.addSprite(newSprite);
                     level.setBlock(x, y, 0); // remove sprite when it is spawned
                 }
-                //TODO: check helper classes etc., maybe rewrite them?
 
                 if (dir != 0) {
                     ArrayList<TileFeature> features = TileFeature.getTileType(this.level.getBlock(x, y));
