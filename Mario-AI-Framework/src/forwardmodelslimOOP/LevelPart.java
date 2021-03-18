@@ -14,7 +14,7 @@ public enum LevelPart {
     GREEN_KOOPA_WINGED(-7),
     SPIKY(-8),
     SPIKY_WINGED(-9),
-    ENEMY_FLOWER(-11), // also means PIPE_TOP_LEFT //TODO: take care
+    ENEMY_FLOWER(-11), // stored as PIPE_TOP_LEFT
 
     // tiles
     EMPTY(0),
@@ -29,7 +29,7 @@ public enum LevelPart {
     COIN_QUESTION_BLOCK(11),
     USED(14),
     COIN(15),
-    PIPE_TOP_LEFT(18), // ENEMY_FLOWER might be here
+    PIPE_TOP_LEFT(18), // ENEMY_FLOWER is here
     PIPE_TOP_RIGHT(19),
     PIPE_BODY_LEFT(20),
     PIPE_BODY_RIGHT(21),
@@ -70,6 +70,9 @@ public enum LevelPart {
     }
 
     static SpriteType getLevelSprite(LevelPart levelPart) {
+        if (levelPart == PIPE_TOP_LEFT)
+            return SpriteType.getSpriteType(-ENEMY_FLOWER.value);
+
         int value = levelPart.value;
         if (value >= 0)
             return SpriteType.NONE;
