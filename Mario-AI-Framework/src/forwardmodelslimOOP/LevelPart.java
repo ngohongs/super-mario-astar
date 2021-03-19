@@ -14,7 +14,11 @@ public enum LevelPart {
     GREEN_KOOPA_WINGED(-7),
     SPIKY(-8),
     SPIKY_WINGED(-9),
-    ENEMY_FLOWER(-11), // stored as PIPE_TOP_LEFT
+    ENEMY_FLOWER(-11),
+
+    // special
+    PIPE_TOP_LEFT_WITH_FLOWER(100), // ENEMY_FLOWER is here
+    PIPE_TOP_LEFT_WITHOUT_FLOWER(101), // ENEMY_FLOWER was already spawned
 
     // tiles
     EMPTY(0),
@@ -29,7 +33,7 @@ public enum LevelPart {
     COIN_QUESTION_BLOCK(11),
     USED(14),
     COIN(15),
-    PIPE_TOP_LEFT(18), // ENEMY_FLOWER is here
+    PIPE_TOP_LEFT(18),
     PIPE_TOP_RIGHT(19),
     PIPE_BODY_LEFT(20),
     PIPE_BODY_RIGHT(21),
@@ -52,6 +56,8 @@ public enum LevelPart {
     }
 
     static LevelPart getLevelPart(int value, boolean levelTile) {
+        if (value == 18 || value == 11) // pipe with flower
+            return PIPE_TOP_LEFT_WITH_FLOWER;
         if (!levelTile)
             value *= -1;
         for (LevelPart levelPart : LevelPart.values()) {
@@ -62,6 +68,9 @@ public enum LevelPart {
     }
 
     static LevelPart checkLevelBlock(LevelPart levelPart) {
+        if (levelPart == PIPE_TOP_LEFT_WITH_FLOWER ||
+            levelPart == PIPE_TOP_LEFT_WITHOUT_FLOWER)
+            return PIPE_TOP_LEFT;
         if (levelPart.value < 0)
             return EMPTY;
         else
@@ -69,8 +78,10 @@ public enum LevelPart {
     }
 
     static SpriteType getLevelSprite(LevelPart levelPart) {
-        if (levelPart == PIPE_TOP_LEFT)
+        if (levelPart == PIPE_TOP_LEFT_WITH_FLOWER)
             return SpriteType.getSpriteType(-ENEMY_FLOWER.value);
+        if (levelPart == PIPE_TOP_LEFT_WITHOUT_FLOWER)
+            return SpriteType.NONE;
 
         int value = levelPart.value;
         if (value >= 0)
@@ -101,6 +112,8 @@ public enum LevelPart {
             case INVISIBLE_COIN_BLOCK:
             case POWER_UP_BRICK_BLOCK:
             case HEALTH_UP_BRICK_BLOCK:
+            case PIPE_TOP_LEFT_WITH_FLOWER:
+            case PIPE_TOP_LEFT_WITHOUT_FLOWER:
                 return true;
             case EMPTY:
             case GROUND_BLOCK:

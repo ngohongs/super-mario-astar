@@ -149,9 +149,9 @@ public class MarioLevelSlim {
         if (xTile < 0 || yTile < 0 || xTile > this.tileWidth - 1 || yTile > this.tileHeight - 1) {
             return;
         }
-        // TODO: take care of pipe flower, we dont want to delete the pipe, just mark that the flower was spawned
-        // TODO: redo to dynamic parts - pipe with and without flower and rewrite everywhere
 
+        if (levelCutout[calculateCutoutIndex(xTile, yTile)] == LevelPart.PIPE_TOP_LEFT_WITH_FLOWER)
+            levelCutout[calculateCutoutIndex(xTile, yTile)] = LevelPart.PIPE_TOP_LEFT_WITHOUT_FLOWER;
         // a block that is set is necessarily dynamic
         levelCutout[calculateCutoutIndex(xTile, yTile)] = LevelPart.getLevelPart(index, true);
     }
