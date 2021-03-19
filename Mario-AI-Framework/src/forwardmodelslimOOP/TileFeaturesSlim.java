@@ -28,6 +28,8 @@ public enum TileFeaturesSlim {
             case BULLET_BILL_COLUMN:
             case PIPE_SINGLE_TOP:
             case PIPE_SINGLE_BODY:
+            case PIPE_TOP_LEFT_WITH_FLOWER:
+            case PIPE_TOP_LEFT_WITHOUT_FLOWER:
                 features.add(BLOCK_ALL);
                 break;
             case JUMP_THROUGH_BLOCK_ALONE:
