@@ -81,4 +81,49 @@ public enum LevelPart {
             return SpriteType.getSpriteType(value);
         }
     }
+
+    static boolean IsDynamic(LevelPart levelPart) {
+        switch (levelPart) {
+            case GOOMBA:
+            case GOOMBA_WINGED:
+            case RED_KOOPA:
+            case RED_KOOPA_WINGED:
+            case GREEN_KOOPA:
+            case GREEN_KOOPA_WINGED:
+            case SPIKY:
+            case SPIKY_WINGED:
+            case ENEMY_FLOWER:
+            case NORMAL_BRICK_BLOCK:
+            case COIN_BRICK_BLOCK:
+            case POWER_UP_QUESTION_BLOCK:
+            case COIN_QUESTION_BLOCK:
+            case COIN:
+            case INVISIBLE_HEALTH_UP_BLOCK:
+            case INVISIBLE_COIN_BLOCK:
+            case POWER_UP_BRICK_BLOCK:
+            case HEALTH_UP_BRICK_BLOCK:
+                return true;
+            case EMPTY:
+            case GROUND_BLOCK:
+            case PYRAMID_BLOCK:
+            case BULLET_BILL_CANNON:
+            case BULLET_BILL_BASE:
+            case BULLET_BILL_COLUMN:
+            case USED:
+            case PIPE_TOP_LEFT:
+            case PIPE_TOP_RIGHT:
+            case PIPE_BODY_LEFT:
+            case PIPE_BODY_RIGHT:
+            case JUMP_THROUGH_BLOCK_ALONE:
+            case JUMP_THROUGH_BLOCK_LEFT:
+            case JUMP_THROUGH_BLOCK_RIGHT:
+            case JUMP_THROUGH_BLOCK_CENTER:
+            case JUMP_THROUGH_BLOCK_BACKGROUND:
+            case PIPE_SINGLE_TOP:
+            case PIPE_SINGLE_BODY:
+                return false;
+            default:
+                throw new IllegalArgumentException();
+        }
+    }
 }

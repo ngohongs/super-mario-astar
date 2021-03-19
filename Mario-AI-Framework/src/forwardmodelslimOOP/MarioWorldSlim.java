@@ -8,6 +8,7 @@ package forwardmodelslimOOP;
 //TODO: fireballsOnScreen is counted but never used?
 //TODO: currentTimer??
 
+import engine.core.MarioLevel;
 import engine.helper.GameStatus;
 import engine.helper.SpriteType;
 import engine.helper.TileFeature;
@@ -32,24 +33,18 @@ public class MarioWorldSlim {
     private ArrayList<MarioSpriteSlim> addedSprites;
     private ArrayList<MarioSpriteSlim> removedSprites;
 
-    public MarioWorldSlim() {
-        this.gameStatus = GameStatus.RUNNING;
+    public MarioWorldSlim(MarioLevel level, int levelCutoutTileWidth) {
+        /*this.gameStatus = GameStatus.RUNNING;
         sprites = new ArrayList<>();
         shellsToCheck = new ArrayList<>();
         fireballsToCheck = new ArrayList<>();
         addedSprites = new ArrayList<>();
-        removedSprites = new ArrayList<>();
+        removedSprites = new ArrayList<>();*/
+        // TODO: convert from MarioWorld
+        this.level = new MarioLevelSlim(level, levelCutoutTileWidth, (int) mario.x);
     }
 
-    /*public void initializeLevel(String level, int timer) {
-        this.currentTimer = timer;
-        this.level = new MarioLevel(level, this.visuals);
-
-        this.mario = new Mario(this.visuals, this.level.marioTileX * 16, this.level.marioTileY * 16);
-        this.mario.alive = true;
-        this.mario.world = this;
-        this.sprites.add(this.mario);
-    }*/
+    // TODO: check that cutout width is at least 19? (world.update)
 
     public MarioWorldSlim clone() {
         /*MarioWorld world = new MarioWorld(this.killEvents);
