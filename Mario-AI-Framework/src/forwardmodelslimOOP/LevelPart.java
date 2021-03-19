@@ -45,7 +45,6 @@ public enum LevelPart {
     PIPE_SINGLE_TOP(52),
     PIPE_SINGLE_BODY(53);
 
-
     private int value;
 
     LevelPart(int value) {
@@ -62,11 +61,11 @@ public enum LevelPart {
         throw new IllegalArgumentException();
     }
 
-    static int getLevelBlock(LevelPart levelPart) {
+    static LevelPart checkLevelBlock(LevelPart levelPart) {
         if (levelPart.value < 0)
-            return 0;
+            return EMPTY;
         else
-            return levelPart.value;
+            return levelPart;
     }
 
     static SpriteType getLevelSprite(LevelPart levelPart) {

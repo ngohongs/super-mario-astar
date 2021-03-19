@@ -2,11 +2,11 @@ package forwardmodelslimOOP;
 
 import engine.core.MarioLevel;
 import engine.helper.SpriteType;
-import engine.helper.TileFeature;
 
 import java.util.ArrayList;
 
 // TODO: remove magic numbers?
+// TODO: remove some of the magic numbers, sprite type?
 
 public class MarioLevelSlim {
     public int width;
@@ -121,16 +121,16 @@ public class MarioLevelSlim {
     }
 
     public boolean isBlocking(int xTile, int yTile, float xa, float ya) {
-        int block = this.getBlock(xTile, yTile);
-        ArrayList<TileFeature> features = TileFeature.getTileType(block);
-        boolean blocking = features.contains(TileFeature.BLOCK_ALL);
-        blocking |= (ya < 0) && features.contains(TileFeature.BLOCK_UPPER);
-        blocking |= (ya > 0) && features.contains(TileFeature.BLOCK_LOWER);
+        LevelPart block = this.getBlock(xTile, yTile);
+        ArrayList<TileFeaturesSlim> features = TileFeaturesSlim.getTileType(block);
+        boolean blocking = features.contains(TileFeaturesSlim.BLOCK_ALL);
+        blocking |= (ya < 0) && features.contains(TileFeaturesSlim.BLOCK_UPPER);
+        blocking |= (ya > 0) && features.contains(TileFeaturesSlim.BLOCK_LOWER);
 
         return blocking;
     }
 
-    public int getBlock(int xTile, int yTile) {
+    public LevelPart getBlock(int xTile, int yTile) {
         if (xTile < 0) {
             xTile = 0;
         }
@@ -138,11 +138,11 @@ public class MarioLevelSlim {
             xTile = this.tileWidth - 1;
         }
         if (yTile < 0 || yTile > this.tileHeight - 1) {
-            return 0;
+            return LevelPart.EMPTY;
         }
 
         LevelPart toReturn = levelCutout[calculateCutoutIndex(xTile, yTile)];
-        return LevelPart.getLevelBlock(toReturn);
+        return LevelPart.checkLevelBlock(toReturn);
     }
 
     public void setBlock(int xTile, int yTile, int index) {

@@ -11,7 +11,6 @@ package forwardmodelslimOOP;
 import engine.core.MarioLevel;
 import engine.helper.GameStatus;
 import engine.helper.SpriteType;
-import engine.helper.TileFeature;
 
 import java.util.ArrayList;
 
@@ -191,8 +190,8 @@ public class MarioWorldSlim {
                 }
 
                 if (dir != 0) {
-                    ArrayList<TileFeature> features = TileFeature.getTileType(this.level.getBlock(x, y));
-                    if (features.contains(TileFeature.SPAWNER)) {
+                    ArrayList<TileFeaturesSlim> features = TileFeaturesSlim.getTileType(this.level.getBlock(x, y));
+                    if (features.contains(TileFeaturesSlim.SPAWNER)) {
                         if (this.currentTick % 100 == 0) {
                             addSprite(new BulletBillSlim(x * 16 + 8 + dir * 8, y * 16 + 15, dir));
                         }
@@ -251,27 +250,27 @@ public class MarioWorldSlim {
     }
 
     public void bump(int xTile, int yTile, boolean canBreakBricks) {
-        int block = this.level.getBlock(xTile, yTile);
-        ArrayList<TileFeature> features = TileFeature.getTileType(block);
+        LevelPart block = this.level.getBlock(xTile, yTile);
+        ArrayList<TileFeaturesSlim> features = TileFeaturesSlim.getTileType(block);
 
-        if (features.contains(TileFeature.BUMPABLE)) {
+        if (features.contains(TileFeaturesSlim.BUMPABLE)) {
             bumpInto(xTile, yTile - 1);
             level.setBlock(xTile, yTile, 14);
 
-            if (features.contains(TileFeature.SPECIAL)) {
+            if (features.contains(TileFeaturesSlim.SPECIAL)) {
                 if (!this.mario.isLarge) {
                     addSprite(new MushroomSlim(xTile * 16 + 9, yTile * 16 + 8));
                 } else {
                     addSprite(new FireFlowerSlim(xTile * 16 + 9, yTile * 16 + 8));
                 }
-            } else if (features.contains(TileFeature.LIFE)) {
+            } else if (features.contains(TileFeaturesSlim.LIFE)) {
                 addSprite(new LifeMushroomSlim(xTile * 16 + 9, yTile * 16 + 8));
             } else {
                 mario.collectCoin();
             }
         }
 
-        if (features.contains(TileFeature.BREAKABLE)) {
+        if (features.contains(TileFeaturesSlim.BREAKABLE)) {
             bumpInto(xTile, yTile - 1);
             if (canBreakBricks)
                 level.setBlock(xTile, yTile, 0);
@@ -279,8 +278,8 @@ public class MarioWorldSlim {
     }
 
     public void bumpInto(int xTile, int yTile) {
-        int block = level.getBlock(xTile, yTile);
-        if (TileFeature.getTileType(block).contains(TileFeature.PICKABLE)) {
+        LevelPart block = level.getBlock(xTile, yTile);
+        if (TileFeaturesSlim.getTileType(block).contains(TileFeaturesSlim.PICKABLE)) {
             this.mario.collectCoin();
             level.setBlock(xTile, yTile, 0);
         }

@@ -1,9 +1,7 @@
 package forwardmodelslimOOP;
 
-import engine.helper.EventType;
 import engine.helper.MarioActions;
 import engine.helper.SpriteType;
-import engine.helper.TileFeature;
 
 public class MarioSlim extends MarioSpriteSlim {
     static final SpriteType type = SpriteType.MARIO;
@@ -146,9 +144,9 @@ public class MarioSlim extends MarioSpriteSlim {
             return false;
 
         boolean blocking = world.level.isBlocking(xTile, yTile, xa, ya);
-        int block = world.level.getBlock(xTile, yTile);
+        LevelPart block = world.level.getBlock(xTile, yTile);
 
-        if (TileFeature.getTileType(block).contains(TileFeature.PICKABLE)) {
+        if (TileFeaturesSlim.getTileType(block).contains(TileFeaturesSlim.PICKABLE)) {
             this.collectCoin();
             world.level.setBlock(xTile, yTile, 0);
         }
