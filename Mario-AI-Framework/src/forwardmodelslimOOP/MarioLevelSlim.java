@@ -52,9 +52,12 @@ public class MarioLevelSlim {
         cutoutArrayBeginning = 0;
         currentCutoutCenter = marioX;
         cutoutLeftBorderX = marioX - cutoutTileWidth / 2;
+
+        int copyStart = marioX - cutoutTileWidth / 2;
+        int copyEnd = cutoutTileWidth % 2 == 0 ? marioX + cutoutTileWidth / 2 - 1 : marioX + cutoutTileWidth / 2;
+
         int column = 0;
-        // TODO: what if left side is beyond level border - start cutout at level border?; generally what if cutout > level
-        for (int x = marioX - cutoutTileWidth / 2; x < marioX + cutoutTileWidth / 2; x++) {
+        for (int x = copyStart; x <= copyEnd; x++) {
             for (int y = 0; y < this.tileHeight; y++) {
                 levelCutout[column * tileHeight + y] = staticLevelParts[x][y];
             }
@@ -91,9 +94,10 @@ public class MarioLevelSlim {
             if (currentCutoutCenter < marioX) { // move right
                 if (currentCutoutCenter + cutoutTileWidth / 2 == tileWidth) // beyond end of level
                     return;
+                int shift = cutoutTileWidth % 2 == 0 ? marioX + cutoutTileWidth / 2 - 1 : marioX + cutoutTileWidth / 2;
                 int y = 0;
                 for (int i = cutoutArrayBeginning; i < cutoutArrayBeginning + tileHeight; i++) {
-                    levelCutout[i] = staticLevelParts[marioX + cutoutTileWidth / 2 - 1][y];
+                    levelCutout[i] = staticLevelParts[shift][y];
                     y++;
                 }
                 currentCutoutCenter++;
