@@ -59,7 +59,10 @@ public class MarioLevelSlim {
         int column = 0;
         for (int x = copyStart; x <= copyEnd; x++) {
             for (int y = 0; y < this.tileHeight; y++) {
-                levelCutout[column * tileHeight + y] = staticLevelParts[x][y];
+                if (x < 0 || x >= tileWidth)
+                    levelCutout[column * tileHeight + y] = LevelPart.EMPTY;
+                else
+                    levelCutout[column * tileHeight + y] = staticLevelParts[x][y];
             }
             column++;
         }
@@ -92,12 +95,12 @@ public class MarioLevelSlim {
     void update(int marioX) { // TODO: call from MarioWorldSlim.update
         if (currentCutoutCenter != marioX) {
             if (currentCutoutCenter < marioX) { // move right
-                if (currentCutoutCenter + cutoutTileWidth / 2 == tileWidth) // beyond end of level
+                int newColumnIndex = cutoutTileWidth % 2 == 0 ? marioX + cutoutTileWidth / 2 - 1 : marioX + cutoutTileWidth / 2;
+                if (newColumnIndex >= tileWidth) // beyond end of level
                     return;
-                int shift = cutoutTileWidth % 2 == 0 ? marioX + cutoutTileWidth / 2 - 1 : marioX + cutoutTileWidth / 2;
                 int y = 0;
                 for (int i = cutoutArrayBeginning; i < cutoutArrayBeginning + tileHeight; i++) {
-                    levelCutout[i] = staticLevelParts[shift][y];
+                    levelCutout[i] = staticLevelParts[newColumnIndex][y];
                     y++;
                 }
                 currentCutoutCenter++;
@@ -105,7 +108,7 @@ public class MarioLevelSlim {
                 cutoutArrayBeginning = (cutoutArrayBeginning + tileHeight) % (cutoutTileWidth * this.tileHeight);
             }
             else { // move left
-                if (cutoutLeftBorderX == 0) // left cutout border == beginning of level
+                if (cutoutLeftBorderX <= 0) // left cutout border <= beginning of level
                     return;
                 int lastColumnIndex = cutoutArrayBeginning - tileHeight;
                 if (lastColumnIndex < 0)
