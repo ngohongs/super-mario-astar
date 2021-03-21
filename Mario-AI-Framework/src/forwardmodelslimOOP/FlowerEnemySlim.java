@@ -1,21 +1,29 @@
 package forwardmodelslimOOP;
 
 import engine.helper.SpriteType;
+import engine.sprites.FlowerEnemy;
 
 public class FlowerEnemySlim extends MarioSpriteSlim {
-    static final SpriteType type = SpriteType.ENEMY_FLOWER;
+    private static final SpriteType type = SpriteType.ENEMY_FLOWER;
     static final int width = 2;
 
     private float yStart;
-    private int tick, waitTime;
+    private int waitTime;
     private float ya;
 
-    public FlowerEnemySlim(float x, float y) {
+    FlowerEnemySlim(FlowerEnemy originalFlowerEnemy) {
+        this.x = originalFlowerEnemy.x;
+        this.y = originalFlowerEnemy.y;
+        this.yStart = originalFlowerEnemy.getyStart();
+        this.waitTime = originalFlowerEnemy.getWaitTime();
+        this.ya = originalFlowerEnemy.ya;
+    }
+
+    FlowerEnemySlim(float x, float y) {
         this.x = x;
-        this.y = y;
+        this.y -= 1;
         this.yStart = this.y;
         this.ya = -1;
-        this.y -= 1;
         for (int i = 0; i < 4; i++) {
             this.update();
         }

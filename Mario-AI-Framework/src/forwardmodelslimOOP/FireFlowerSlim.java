@@ -1,6 +1,7 @@
 package forwardmodelslimOOP;
 
 import engine.helper.SpriteType;
+import engine.sprites.FireFlower;
 
 public class FireFlowerSlim extends MarioSpriteSlim {
     private static final int width = 4;
@@ -9,7 +10,13 @@ public class FireFlowerSlim extends MarioSpriteSlim {
 
     private int life;
 
-    public FireFlowerSlim(float x, float y) {
+    FireFlowerSlim(FireFlower originalFireFlower) {
+        this.x = originalFireFlower.x;
+        this.y = originalFireFlower.y;
+        this.life = originalFireFlower.getLife();
+    }
+
+    FireFlowerSlim(float x, float y) {
         this.x = x;
         this.y = y;
         this.life = 0;

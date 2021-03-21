@@ -2,27 +2,51 @@ package forwardmodelslimOOP;
 
 import engine.helper.MarioActions;
 import engine.helper.SpriteType;
+import engine.sprites.Mario;
 
 public class MarioSlim extends MarioSpriteSlim {
-    static final SpriteType type = SpriteType.MARIO;
-    static final int width = 4;
-    static final float GROUND_INERTIA = 0.89f;
-    static final float AIR_INERTIA = 0.89f;
-    static final int POWERUP_TIME = 3;
+    private static final SpriteType type = SpriteType.MARIO;
+    private     static final int width = 4;
+    private static final float GROUND_INERTIA = 0.89f;
+    private static final float AIR_INERTIA = 0.89f;
+    private static final int POWERUP_TIME = 3;
 
     int height = 24;
     boolean[] actions;
-    private int invulnerableTime = 0;
-    boolean wasOnGround, onGround, isDucking, isLarge,
-            mayJump, canShoot, isFire, oldLarge, oldFire;
-    float xa, ya;
-    byte facing = 1;
-    int jumpTime = 0;
+    private int invulnerableTime;
+    boolean onGround, wasOnGround;
+    boolean isLarge;
+    private boolean isDucking, mayJump, canShoot, isFire, oldLarge, oldFire;
+    private float xa;
+    float ya;
+    byte facing;
+    private int jumpTime;
     private float xJumpSpeed, yJumpSpeed, xJumpStart;
 
-    public MarioSlim(float x, float y) {
-        this.x = x + 8;
-        this.y = y + 15;
+    MarioSlim(Mario originalMario) {
+        Mario.PrivateMarioCopyInfo info = originalMario.getPrivateCopyInfo();
+        this.invulnerableTime = info.invulnerableTime;
+        this.oldLarge = info.oldLarge;
+        this.oldFire = info.oldFire;
+        this.xJumpSpeed = info.xJumpSpeed;
+        this.yJumpSpeed = info.yJumpSpeed;
+        this.xJumpStart = info.xJumpStart;
+
+        this.x = originalMario.x;
+        this.y = originalMario.y;
+        this.height = originalMario.height;
+        this.actions = originalMario.actions;
+        this.wasOnGround = originalMario.wasOnGround;
+        this.onGround = originalMario.onGround;
+        this.isDucking = originalMario.isDucking;
+        this.isLarge = originalMario.isLarge;
+        this.mayJump = originalMario.mayJump;
+        this.canShoot = originalMario.canShoot;
+        this.isFire = originalMario.isFire;
+        this.xa = originalMario.xa;
+        this.ya = originalMario.ya;
+        this.facing = (byte) originalMario.facing;
+        this.jumpTime = originalMario.jumpTime;
     }
 
     @Override

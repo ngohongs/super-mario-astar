@@ -5,25 +5,27 @@ package forwardmodelslimOOP;
 //TODO: there is a bullet bill spawner - needs attention
 
 //TODO: is pauseTimer incremented somewhere?
-//TODO: fireballsOnScreen is counted but never used?
+//TODO: fireballsOnScreen - could be a local variable?
 //TODO: currentTimer??
 
-import engine.core.MarioLevel;
+import engine.core.MarioSprite;
+import engine.core.MarioWorld;
 import engine.helper.GameStatus;
 import engine.helper.SpriteType;
+import engine.sprites.*;
 
 import java.util.ArrayList;
 
 public class MarioWorldSlim {
-    public GameStatus gameStatus;
-    public int pauseTimer = 0;
-    public int fireballsOnScreen = 0;
-    public int currentTimer = -1;
+    private GameStatus gameStatus;
+    int pauseTimer;
+    int fireballsOnScreen;
+    private int currentTimer;
     public float cameraX;
     public float cameraY;
     public MarioSlim mario;
     public MarioLevelSlim level;
-    public int currentTick;
+    private int currentTick;
     int coins, lives;
 
     private ArrayList<MarioSpriteSlim> sprites;
@@ -32,18 +34,64 @@ public class MarioWorldSlim {
     private ArrayList<MarioSpriteSlim> addedSprites;
     private ArrayList<MarioSpriteSlim> removedSprites;
 
-    public MarioWorldSlim(MarioLevel level, int levelCutoutTileWidth) {
-        /*this.gameStatus = GameStatus.RUNNING;
+    public MarioWorldSlim(MarioWorld originalWorld, int levelCutoutTileWidth) {
+        this.gameStatus = originalWorld.gameStatus;
+        this.pauseTimer = originalWorld.pauseTimer;
+        this.fireballsOnScreen = originalWorld.fireballsOnScreen;
+        this.currentTimer = originalWorld.currentTimer;
+        this.cameraX = originalWorld.cameraX;
+        this.cameraY = originalWorld.cameraY;
+        this.currentTick = originalWorld.currentTick;
+        this.coins = originalWorld.coins;
+        this.lives = originalWorld.lives;
+
         sprites = new ArrayList<>();
+
+        for (MarioSprite originalSprite : originalWorld.sprites) {
+            if (originalSprite instanceof BulletBill)
+                setupSprite(new BulletBillSlim((BulletBill) originalSprite));
+            else if (originalSprite instanceof FlowerEnemy)
+                setupSprite(new FlowerEnemySlim((FlowerEnemy) originalSprite));
+            else if (originalSprite instanceof Enemy)
+                setupSprite(new EnemySlim((Enemy) originalSprite));
+            else if (originalSprite instanceof Fireball)
+                setupSprite(new FireballSlim((Fireball) originalSprite));
+            else if (originalSprite instanceof FireFlower)
+                setupSprite(new FireFlowerSlim((FireFlower) originalSprite));
+            else if (originalSprite instanceof LifeMushroom)
+                setupSprite(new LifeMushroomSlim((LifeMushroom) originalSprite));
+            else if (originalSprite instanceof Mario) {
+                mario = new MarioSlim((Mario) originalSprite);
+                setupSprite(mario);
+            }
+            else if (originalSprite instanceof Mushroom)
+                setupSprite(new MushroomSlim((Mushroom) originalSprite));
+            else if (originalSprite instanceof Shell)
+                setupSprite(new ShellSlim((Shell) originalSprite));
+            else
+                throw new IllegalArgumentException();
+        }
+
+        // minimum width because world.update method might look this far
+        // TODO: is this large enough?
+        if (levelCutoutTileWidth < 19)
+            levelCutoutTileWidth = 19;
+
+        assert mario != null;
+        this.level = new MarioLevelSlim(originalWorld.level, levelCutoutTileWidth, (int) mario.x / 16);
+
+        // these don't hold a state between update runs
         shellsToCheck = new ArrayList<>();
         fireballsToCheck = new ArrayList<>();
         addedSprites = new ArrayList<>();
-        removedSprites = new ArrayList<>();*/
-        // TODO: convert from MarioWorld
-        this.level = new MarioLevelSlim(level, levelCutoutTileWidth, (int) mario.x);
+        removedSprites = new ArrayList<>();
     }
 
-    // TODO: check that cutout width is at least 19? (world.update)
+    private void setupSprite(MarioSpriteSlim sprite) {
+        sprite.alive = true;
+        sprite.world = this;
+        this.sprites.add(sprite);
+    }
 
     public MarioWorldSlim clone() {
         /*MarioWorld world = new MarioWorld(this.killEvents);
@@ -84,7 +132,7 @@ public class MarioWorldSlim {
         return enemies;
     }
 
-    public void addSprite(MarioSpriteSlim sprite) {
+    void addSprite(MarioSpriteSlim sprite) {
         this.addedSprites.add(sprite);
         sprite.alive = true;
         sprite.world = this;
@@ -96,15 +144,15 @@ public class MarioWorldSlim {
         sprite.world = null;
     }
 
-    public void checkShellCollide(ShellSlim shell) {
+    void checkShellCollide(ShellSlim shell) {
         shellsToCheck.add(shell);
     }
 
-    public void checkFireballCollide(FireballSlim fireball) {
+    void checkFireballCollide(FireballSlim fireball) {
         fireballsToCheck.add(fireball);
     }
 
-    public void win() {
+    void win() {
         this.gameStatus = GameStatus.WIN;
     }
 
@@ -113,7 +161,7 @@ public class MarioWorldSlim {
         this.mario.alive = false;
     }
 
-    public void timeout() {
+    private void timeout() {
         this.gameStatus = GameStatus.TIME_OUT;
         this.mario.alive = false;
     }
@@ -173,6 +221,8 @@ public class MarioWorldSlim {
                 this.fireballsOnScreen += 1;
             }
         }
+
+        this.level.update((int) mario.x / 16);
 
         for (int x = (int) cameraX / 16 - 1; x <= (int) (cameraX + marioGameWidth) / 16 + 1; x++) {
             for (int y = (int) cameraY / 16 - 1; y <= (int) (cameraY + marioGameHeight) / 16 + 1; y++) {
@@ -277,7 +327,7 @@ public class MarioWorldSlim {
         }
     }
 
-    public void bumpInto(int xTile, int yTile) {
+    private void bumpInto(int xTile, int yTile) {
         LevelPart block = level.getBlock(xTile, yTile);
         if (TileFeaturesSlim.getTileType(block).contains(TileFeaturesSlim.PICKABLE)) {
             this.mario.collectCoin();

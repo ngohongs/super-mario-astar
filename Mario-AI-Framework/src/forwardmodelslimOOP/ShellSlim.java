@@ -1,25 +1,35 @@
 package forwardmodelslimOOP;
 
 import engine.helper.SpriteType;
+import engine.sprites.Shell;
 
 public class ShellSlim extends MarioSpriteSlim {
     private static final float GROUND_INERTIA = 0.89f;
     private static final float AIR_INERTIA = 0.89f;
     private static final SpriteType type = SpriteType.SHELL;
-    static final int width = 4;
+    private static final int width = 4;
     static final int height = 12;
 
-    private boolean onGround = false;
+    private boolean onGround;
 
-    float xa, ya;
+    private float xa, ya;
     byte facing;
 
-    public ShellSlim(float x, float y) {
+    ShellSlim(Shell originalShell) {
+        this.x = originalShell.x;
+        this.y = originalShell.y;
+        this.xa = originalShell.xa;
+        this.ya = originalShell.ya;
+        this.facing = (byte) originalShell.facing;
+        this.onGround = originalShell.isOnGround();
+    }
+
+    ShellSlim(float x, float y) {
         this.x = x;
         this.y = y;
-
         this.facing = 0;
         this.ya = -5;
+        this.onGround = false;
     }
 
     @Override

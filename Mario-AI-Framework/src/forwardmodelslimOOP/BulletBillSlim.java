@@ -1,15 +1,22 @@
 package forwardmodelslimOOP;
 
 import engine.helper.SpriteType;
+import engine.sprites.BulletBill;
 
 class BulletBillSlim extends MarioSpriteSlim {
-    static final SpriteType type = SpriteType.BULLET_BILL;
+    private static final SpriteType type = SpriteType.BULLET_BILL;
     static final int width = 4;
     static final int height = 12;
 
-    byte facing;
+    private byte facing;
 
-    public BulletBillSlim(float x, float y, int facing) {
+    BulletBillSlim(BulletBill originalBulletBill) {
+        this.x = originalBulletBill.x;
+        this.y = originalBulletBill.y;
+        this.facing = (byte) originalBulletBill.facing;
+    }
+
+    BulletBillSlim(float x, float y, int facing) {
         this.x = x;
         this.y = y;
         this.facing = (byte) facing;

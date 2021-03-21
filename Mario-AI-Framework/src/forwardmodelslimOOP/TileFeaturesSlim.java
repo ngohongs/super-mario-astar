@@ -84,6 +84,8 @@ public enum TileFeaturesSlim {
                 features.add(LIFE);
                 features.add(BUMPABLE);
                 break;
+            case EMPTY:
+                break;
             default:
                 throw new IllegalArgumentException();
         }

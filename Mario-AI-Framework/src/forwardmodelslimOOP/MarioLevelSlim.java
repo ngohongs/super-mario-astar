@@ -9,38 +9,47 @@ import java.util.ArrayList;
 // TODO: remove some of the magic numbers, sprite type?
 
 public class MarioLevelSlim {
+    private static int totalCoins;
+
     public int width;
-    public int tileWidth;
+    private int tileWidth;
     public int height;
-    public int tileHeight;
-    public static int totalCoins;
-    public int exitTileX, exitTileY;
+    private int tileHeight;
+    int exitTileX;
+    private int exitTileY;
 
     private static LevelPart[][] staticLevelParts;
     private static int cutoutTileWidth;
 
-    private int currentCutoutCenter;
     private LevelPart[] levelCutout;
+    private int currentCutoutCenter;
     private int cutoutArrayBeginning; // index of the current array beginning
     private int cutoutLeftBorderX;
 
-    public MarioLevelSlim(MarioLevel level, int cutoutTileWidth, int marioX) {
-        MarioLevelSlim.cutoutTileWidth = cutoutTileWidth;
+    MarioLevelSlim(MarioLevel level, int cutoutTileWidth, int marioTileX) {
+        totalCoins = level.totalCoins;
 
         this.width = level.width;
         this.tileWidth = level.tileWidth;
         this.height = level.height;
         this.tileHeight = level.tileHeight;
-        totalCoins = level.totalCoins;
         this.exitTileX = level.exitTileX;
         this.exitTileY = level.exitTileY;
 
-        staticLevelParts = new LevelPart[level.levelTiles[0].length][level.levelTiles.length];
-        for (int y = 0; y < level.levelTiles.length; y++) {
-            for (int x = 0; x < level.levelTiles[y].length; x++) {
+        MarioLevelSlim.cutoutTileWidth = cutoutTileWidth;
+        if (MarioLevelSlim.cutoutTileWidth > tileWidth)
+            MarioLevelSlim.cutoutTileWidth = tileWidth;
+
+        staticLevelParts = new LevelPart[level.levelTiles.length][level.levelTiles[0].length];
+        for (int x = 0; x < level.levelTiles.length; x++) {
+            for (int y = 0; y < level.levelTiles[x].length; y++) {
                 LevelPart levelPart;
-                if (level.levelTiles[x][y] != 0)
-                    levelPart = LevelPart.getLevelPart(level.levelTiles[x][y], true);
+                if (level.levelTiles[x][y] != 0) {
+                    if (level.levelTiles[x][y] == 39 || level.levelTiles[x][y] == 40)
+                        levelPart = LevelPart.EMPTY; // flag is ignored
+                    else
+                        levelPart = LevelPart.getLevelPart(level.levelTiles[x][y], true);
+                }
                 else
                     levelPart = LevelPart.getLevelPart(level.spriteTemplates[x][y].getValue(), false);
 
@@ -49,12 +58,12 @@ public class MarioLevelSlim {
         }
 
         levelCutout = new LevelPart[cutoutTileWidth * this.tileHeight];
+        currentCutoutCenter = marioTileX;
         cutoutArrayBeginning = 0;
-        currentCutoutCenter = marioX;
-        cutoutLeftBorderX = marioX - cutoutTileWidth / 2;
+        cutoutLeftBorderX = marioTileX - cutoutTileWidth / 2;
 
-        int copyStart = marioX - cutoutTileWidth / 2;
-        int copyEnd = cutoutTileWidth % 2 == 0 ? marioX + cutoutTileWidth / 2 - 1 : marioX + cutoutTileWidth / 2;
+        int copyStart = marioTileX - cutoutTileWidth / 2;
+        int copyEnd = cutoutTileWidth % 2 == 0 ? marioTileX + cutoutTileWidth / 2 - 1 : marioTileX + cutoutTileWidth / 2;
 
         int column = 0;
         for (int x = copyStart; x <= copyEnd; x++) {
@@ -92,10 +101,10 @@ public class MarioLevelSlim {
         return null;
     }
 
-    void update(int marioX) { // TODO: call from MarioWorldSlim.update
-        if (currentCutoutCenter != marioX) {
-            if (currentCutoutCenter < marioX) { // move right
-                int newColumnIndex = cutoutTileWidth % 2 == 0 ? marioX + cutoutTileWidth / 2 - 1 : marioX + cutoutTileWidth / 2;
+    void update(int marioTileX) {
+        if (currentCutoutCenter != marioTileX) {
+            if (currentCutoutCenter < marioTileX) { // move right
+                int newColumnIndex = cutoutTileWidth % 2 == 0 ? marioTileX + cutoutTileWidth / 2 - 1 : marioTileX + cutoutTileWidth / 2;
                 if (newColumnIndex >= tileWidth) // beyond end of level
                     return;
                 int y = 0;
@@ -115,7 +124,7 @@ public class MarioLevelSlim {
                     lastColumnIndex = (cutoutTileWidth * this.tileHeight) - tileHeight;
                 int y = 0;
                 for (int i = lastColumnIndex; i < lastColumnIndex + tileHeight; i++) {
-                    levelCutout[i] = staticLevelParts[marioX - cutoutTileWidth / 2][y];
+                    levelCutout[i] = staticLevelParts[marioTileX - cutoutTileWidth / 2][y];
                     y++;
                 }
                 currentCutoutCenter--;

@@ -4,7 +4,7 @@ public class MarioForwardModelSlim {
 
     private MarioWorldSlim world;
 
-    public MarioForwardModelSlim(MarioWorldSlim world) {
+    MarioForwardModelSlim(MarioWorldSlim world) {
         this.world = world;
     }
 

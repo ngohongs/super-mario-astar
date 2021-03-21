@@ -1,24 +1,36 @@
 package forwardmodelslimOOP;
 
 import engine.helper.SpriteType;
+import engine.sprites.Mushroom;
 
 public class MushroomSlim extends MarioSpriteSlim {
     private static final float GROUND_INERTIA = 0.89f;
     private static final float AIR_INERTIA = 0.89f;
-    static final SpriteType type = SpriteType.LIFE_MUSHROOM;
-    static final int width = 4;
-    static final int height = 12;
+    private static final SpriteType type = SpriteType.LIFE_MUSHROOM;
+    private static final int width = 4;
+    private static final int height = 12;
 
-    float xa, ya;
-    byte facing;
-    private boolean onGround = false;
+    private float xa, ya;
+    private byte facing;
+    private boolean onGround;
     private int life;
 
-    public MushroomSlim(float x, float y) {
+    MushroomSlim(Mushroom originalMushroom) {
+        this.x = originalMushroom.x;
+        this.y = originalMushroom.y;
+        this.xa = originalMushroom.xa;
+        this.ya = originalMushroom.ya;
+        this.facing = (byte) originalMushroom.facing;
+        this.onGround = originalMushroom.isOnGround();
+        this.life = originalMushroom.getLife();
+    }
+
+    MushroomSlim(float x, float y) {
         this.x = x;
         this.y = y;
         this.facing = 1;
         this.life = 0;
+        this.onGround = false;
     }
 
     @Override

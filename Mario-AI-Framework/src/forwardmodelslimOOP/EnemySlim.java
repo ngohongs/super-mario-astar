@@ -1,25 +1,42 @@
 package forwardmodelslimOOP;
 
 import engine.helper.SpriteType;
+import engine.sprites.Enemy;
 
 public class EnemySlim extends  MarioSpriteSlim {
     private static final float GROUND_INERTIA = 0.89f;
     private static final float AIR_INERTIA = 0.89f;
-    static final int width = 4;
+    private static final int width = 4;
 
-    protected SpriteType type;
+    private SpriteType type;
 
-    protected float xa, ya;
-    protected byte facing;
+    private float xa, ya;
+    private byte facing;
 
-    protected int height;
+    int height;
 
-    protected boolean onGround = false;
-    protected boolean avoidCliffs;
-    protected boolean winged;
-    protected boolean noFireballDeath;
+    private boolean onGround;
+    private boolean avoidCliffs;
+    private boolean winged;
+    private boolean noFireballDeath;
 
-    public EnemySlim(float x, float y, int dir, SpriteType type) {
+    EnemySlim(Enemy originalEnemy) {
+        this.x = originalEnemy.x;
+        this.y = originalEnemy.y;
+        this.type = originalEnemy.type;
+        this.xa = originalEnemy.xa;
+        this.ya = originalEnemy.ya;
+        this.facing = (byte) originalEnemy.facing;
+        this.height = originalEnemy.height;
+
+        Enemy.PrivateEnemyCopyInfo info = originalEnemy.getPrivateCopyInfo();
+        this.onGround = info.onGround;
+        this.avoidCliffs = info.avoidCliffs;
+        this.winged = info.winged;
+        this.noFireballDeath = info.noFireballDeath;
+    }
+
+    EnemySlim(float x, float y, int dir, SpriteType type) {
         this.x = x;
         this.y = y;
         this.type = type;
@@ -31,6 +48,7 @@ public class EnemySlim extends  MarioSpriteSlim {
         this.winged = this.type.getValue() % 2 == 1;
         this.avoidCliffs = this.type == SpriteType.RED_KOOPA || this.type == SpriteType.RED_KOOPA_WINGED;
         this.noFireballDeath = this.type == SpriteType.SPIKY || this.type == SpriteType.SPIKY_WINGED;
+        this.onGround = false;
         this.facing = (byte) dir;
         if (this.facing == 0) {
             this.facing = 1;

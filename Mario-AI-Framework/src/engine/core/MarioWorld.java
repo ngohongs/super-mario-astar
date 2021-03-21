@@ -28,7 +28,7 @@ public class MarioWorld {
     public ArrayList<MarioEvent> lastFrameEvents;
 
     private MarioEvent[] killEvents;
-    private ArrayList<MarioSprite> sprites;
+    public ArrayList<MarioSprite> sprites;
     private ArrayList<Shell> shellsToCheck;
     private ArrayList<Fireball> fireballsToCheck;
     private ArrayList<MarioSprite> addedSprites;

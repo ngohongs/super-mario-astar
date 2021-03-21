@@ -37,6 +37,7 @@ public enum LevelPart {
     PIPE_TOP_RIGHT(19),
     PIPE_BODY_LEFT(20),
     PIPE_BODY_RIGHT(21),
+    // TODO: 39 = flag, 40 = flag pole, needed?
     JUMP_THROUGH_BLOCK_ALONE(43),
     JUMP_THROUGH_BLOCK_LEFT(44),
     JUMP_THROUGH_BLOCK_RIGHT(45),

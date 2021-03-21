@@ -79,4 +79,8 @@ public class FireFlower extends MarioSprite {
         super.render(og);
         this.graphics.render(og, (int) (this.x - this.world.cameraX), (int) (this.y - this.world.cameraY));
     }
+
+    public int getLife() {
+        return life;
+    }
 }

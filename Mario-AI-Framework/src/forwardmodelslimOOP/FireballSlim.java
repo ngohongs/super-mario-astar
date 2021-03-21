@@ -1,23 +1,34 @@
 package forwardmodelslimOOP;
 
 import engine.helper.SpriteType;
+import engine.sprites.Fireball;
 
 public class FireballSlim extends MarioSpriteSlim {
     private static final float GROUND_INERTIA = 0.89f;
     private static final float AIR_INERTIA = 0.89f;
-    static final SpriteType type = SpriteType.FIREBALL;
-    static final int width = 4;
+    private static final SpriteType type = SpriteType.FIREBALL;
+    private static final int width = 4;
     static final int height = 8;
 
-    float xa, ya;
+    private float xa, ya;
     byte facing;
-    private boolean onGround = false;
+    private boolean onGround;
 
-    public FireballSlim(float x, float y, int facing) {
+    FireballSlim(Fireball originalFireball) {
+        this.x = originalFireball.x;
+        this.y = originalFireball.y;
+        this.xa = originalFireball.xa;
+        this.ya = originalFireball.ya;
+        this.facing = (byte) originalFireball.facing;
+        this.onGround = originalFireball.isOnGround();
+    }
+
+    FireballSlim(float x, float y, int facing) {
         this.x = x;
         this.y = y;
         this.facing = (byte) facing;
         this.ya = 4;
+        this.onGround = false;
     }
 
     @Override
