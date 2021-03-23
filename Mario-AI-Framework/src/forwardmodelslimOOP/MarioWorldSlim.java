@@ -322,8 +322,18 @@ public class MarioWorldSlim {
     }
 
     private MarioSpriteSlim spawnEnemy(SpriteType type, int x, int y, int dir) {
-        if (type == SpriteType.ENEMY_FLOWER)
-            return new FlowerEnemySlim(x * 16 + 17, y * 16 + 18);
+        if (type == SpriteType.ENEMY_FLOWER) {
+            // flower enemy constructor needs to call update - which uses world
+            MarioUpdateContext updateContext = MarioUpdateContext.get();
+            updateContext.world = this;
+
+            FlowerEnemySlim flowerEnemy = new FlowerEnemySlim(x * 16 + 17, y * 16 + 18, updateContext);
+
+            updateContext.world = null;
+            MarioUpdateContext.back(updateContext);
+
+            return flowerEnemy;
+        }
         else
             return new EnemySlim(x * 16 + 8, y * 16 + 15, dir, type);
     }

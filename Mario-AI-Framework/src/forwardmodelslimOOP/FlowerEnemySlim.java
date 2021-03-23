@@ -19,13 +19,14 @@ public class FlowerEnemySlim extends MarioSpriteSlim {
         this.ya = originalFlowerEnemy.ya;
     }
 
-    FlowerEnemySlim(float x, float y) {
+    // this constructor calls update on itself - needs context with world set
+    FlowerEnemySlim(float x, float y, MarioUpdateContext updateContext) {
         this.x = x;
         this.y -= 1;
         this.yStart = this.y;
         this.ya = -1;
         for (int i = 0; i < 4; i++) {
-            this.update(null); //FlowerEnemy doesn't use updateContext
+            this.update(updateContext);
         }
     }
 
