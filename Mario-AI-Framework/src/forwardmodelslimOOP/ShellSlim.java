@@ -6,8 +6,8 @@ import engine.sprites.Shell;
 import java.util.ArrayList;
 
 public class ShellSlim extends MarioSpriteSlim {
-    private static final float GROUND_INERTIA = 0.89f;
-    private static final float AIR_INERTIA = 0.89f;
+    public static final float GROUND_INERTIA = 0.89f;
+    public static final float AIR_INERTIA = 0.89f;
     private static final SpriteType type = SpriteType.SHELL;
     private static final int width = 4;
     static final int height = 12;

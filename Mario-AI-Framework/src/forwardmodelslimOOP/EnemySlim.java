@@ -4,8 +4,8 @@ import engine.helper.SpriteType;
 import engine.sprites.Enemy;
 
 public class EnemySlim extends  MarioSpriteSlim {
-    private static final float GROUND_INERTIA = 0.89f;
-    private static final float AIR_INERTIA = 0.89f;
+    public static final float GROUND_INERTIA = 0.89f;
+    public static final float AIR_INERTIA = 0.89f;
     private static final int width = 4;
 
     private SpriteType type;
