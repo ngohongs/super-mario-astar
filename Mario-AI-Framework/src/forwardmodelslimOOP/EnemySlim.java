@@ -11,7 +11,7 @@ public class EnemySlim extends  MarioSpriteSlim {
     private SpriteType type;
 
     private float xa, ya;
-    private byte facing;
+    private int facing;
 
     int height;
 
@@ -26,7 +26,7 @@ public class EnemySlim extends  MarioSpriteSlim {
         this.type = originalEnemy.type;
         this.xa = originalEnemy.xa;
         this.ya = originalEnemy.ya;
-        this.facing = (byte) originalEnemy.facing;
+        this.facing = originalEnemy.facing;
         this.height = originalEnemy.height;
 
         Enemy.PrivateEnemyCopyInfo info = originalEnemy.getPrivateCopyInfo();
@@ -49,7 +49,7 @@ public class EnemySlim extends  MarioSpriteSlim {
         this.avoidCliffs = this.type == SpriteType.RED_KOOPA || this.type == SpriteType.RED_KOOPA_WINGED;
         this.noFireballDeath = this.type == SpriteType.SPIKY || this.type == SpriteType.SPIKY_WINGED;
         this.onGround = false;
-        this.facing = (byte) dir;
+        this.facing = dir;
         if (this.facing == 0) {
             this.facing = 1;
         }
@@ -144,7 +144,7 @@ public class EnemySlim extends  MarioSpriteSlim {
         xa = facing * sideWaysSpeed;
 
         if (!move(xa, 0))
-            facing = (byte) -facing;
+            facing = -facing;
         onGround = false;
         move(0, ya);
 

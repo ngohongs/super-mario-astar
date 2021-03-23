@@ -15,14 +15,14 @@ public class ShellSlim extends MarioSpriteSlim {
     private boolean onGround;
 
     private float xa, ya;
-    byte facing;
+    int facing;
 
     ShellSlim(Shell originalShell) {
         this.x = originalShell.x;
         this.y = originalShell.y;
         this.xa = originalShell.xa;
         this.ya = originalShell.ya;
-        this.facing = (byte) originalShell.facing;
+        this.facing = originalShell.facing;
         this.onGround = originalShell.isOnGround();
     }
 
@@ -85,7 +85,7 @@ public class ShellSlim extends MarioSpriteSlim {
         }
 
         if (!move(xa, 0)) {
-            facing = (byte) -facing;
+            facing = -facing;
         }
         onGround = false;
         move(0, ya);
@@ -258,7 +258,7 @@ public class ShellSlim extends MarioSpriteSlim {
         if (!this.alive) return;
 
         if (x + width > xTile * 16 && x - width < xTile * 16 + 16 && yTile == (int) ((y - 1) / 16)) {
-            facing = (byte) -world.mario.facing;
+            facing = -world.mario.facing;
             ya = -10;
         }
     }

@@ -104,7 +104,7 @@ public class MarioWorldSlim {
         else
             System.out.println("WORLD PROPERTIES NOT EQUAL");
 
-        return worldProperties && level.equals(that.level) &&
+        return worldProperties & level.equals(that.level) &
                 areSpritesEqual(this.sprites, that.sprites);
     }
 

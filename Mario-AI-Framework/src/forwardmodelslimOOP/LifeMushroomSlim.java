@@ -13,7 +13,7 @@ public class LifeMushroomSlim extends MarioSpriteSlim {
     private static final int height = 12;
 
     private float xa, ya;
-    private byte facing;
+    private int facing;
     private boolean onGround;
     private int life;
 
@@ -22,7 +22,7 @@ public class LifeMushroomSlim extends MarioSpriteSlim {
         this.y = originalLifeMushroom.y;
         this.xa = originalLifeMushroom.xa;
         this.ya = originalLifeMushroom.ya;
-        this.facing = (byte) originalLifeMushroom.facing;
+        this.facing = originalLifeMushroom.facing;
         this.onGround = originalLifeMushroom.isOnGround();
         this.life = originalLifeMushroom.getLife();
     }
@@ -103,7 +103,7 @@ public class LifeMushroomSlim extends MarioSpriteSlim {
         }
 
         if (x + width > xTile * 16 && x - width < xTile * 16 + 16 && yTile == (int) ((y - 1) / 16)) {
-            facing = (byte) -world.mario.facing;
+            facing = -world.mario.facing;
             ya = -10;
         }
     }
@@ -213,7 +213,7 @@ public class LifeMushroomSlim extends MarioSpriteSlim {
         xa = facing * sideWaysSpeed;
 
         if (!move(xa, 0))
-            facing = (byte) -facing;
+            facing = -facing;
         onGround = false;
         move(0, ya);
 

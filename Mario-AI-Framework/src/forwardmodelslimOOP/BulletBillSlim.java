@@ -8,18 +8,18 @@ class BulletBillSlim extends MarioSpriteSlim {
     static final int width = 4;
     static final int height = 12;
 
-    private byte facing;
+    private int facing;
 
     BulletBillSlim(BulletBill originalBulletBill) {
         this.x = originalBulletBill.x;
         this.y = originalBulletBill.y;
-        this.facing = (byte) originalBulletBill.facing;
+        this.facing = originalBulletBill.facing;
     }
 
     BulletBillSlim(float x, float y, int facing) {
         this.x = x;
         this.y = y;
-        this.facing = (byte) facing;
+        this.facing = facing;
     }
 
     @Override

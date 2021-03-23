@@ -13,7 +13,7 @@ public class FireballSlim extends MarioSpriteSlim {
     static final int height = 8;
 
     private float xa, ya;
-    byte facing;
+    int facing;
     private boolean onGround;
 
     FireballSlim(Fireball originalFireball) {
@@ -21,14 +21,14 @@ public class FireballSlim extends MarioSpriteSlim {
         this.y = originalFireball.y;
         this.xa = originalFireball.xa;
         this.ya = originalFireball.ya;
-        this.facing = (byte) originalFireball.facing;
+        this.facing = originalFireball.facing;
         this.onGround = originalFireball.isOnGround();
     }
 
     FireballSlim(float x, float y, int facing) {
         this.x = x;
         this.y = y;
-        this.facing = (byte) facing;
+        this.facing = facing;
         this.ya = 4;
         this.onGround = false;
     }

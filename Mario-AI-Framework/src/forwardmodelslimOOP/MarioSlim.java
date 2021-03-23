@@ -19,7 +19,7 @@ public class MarioSlim extends MarioSpriteSlim {
     private boolean isDucking, mayJump, canShoot, isFire, oldLarge, oldFire;
     private float xa;
     float ya;
-    byte facing;
+    int facing;
     private int jumpTime;
     private float xJumpSpeed, yJumpSpeed, xJumpStart;
 
@@ -45,7 +45,7 @@ public class MarioSlim extends MarioSpriteSlim {
         this.isFire = originalMario.isFire;
         this.xa = originalMario.xa;
         this.ya = originalMario.ya;
-        this.facing = (byte) originalMario.facing;
+        this.facing = originalMario.facing;
         this.jumpTime = originalMario.jumpTime;
     }
 
