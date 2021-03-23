@@ -15,7 +15,6 @@ public class MarioLevelSlim {
     private int tileHeight;
     int exitTileX;
 
-    private static LevelPart[][] staticLevelParts;
     private static int cutoutTileWidth;
 
     private LevelPart[] levelCutout;
@@ -34,7 +33,7 @@ public class MarioLevelSlim {
         if (MarioLevelSlim.cutoutTileWidth > tileWidth)
             MarioLevelSlim.cutoutTileWidth = tileWidth;
 
-        staticLevelParts = new LevelPart[level.levelTiles.length][level.levelTiles[0].length];
+        StaticLevel.data = new LevelPart[level.levelTiles.length][level.levelTiles[0].length];
         for (int x = 0; x < level.levelTiles.length; x++) {
             for (int y = 0; y < level.levelTiles[x].length; y++) {
                 LevelPart levelPart;
@@ -47,7 +46,7 @@ public class MarioLevelSlim {
                 else
                     levelPart = LevelPart.getLevelPart(level.spriteTemplates[x][y].getValue(), false);
 
-                staticLevelParts[x][y] = levelPart;
+                StaticLevel.data[x][y] = levelPart;
             }
         }
 
@@ -65,7 +64,7 @@ public class MarioLevelSlim {
                 if (x < 0 || x >= tileWidth)
                     levelCutout[column * tileHeight + y] = LevelPart.EMPTY;
                 else
-                    levelCutout[column * tileHeight + y] = staticLevelParts[x][y];
+                    levelCutout[column * tileHeight + y] = StaticLevel.data[x][y];
             }
             column++;
         }
@@ -137,7 +136,7 @@ public class MarioLevelSlim {
                     return;
                 int y = 0;
                 for (int i = cutoutArrayBeginning; i < cutoutArrayBeginning + tileHeight; i++) {
-                    levelCutout[i] = staticLevelParts[newColumnIndex][y];
+                    levelCutout[i] = StaticLevel.data[newColumnIndex][y];
                     y++;
                 }
                 currentCutoutCenter++;
@@ -152,7 +151,7 @@ public class MarioLevelSlim {
                     lastColumnIndex = (cutoutTileWidth * this.tileHeight) - tileHeight;
                 int y = 0;
                 for (int i = lastColumnIndex; i < lastColumnIndex + tileHeight; i++) {
-                    levelCutout[i] = staticLevelParts[marioTileX - cutoutTileWidth / 2][y];
+                    levelCutout[i] = StaticLevel.data[marioTileX - cutoutTileWidth / 2][y];
                     y++;
                 }
                 currentCutoutCenter--;
