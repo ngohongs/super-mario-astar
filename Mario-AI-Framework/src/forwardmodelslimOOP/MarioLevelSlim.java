@@ -9,14 +9,11 @@ import java.util.ArrayList;
 // TODO: remove some of the magic numbers, sprite type?
 
 public class MarioLevelSlim {
-    private static int totalCoins;
-
     public int width;
     private int tileWidth;
     public int height;
     private int tileHeight;
     int exitTileX;
-    private int exitTileY;
 
     private static LevelPart[][] staticLevelParts;
     private static int cutoutTileWidth;
@@ -27,14 +24,11 @@ public class MarioLevelSlim {
     private int cutoutLeftBorderX;
 
     MarioLevelSlim(MarioLevel level, int cutoutTileWidth, int marioTileX) {
-        totalCoins = level.totalCoins;
-
         this.width = level.width;
         this.tileWidth = level.tileWidth;
         this.height = level.height;
         this.tileHeight = level.tileHeight;
         this.exitTileX = level.exitTileX;
-        this.exitTileY = level.exitTileY;
 
         MarioLevelSlim.cutoutTileWidth = cutoutTileWidth;
         if (MarioLevelSlim.cutoutTileWidth > tileWidth)
@@ -75,6 +69,32 @@ public class MarioLevelSlim {
             }
             column++;
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        MarioLevelSlim that = (MarioLevelSlim) o;
+        return  width == that.width &&
+                tileWidth == that.tileWidth &&
+                height == that.height &&
+                tileHeight == that.tileHeight &&
+                exitTileX == that.exitTileX &&
+                currentCutoutCenter == that.currentCutoutCenter &&
+                cutoutArrayBeginning == that.cutoutArrayBeginning &&
+                cutoutLeftBorderX == that.cutoutLeftBorderX &&
+                compareCutouts(levelCutout, that.levelCutout);
+    }
+
+    private boolean compareCutouts(LevelPart[] a1, LevelPart[] a2) {
+        if (a1.length != a2.length)
+            return false;
+        for (int i = 0; i < a1.length; i++) {
+            if (a1[i].getValue() != a2[i].getValue())
+                return false;
+        }
+        return true;
     }
 
     public MarioLevelSlim clone() {

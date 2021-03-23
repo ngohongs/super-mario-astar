@@ -3,6 +3,8 @@ package forwardmodelslimOOP;
 import engine.helper.SpriteType;
 import engine.sprites.Fireball;
 
+import java.util.ArrayList;
+
 public class FireballSlim extends MarioSpriteSlim {
     private static final float GROUND_INERTIA = 0.89f;
     private static final float AIR_INERTIA = 0.89f;
@@ -29,6 +31,20 @@ public class FireballSlim extends MarioSpriteSlim {
         this.facing = (byte) facing;
         this.ya = 4;
         this.onGround = false;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        FireballSlim that = (FireballSlim) o;
+        return  Float.compare(that.xa, xa) == 0 &&
+                Float.compare(that.ya, ya) == 0 &&
+                facing == that.facing &&
+                onGround == that.onGround  &&
+                Float.compare(x, that.x) == 0 &&
+                Float.compare(y, that.y) == 0 &&
+                alive == that.alive;
     }
 
     @Override
@@ -143,8 +159,7 @@ public class FireballSlim extends MarioSpriteSlim {
         return blocking;
     }
 
-    @Override
-    public void update() {
+    public void update(ArrayList<FireballSlim> fireballsToCheck) {
         if (!this.alive) {
             return;
         }
@@ -158,7 +173,7 @@ public class FireballSlim extends MarioSpriteSlim {
         }
         xa = facing * sideWaysSpeed;
 
-        world.checkFireballCollide(this);
+        fireballsToCheck.add(this);
 
         if (!move(xa, 0)) {
             this.world.removeSprite(this);

@@ -5,7 +5,6 @@ package forwardmodelslimOOP;
 //TODO: there is a bullet bill spawner - needs attention
 
 //TODO: is pauseTimer incremented somewhere?
-//TODO: fireballsOnScreen - could be a local variable?
 //TODO: currentTimer??
 
 import engine.core.MarioSprite;
@@ -19,7 +18,6 @@ import java.util.ArrayList;
 public class MarioWorldSlim {
     private GameStatus gameStatus;
     int pauseTimer;
-    int fireballsOnScreen;
     private int currentTimer;
     public float cameraX;
     public float cameraY;
@@ -29,15 +27,12 @@ public class MarioWorldSlim {
     int coins, lives;
 
     private ArrayList<MarioSpriteSlim> sprites;
-    private ArrayList<ShellSlim> shellsToCheck;
-    private ArrayList<FireballSlim> fireballsToCheck;
     private ArrayList<MarioSpriteSlim> addedSprites;
     private ArrayList<MarioSpriteSlim> removedSprites;
 
     public MarioWorldSlim(MarioWorld originalWorld, int levelCutoutTileWidth) {
         this.gameStatus = originalWorld.gameStatus;
         this.pauseTimer = originalWorld.pauseTimer;
-        this.fireballsOnScreen = originalWorld.fireballsOnScreen;
         this.currentTimer = originalWorld.currentTimer;
         this.cameraX = originalWorld.cameraX;
         this.cameraY = originalWorld.cameraY;
@@ -81,8 +76,6 @@ public class MarioWorldSlim {
         this.level = new MarioLevelSlim(originalWorld.level, levelCutoutTileWidth, (int) mario.x / 16);
 
         // these don't hold a state between update runs
-        shellsToCheck = new ArrayList<>();
-        fireballsToCheck = new ArrayList<>();
         addedSprites = new ArrayList<>();
         removedSprites = new ArrayList<>();
     }
@@ -91,6 +84,42 @@ public class MarioWorldSlim {
         sprite.alive = true;
         sprite.world = this;
         this.sprites.add(sprite);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        MarioWorldSlim that = (MarioWorldSlim) o;
+        return  pauseTimer == that.pauseTimer &&
+                currentTimer == that.currentTimer &&
+                Float.compare(that.cameraX, cameraX) == 0 &&
+                Float.compare(that.cameraY, cameraY) == 0 &&
+                currentTick == that.currentTick &&
+                coins == that.coins &&
+                lives == that.lives &&
+                gameStatus == that.gameStatus &&
+                level.equals(that.level) &&
+                areSpritesEqual(this.sprites, that.sprites);
+    }
+
+    private boolean areSpritesEqual(ArrayList<MarioSpriteSlim> sprites1, ArrayList<MarioSpriteSlim> sprites2) {
+        for (MarioSpriteSlim sprite1 : sprites1) {
+            boolean found = false;
+            for (MarioSpriteSlim sprite2 : sprites2) {
+                if (sprite1.getType() == sprite2.getType() &&
+                        Float.compare(sprite1.x, sprite2.x) == 0 &&
+                        Float.compare(sprite1.y, sprite2.y) == 0) {
+                    if (sprite1.equals(sprite2)) {
+                        found = true;
+                        break;
+                    }
+                }
+            }
+            if (!found)
+                return false;
+        }
+        return true;
     }
 
     public MarioWorldSlim clone() {
@@ -142,14 +171,6 @@ public class MarioWorldSlim {
         this.removedSprites.add(sprite);
         sprite.alive = false;
         sprite.world = null;
-    }
-
-    void checkShellCollide(ShellSlim shell) {
-        shellsToCheck.add(shell);
-    }
-
-    void checkFireballCollide(FireballSlim fireball) {
-        fireballsToCheck.add(fireball);
     }
 
     void win() {
@@ -208,7 +229,7 @@ public class MarioWorldSlim {
             this.cameraY = 0;
         }
 
-        this.fireballsOnScreen = 0;
+        int fireballsOnScreen = 0;
         for (MarioSpriteSlim sprite : sprites) {
             if (sprite.x < cameraX - 64 || sprite.x > cameraX + marioGameWidth + 64 || sprite.y > this.level.height + 32) {
                 if (sprite.getType() == SpriteType.MARIO) {
@@ -218,7 +239,7 @@ public class MarioWorldSlim {
                 continue;
             }
             if (sprite.getType() == SpriteType.FIREBALL) {
-                this.fireballsOnScreen += 1;
+                fireballsOnScreen += 1;
             }
         }
 
@@ -250,12 +271,28 @@ public class MarioWorldSlim {
             }
         }
 
+        ArrayList<ShellSlim> shellsToCheck = new ArrayList<>();
+        ArrayList<FireballSlim> fireballsToCheck = new ArrayList<>();
+
         this.mario.actions = actions;
         for (MarioSpriteSlim sprite : sprites) {
             if (!sprite.alive) {
                 continue;
             }
-            sprite.update();
+            if (sprite.getType() == SpriteType.MARIO) {
+                mario.update(fireballsOnScreen);
+            }
+            else if (sprite.getType() == SpriteType.SHELL) {
+                ShellSlim shell = (ShellSlim) sprite;
+                shell.update(shellsToCheck);
+            }
+            else if (sprite.getType() == SpriteType.FIREBALL) {
+                FireballSlim fireball = (FireballSlim) sprite;
+                fireball.update(fireballsToCheck);
+            }
+            else {
+                sprite.update();
+            }
         }
         for (MarioSpriteSlim sprite : sprites) {
             if (!sprite.alive) {

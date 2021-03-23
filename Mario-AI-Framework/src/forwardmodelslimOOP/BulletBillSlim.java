@@ -23,6 +23,17 @@ class BulletBillSlim extends MarioSpriteSlim {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        BulletBillSlim that = (BulletBillSlim) o;
+        return  facing == that.facing &&
+                Float.compare(x, that.x) == 0 &&
+                Float.compare(y, that.y) == 0 &&
+                alive == that.alive;
+    }
+
+    @Override
     public SpriteType getType() {
         return type;
     }

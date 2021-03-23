@@ -6,7 +6,7 @@ import engine.sprites.Mario;
 
 public class MarioSlim extends MarioSpriteSlim {
     private static final SpriteType type = SpriteType.MARIO;
-    private     static final int width = 4;
+    private static final int width = 4;
     private static final float GROUND_INERTIA = 0.89f;
     private static final float AIR_INERTIA = 0.89f;
     private static final int POWERUP_TIME = 3;
@@ -50,12 +50,40 @@ public class MarioSlim extends MarioSpriteSlim {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        MarioSlim that = (MarioSlim) o;
+        return  height == that.height &&
+                invulnerableTime == that.invulnerableTime &&
+                onGround == that.onGround &&
+                wasOnGround == that.wasOnGround &&
+                isLarge == that.isLarge &&
+                isDucking == that.isDucking &&
+                mayJump == that.mayJump &&
+                canShoot == that.canShoot &&
+                isFire == that.isFire &&
+                oldLarge == that.oldLarge &&
+                oldFire == that.oldFire &&
+                Float.compare(that.xa, xa) == 0 &&
+                Float.compare(that.ya, ya) == 0 &&
+                facing == that.facing &&
+                jumpTime == that.jumpTime &&
+                Float.compare(that.xJumpSpeed, xJumpSpeed) == 0 &&
+                Float.compare(that.yJumpSpeed, yJumpSpeed) == 0 &&
+                Float.compare(that.xJumpStart, xJumpStart) == 0 &&
+                //Arrays.equals(actions, that.actions) &&
+                Float.compare(x, that.x) == 0 &&
+                Float.compare(y, that.y) == 0 &&
+                alive == that.alive;
+    }
+
+    @Override
     public SpriteType getType() {
         return type;
     }
 
-    @Override
-    public void update() {
+    public void update(int fireballsOnScreen) {
         if (!alive) return;
 
         if (invulnerableTime > 0) {
@@ -119,7 +147,7 @@ public class MarioSlim extends MarioSpriteSlim {
                 facing = 1;
         }
 
-        if (actions[MarioActions.SPEED.getValue()] && canShoot && isFire && world.fireballsOnScreen < 2) {
+        if (actions[MarioActions.SPEED.getValue()] && canShoot && isFire && fireballsOnScreen < 2) {
             world.addSprite(new FireballSlim(x + facing * 6, y - 20, facing));
         }
 

@@ -56,6 +56,10 @@ public enum LevelPart {
         this.value = value;
     }
 
+    int getValue() {
+        return value;
+    }
+
     static LevelPart getLevelPart(int value, boolean levelTile) {
         if (value == 18 || value == 11) // pipe with flower
             return PIPE_TOP_LEFT_WITH_FLOWER;

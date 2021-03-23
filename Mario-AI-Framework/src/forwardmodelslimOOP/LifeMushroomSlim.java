@@ -36,6 +36,21 @@ public class LifeMushroomSlim extends MarioSpriteSlim {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        LifeMushroomSlim that = (LifeMushroomSlim) o;
+        return  Float.compare(that.xa, xa) == 0 &&
+                Float.compare(that.ya, ya) == 0 &&
+                facing == that.facing &&
+                onGround == that.onGround &&
+                life == that.life &&
+                Float.compare(x, that.x) == 0 &&
+                Float.compare(y, that.y) == 0 &&
+                alive == that.alive;
+    }
+
+    @Override
     public SpriteType getType() {
         return type;
     }

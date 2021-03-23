@@ -30,6 +30,19 @@ public class FlowerEnemySlim extends MarioSpriteSlim {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        FlowerEnemySlim that = (FlowerEnemySlim) o;
+        return  Float.compare(that.yStart, yStart) == 0 &&
+                waitTime == that.waitTime &&
+                Float.compare(that.ya, ya) == 0  &&
+                Float.compare(x, that.x) == 0 &&
+                Float.compare(y, that.y) == 0 &&
+                alive == that.alive;
+    }
+
+    @Override
     public SpriteType getType() {
         return type;
     }

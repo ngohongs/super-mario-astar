@@ -3,6 +3,8 @@ package forwardmodelslimOOP;
 import engine.helper.SpriteType;
 import engine.sprites.Shell;
 
+import java.util.ArrayList;
+
 public class ShellSlim extends MarioSpriteSlim {
     private static final float GROUND_INERTIA = 0.89f;
     private static final float AIR_INERTIA = 0.89f;
@@ -33,6 +35,20 @@ public class ShellSlim extends MarioSpriteSlim {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ShellSlim that = (ShellSlim) o;
+        return  onGround == that.onGround &&
+                Float.compare(that.xa, xa) == 0 &&
+                Float.compare(that.ya, ya) == 0 &&
+                facing == that.facing &&
+                Float.compare(x, that.x) == 0 &&
+                Float.compare(y, that.y) == 0 &&
+                alive == that.alive;
+    }
+
+    @Override
     public SpriteType getType() {
         return type;
     }
@@ -50,8 +66,7 @@ public class ShellSlim extends MarioSpriteSlim {
         return null;
     }
 
-    @Override
-    public void update() {
+    public void update(ArrayList<ShellSlim> shellsToCheck) {
         if (!this.alive) return;
 
         float sideWaysSpeed = 11f;
@@ -66,7 +81,7 @@ public class ShellSlim extends MarioSpriteSlim {
         xa = facing * sideWaysSpeed;
 
         if (facing != 0) {
-            world.checkShellCollide(this);
+            shellsToCheck.add(this);
         }
 
         if (!move(xa, 0)) {

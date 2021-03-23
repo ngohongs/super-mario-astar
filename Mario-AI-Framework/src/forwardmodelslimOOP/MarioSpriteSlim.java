@@ -8,7 +8,7 @@ abstract class MarioSpriteSlim {
     public MarioWorldSlim world;
 
     public abstract SpriteType getType();
-    public abstract void update();
+    public void update() { }
 
     public void collideCheck() { }
     public void bumpCheck(int xTile, int yTile) { }

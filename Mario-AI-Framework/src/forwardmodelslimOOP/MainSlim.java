@@ -37,7 +37,7 @@ public class MainSlim {
         // convert to slim OOP forward model
         MarioForwardModelSlim slimModel = Converter.convert(originalModel, levelCutoutTileWidth);
 
-        // advance both models TODO: more complicated actions
+        // advance both models TODO: more complicated actions, test more worlds
         boolean[] actions = { false, false, false, false, false };
         originalModel.advance(actions);
         slimModel.advance(actions);
@@ -45,6 +45,10 @@ public class MainSlim {
         // make a control slim model
         MarioForwardModelSlim controlSlimModel = Converter.convert(originalModel, levelCutoutTileWidth);
 
-        // TODO: compare the two slim models
+        // compare the two slim models
+        if (slimModel.equals(controlSlimModel))
+            System.out.println("EQUAL");
+        else
+            System.out.println("NOT EQUAL");
     }
 }
