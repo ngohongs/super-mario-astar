@@ -91,15 +91,20 @@ public class MarioWorldSlim {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         MarioWorldSlim that = (MarioWorldSlim) o;
-        return  pauseTimer == that.pauseTimer &&
+        boolean worldProperties = pauseTimer == that.pauseTimer &&
                 currentTimer == that.currentTimer &&
                 Float.compare(that.cameraX, cameraX) == 0 &&
                 Float.compare(that.cameraY, cameraY) == 0 &&
                 currentTick == that.currentTick &&
                 coins == that.coins &&
                 lives == that.lives &&
-                gameStatus == that.gameStatus &&
-                level.equals(that.level) &&
+                gameStatus == that.gameStatus;
+        if (worldProperties)
+            System.out.println("WORLD PROPERTIES EQUAL");
+        else
+            System.out.println("WORLD PROPERTIES NOT EQUAL");
+
+        return worldProperties && level.equals(that.level) &&
                 areSpritesEqual(this.sprites, that.sprites);
     }
 
@@ -116,9 +121,12 @@ public class MarioWorldSlim {
                     }
                 }
             }
-            if (!found)
+            if (!found) {
+                System.out.println("SPRITES NOT EQUAL");
                 return false;
+            }
         }
+        System.out.println("SPRITES EQUAL");
         return true;
     }
 

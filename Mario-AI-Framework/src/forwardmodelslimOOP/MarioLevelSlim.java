@@ -76,7 +76,7 @@ public class MarioLevelSlim {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         MarioLevelSlim that = (MarioLevelSlim) o;
-        return  width == that.width &&
+        boolean equal = width == that.width &&
                 tileWidth == that.tileWidth &&
                 height == that.height &&
                 tileHeight == that.tileHeight &&
@@ -85,6 +85,14 @@ public class MarioLevelSlim {
                 cutoutArrayBeginning == that.cutoutArrayBeginning &&
                 cutoutLeftBorderX == that.cutoutLeftBorderX &&
                 compareCutouts(levelCutout, that.levelCutout);
+        if (equal) {
+            System.out.println("LEVEL EQUAL");
+            return true;
+        }
+        else {
+            System.out.println("LEVEL NOT EQUAL");
+            return false;
+        }
     }
 
     private boolean compareCutouts(LevelPart[] a1, LevelPart[] a2) {

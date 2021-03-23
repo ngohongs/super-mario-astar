@@ -46,9 +46,13 @@ public class MainSlim {
         MarioForwardModelSlim controlSlimModel = Converter.convert(originalModel, levelCutoutTileWidth);
 
         // compare the two slim models
-        if (slimModel.equals(controlSlimModel))
+        if (slimModel.equals(controlSlimModel)) {
+            System.out.println("-------------");
             System.out.println("EQUAL");
-        else
+        }
+        else {
+            System.out.println("-------------");
             System.out.println("NOT EQUAL");
+        }
     }
 }
