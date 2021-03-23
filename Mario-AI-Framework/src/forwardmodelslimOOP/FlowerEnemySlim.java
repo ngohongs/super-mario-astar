@@ -25,7 +25,7 @@ public class FlowerEnemySlim extends MarioSpriteSlim {
         this.yStart = this.y;
         this.ya = -1;
         for (int i = 0; i < 4; i++) {
-            this.update();
+            this.update(null); //FlowerEnemy doesn't use updateContext
         }
     }
 
@@ -66,7 +66,7 @@ public class FlowerEnemySlim extends MarioSpriteSlim {
     }
 
     @Override
-    public void update() {
+    public void update(MarioUpdateContext updateContext) {
         if (!this.alive) {
             return;
         }
@@ -74,7 +74,7 @@ public class FlowerEnemySlim extends MarioSpriteSlim {
         if (ya > 0) {
             if (y >= yStart) {
                 y = yStart;
-                int xd = (int) (Math.abs(world.mario.x - x));
+                int xd = (int) (Math.abs(updateContext.world.mario.x - x));
                 waitTime++;
                 if (waitTime > 40 && xd > 24) {
                     waitTime = 0;

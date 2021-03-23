@@ -53,24 +53,24 @@ public class FireFlowerSlim extends MarioSpriteSlim {
     }
 
     @Override
-    public void collideCheck() {
+    public void collideCheck(MarioUpdateContext updateContext) {
         if (!this.alive) {
             return;
         }
 
-        float xMarioD = world.mario.x - x;
-        float yMarioD = world.mario.y - y;
+        float xMarioD = updateContext.world.mario.x - x;
+        float yMarioD = updateContext.world.mario.y - y;
         if (xMarioD > -16 && xMarioD < 16) {
-            if (yMarioD > -height && yMarioD < world.mario.height) {
+            if (yMarioD > -height && yMarioD < updateContext.world.mario.height) {
                 //world.addEvent(EventType.COLLECT, this.type.getValue());
-                world.mario.getFlower();
-                world.removeSprite(this);
+                updateContext.world.mario.getFlower(updateContext);
+                updateContext.world.removeSprite(this, updateContext);
             }
         }
     }
 
     @Override
-    public void update() {
+    public void update(MarioUpdateContext updateContext) {
         if (!this.alive) {
             return;
         }

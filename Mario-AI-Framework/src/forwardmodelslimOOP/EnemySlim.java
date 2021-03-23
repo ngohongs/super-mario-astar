@@ -96,38 +96,38 @@ public class EnemySlim extends  MarioSpriteSlim {
     }
 
     @Override
-    public void collideCheck() {
+    public void collideCheck(MarioUpdateContext updateContext) {
         if (!this.alive) {
             return;
         }
 
-        float xMarioD = world.mario.x - x;
-        float yMarioD = world.mario.y - y;
+        float xMarioD = updateContext.world.mario.x - x;
+        float yMarioD = updateContext.world.mario.y - y;
         if (xMarioD > -width * 2 - 4 && xMarioD < width * 2 + 4) {
-            if (yMarioD > -height && yMarioD < world.mario.height) {
+            if (yMarioD > -height && yMarioD < updateContext.world.mario.height) {
                 if (type != SpriteType.SPIKY && type != SpriteType.SPIKY_WINGED && type != SpriteType.ENEMY_FLOWER &&
-                        world.mario.ya > 0 && yMarioD <= 0 && (!world.mario.onGround || !world.mario.wasOnGround)) {
-                    world.mario.stomp(this);
+                        updateContext.world.mario.ya > 0 && yMarioD <= 0 && (!updateContext.world.mario.onGround || !updateContext.world.mario.wasOnGround)) {
+                    updateContext.world.mario.stomp(this, updateContext);
                     if (winged) {
                         winged = false;
                         ya = 0;
                     } else {
                         if (type == SpriteType.GREEN_KOOPA || type == SpriteType.GREEN_KOOPA_WINGED) {
-                            this.world.addSprite(new ShellSlim(x, y));
+                            updateContext.world.addSprite(new ShellSlim(x, y), updateContext);
                         } else if (type == SpriteType.RED_KOOPA || type == SpriteType.RED_KOOPA_WINGED) {
-                            this.world.addSprite(new ShellSlim(x, y));
+                            updateContext.world.addSprite(new ShellSlim(x, y), updateContext);
                         }
-                        this.world.removeSprite(this);
+                        updateContext.world.removeSprite(this, updateContext);
                     }
                 } else {
-                    world.mario.getHurt();
+                    updateContext.world.mario.getHurt(updateContext);
                 }
             }
         }
     }
 
     @Override
-    public void update() {
+    public void update(MarioUpdateContext updateContext) {
         if (!this.alive) {
             return;
         }
@@ -143,10 +143,10 @@ public class EnemySlim extends  MarioSpriteSlim {
 
         xa = facing * sideWaysSpeed;
 
-        if (!move(xa, 0))
+        if (!move(xa, 0, updateContext))
             facing = -facing;
         onGround = false;
-        move(0, ya);
+        move(0, ya, updateContext);
 
         ya *= winged ? 0.95f : 0.85f;
         if (onGround) {
@@ -166,69 +166,69 @@ public class EnemySlim extends  MarioSpriteSlim {
         }
     }
 
-    private boolean move(float xa, float ya) {
+    private boolean move(float xa, float ya, MarioUpdateContext updateContext) {
         while (xa > 8) {
-            if (!move(8, 0))
+            if (!move(8, 0, updateContext))
                 return false;
             xa -= 8;
         }
         while (xa < -8) {
-            if (!move(-8, 0))
+            if (!move(-8, 0, updateContext))
                 return false;
             xa += 8;
         }
         while (ya > 8) {
-            if (!move(0, 8))
+            if (!move(0, 8, updateContext))
                 return false;
             ya -= 8;
         }
         while (ya < -8) {
-            if (!move(0, -8))
+            if (!move(0, -8, updateContext))
                 return false;
             ya += 8;
         }
 
         boolean collide = false;
         if (ya > 0) {
-            if (isBlocking(x + xa - width, y + ya, xa, 0))
+            if (isBlocking(x + xa - width, y + ya, xa, 0, updateContext))
                 collide = true;
-            else if (isBlocking(x + xa + width, y + ya, xa, 0))
+            else if (isBlocking(x + xa + width, y + ya, xa, 0, updateContext))
                 collide = true;
-            else if (isBlocking(x + xa - width, y + ya + 1, xa, ya))
+            else if (isBlocking(x + xa - width, y + ya + 1, xa, ya, updateContext))
                 collide = true;
-            else if (isBlocking(x + xa + width, y + ya + 1, xa, ya))
+            else if (isBlocking(x + xa + width, y + ya + 1, xa, ya, updateContext))
                 collide = true;
         }
         if (ya < 0) {
-            if (isBlocking(x + xa, y + ya - height, xa, ya))
+            if (isBlocking(x + xa, y + ya - height, xa, ya, updateContext))
                 collide = true;
-            else if (collide || isBlocking(x + xa - width, y + ya - height, xa, ya))
+            else if (collide || isBlocking(x + xa - width, y + ya - height, xa, ya, updateContext))
                 collide = true;
-            else if (collide || isBlocking(x + xa + width, y + ya - height, xa, ya))
+            else if (collide || isBlocking(x + xa + width, y + ya - height, xa, ya, updateContext))
                 collide = true;
         }
         if (xa > 0) {
-            if (isBlocking(x + xa + width, y + ya - height, xa, ya))
+            if (isBlocking(x + xa + width, y + ya - height, xa, ya, updateContext))
                 collide = true;
-            if (isBlocking(x + xa + width, y + ya - height / 2, xa, ya))
+            if (isBlocking(x + xa + width, y + ya - height / 2, xa, ya, updateContext))
                 collide = true;
-            if (isBlocking(x + xa + width, y + ya, xa, ya))
+            if (isBlocking(x + xa + width, y + ya, xa, ya, updateContext))
                 collide = true;
 
             if (avoidCliffs && onGround
-                    && !world.level.isBlocking((int) ((x + xa + width) / 16), (int) ((y) / 16 + 1), xa, 1))
+                    && !updateContext.world.level.isBlocking((int) ((x + xa + width) / 16), (int) ((y) / 16 + 1), xa, 1))
                 collide = true;
         }
         if (xa < 0) {
-            if (isBlocking(x + xa - width, y + ya - height, xa, ya))
+            if (isBlocking(x + xa - width, y + ya - height, xa, ya, updateContext))
                 collide = true;
-            if (isBlocking(x + xa - width, y + ya - height / 2, xa, ya))
+            if (isBlocking(x + xa - width, y + ya - height / 2, xa, ya, updateContext))
                 collide = true;
-            if (isBlocking(x + xa - width, y + ya, xa, ya))
+            if (isBlocking(x + xa - width, y + ya, xa, ya, updateContext))
                 collide = true;
 
             if (avoidCliffs && onGround
-                    && !world.level.isBlocking((int) ((x + xa - width) / 16), (int) ((y) / 16 + 1), xa, 1))
+                    && !updateContext.world.level.isBlocking((int) ((x + xa - width) / 16), (int) ((y) / 16 + 1), xa, 1))
                 collide = true;
         }
 
@@ -257,19 +257,19 @@ public class EnemySlim extends  MarioSpriteSlim {
         }
     }
 
-    private boolean isBlocking(float _x, float _y, float xa, float ya) {
+    private boolean isBlocking(float _x, float _y, float xa, float ya, MarioUpdateContext updateContext) {
         int x = (int) (_x / 16);
         int y = (int) (_y / 16);
         if (x == (int) (this.x / 16) && y == (int) (this.y / 16))
             return false;
 
-        boolean blocking = world.level.isBlocking(x, y, xa, ya);
+        boolean blocking = updateContext.world.level.isBlocking(x, y, xa, ya);
 
         return blocking;
     }
 
     @Override
-    public boolean shellCollideCheck(ShellSlim shell) {
+    public boolean shellCollideCheck(ShellSlim shell, MarioUpdateContext updateContext) {
         if (!this.alive) {
             return false;
         }
@@ -282,7 +282,7 @@ public class EnemySlim extends  MarioSpriteSlim {
                 xa = shell.facing * 2;
                 ya = -5;
                 //this.world.addEvent(EventType.SHELL_KILL, this.type.getValue());
-                this.world.removeSprite(this);
+                updateContext.world.removeSprite(this, updateContext);
                 return true;
             }
         }
@@ -290,7 +290,7 @@ public class EnemySlim extends  MarioSpriteSlim {
     }
 
     @Override
-    public boolean fireballCollideCheck(FireballSlim fireball) {
+    public boolean fireballCollideCheck(FireballSlim fireball, MarioUpdateContext updateContext) {
         if (!this.alive) {
             return false;
         }
@@ -306,7 +306,7 @@ public class EnemySlim extends  MarioSpriteSlim {
                 xa = fireball.facing * 2;
                 ya = -5;
                 //this.world.addEvent(EventType.FIRE_KILL, this.type.getValue());
-                this.world.removeSprite(this);
+                updateContext.world.removeSprite(this, updateContext);
                 return true;
             }
         }
@@ -314,15 +314,15 @@ public class EnemySlim extends  MarioSpriteSlim {
     }
 
     @Override
-    public void bumpCheck(int xTile, int yTile) {
+    public void bumpCheck(int xTile, int yTile, MarioUpdateContext updateContext) {
         if (!this.alive) {
             return;
         }
 
         if (x + width > xTile * 16 && x - width < xTile * 16 + 16 && yTile == (int) ((y - 1) / 16)) {
-            xa = -world.mario.facing * 2;
+            xa = -updateContext.world.mario.facing * 2;
             ya = -5;
-            this.world.removeSprite(this);
+            updateContext.world.removeSprite(this, updateContext);
         }
     }
 }

@@ -27,8 +27,6 @@ public class MarioWorldSlim {
     int coins, lives;
 
     private ArrayList<MarioSpriteSlim> sprites;
-    private ArrayList<MarioSpriteSlim> addedSprites;
-    private ArrayList<MarioSpriteSlim> removedSprites;
 
     public MarioWorldSlim(MarioWorld originalWorld, int levelCutoutTileWidth) {
         this.gameStatus = originalWorld.gameStatus;
@@ -74,15 +72,10 @@ public class MarioWorldSlim {
 
         assert mario != null;
         this.level = new MarioLevelSlim(originalWorld.level, levelCutoutTileWidth, (int) mario.x / 16);
-
-        // these don't hold a state between update runs
-        addedSprites = new ArrayList<>();
-        removedSprites = new ArrayList<>();
     }
 
     private void setupSprite(MarioSpriteSlim sprite) {
         sprite.alive = true;
-        sprite.world = this;
         this.sprites.add(sprite);
     }
 
@@ -169,16 +162,14 @@ public class MarioWorldSlim {
         return enemies;
     }
 
-    void addSprite(MarioSpriteSlim sprite) {
-        this.addedSprites.add(sprite);
+    void addSprite(MarioSpriteSlim sprite, MarioUpdateContext updateContext) {
+        updateContext.addedSprites.add(sprite);
         sprite.alive = true;
-        sprite.world = this;
         }
 
-    public void removeSprite(MarioSpriteSlim sprite) {
-        this.removedSprites.add(sprite);
+    public void removeSprite(MarioSpriteSlim sprite, MarioUpdateContext updateContext) {
+        updateContext.removedSprites.add(sprite);
         sprite.alive = false;
-        sprite.world = null;
     }
 
     void win() {
@@ -217,6 +208,9 @@ public class MarioWorldSlim {
             }
         }
 
+        MarioUpdateContext updateContext = MarioUpdateContext.get();
+        updateContext.world = this;
+
         // workaround the nonexistence of MarioGame here
         int marioGameWidth = 256;
         int marioGameHeight = 256;
@@ -237,17 +231,17 @@ public class MarioWorldSlim {
             this.cameraY = 0;
         }
 
-        int fireballsOnScreen = 0;
+        updateContext.fireballsOnScreen = 0;
         for (MarioSpriteSlim sprite : sprites) {
             if (sprite.x < cameraX - 64 || sprite.x > cameraX + marioGameWidth + 64 || sprite.y > this.level.height + 32) {
                 if (sprite.getType() == SpriteType.MARIO) {
                     this.lose();
                 }
-                this.removeSprite(sprite);
+                this.removeSprite(sprite, updateContext);
                 continue;
             }
             if (sprite.getType() == SpriteType.FIREBALL) {
-                fireballsOnScreen += 1;
+                updateContext.fireballsOnScreen += 1;
             }
         }
 
@@ -264,7 +258,7 @@ public class MarioWorldSlim {
                 SpriteType spriteType = level.getSpriteType(x, y);
                 if (spriteType != SpriteType.NONE) {
                     MarioSpriteSlim newSprite = this.spawnEnemy(spriteType, x, y, dir);
-                    this.addSprite(newSprite);
+                    this.addSprite(newSprite, updateContext);
                     level.setBlock(x, y, 0); // remove sprite when it is spawned
                 }
 
@@ -272,69 +266,59 @@ public class MarioWorldSlim {
                     ArrayList<TileFeaturesSlim> features = TileFeaturesSlim.getTileType(this.level.getBlock(x, y));
                     if (features.contains(TileFeaturesSlim.SPAWNER)) {
                         if (this.currentTick % 100 == 0) {
-                            addSprite(new BulletBillSlim(x * 16 + 8 + dir * 8, y * 16 + 15, dir));
+                            addSprite(new BulletBillSlim(x * 16 + 8 + dir * 8, y * 16 + 15, dir), updateContext);
                         }
                     }
                 }
             }
         }
 
-        ArrayList<ShellSlim> shellsToCheck = new ArrayList<>();
-        ArrayList<FireballSlim> fireballsToCheck = new ArrayList<>();
+        updateContext.actions = actions;
 
-        this.mario.actions = actions;
         for (MarioSpriteSlim sprite : sprites) {
             if (!sprite.alive) {
                 continue;
             }
-            if (sprite.getType() == SpriteType.MARIO) {
-                mario.update(fireballsOnScreen);
-            }
-            else if (sprite.getType() == SpriteType.SHELL) {
-                ShellSlim shell = (ShellSlim) sprite;
-                shell.update(shellsToCheck);
-            }
-            else if (sprite.getType() == SpriteType.FIREBALL) {
-                FireballSlim fireball = (FireballSlim) sprite;
-                fireball.update(fireballsToCheck);
-            }
-            else {
-                sprite.update();
-            }
+            sprite.update(updateContext);
         }
         for (MarioSpriteSlim sprite : sprites) {
             if (!sprite.alive) {
                 continue;
             }
-            sprite.collideCheck();
+            sprite.collideCheck(updateContext);
         }
 
-        for (ShellSlim shell : shellsToCheck) {
+        for (ShellSlim shell : updateContext.shellsToCheck) {
             for (MarioSpriteSlim sprite : sprites) {
                 if (sprite != shell && shell.alive && sprite.alive) {
-                    if (sprite.shellCollideCheck(shell)) {
-                        this.removeSprite(sprite);
+                    if (sprite.shellCollideCheck(shell, updateContext)) {
+                        this.removeSprite(sprite, updateContext);
                     }
                 }
             }
         }
-        shellsToCheck.clear();
+        updateContext.shellsToCheck.clear();
 
-        for (FireballSlim fireball : fireballsToCheck) {
+        for (FireballSlim fireball : updateContext.fireballsToCheck) {
             for (MarioSpriteSlim sprite : sprites) {
                 if (sprite != fireball && fireball.alive && sprite.alive) {
-                    if (sprite.fireballCollideCheck(fireball)) {
-                        this.removeSprite(fireball);
+                    if (sprite.fireballCollideCheck(fireball, updateContext)) {
+                        this.removeSprite(fireball, updateContext);
                     }
                 }
             }
         }
-        fireballsToCheck.clear();
+        updateContext.fireballsToCheck.clear();
 
-        sprites.addAll(0, addedSprites);
-        sprites.removeAll(removedSprites);
-        addedSprites.clear();
-        removedSprites.clear();
+        sprites.addAll(0, updateContext.addedSprites);
+        sprites.removeAll(updateContext.removedSprites);
+        updateContext.addedSprites.clear();
+        updateContext.removedSprites.clear();
+
+        updateContext.world = null;
+        updateContext.actions = null;
+        updateContext.fireballsOnScreen = 0;
+        MarioUpdateContext.back(updateContext);
     }
 
     private MarioSpriteSlim spawnEnemy(SpriteType type, int x, int y, int dir) {
@@ -344,43 +328,43 @@ public class MarioWorldSlim {
             return new EnemySlim(x * 16 + 8, y * 16 + 15, dir, type);
     }
 
-    public void bump(int xTile, int yTile, boolean canBreakBricks) {
+    public void bump(int xTile, int yTile, boolean canBreakBricks, MarioUpdateContext updateContext) {
         LevelPart block = this.level.getBlock(xTile, yTile);
         ArrayList<TileFeaturesSlim> features = TileFeaturesSlim.getTileType(block);
 
         if (features.contains(TileFeaturesSlim.BUMPABLE)) {
-            bumpInto(xTile, yTile - 1);
+            bumpInto(xTile, yTile - 1, updateContext);
             level.setBlock(xTile, yTile, 14);
 
             if (features.contains(TileFeaturesSlim.SPECIAL)) {
                 if (!this.mario.isLarge) {
-                    addSprite(new MushroomSlim(xTile * 16 + 9, yTile * 16 + 8));
+                    addSprite(new MushroomSlim(xTile * 16 + 9, yTile * 16 + 8), updateContext);
                 } else {
-                    addSprite(new FireFlowerSlim(xTile * 16 + 9, yTile * 16 + 8));
+                    addSprite(new FireFlowerSlim(xTile * 16 + 9, yTile * 16 + 8), updateContext);
                 }
             } else if (features.contains(TileFeaturesSlim.LIFE)) {
-                addSprite(new LifeMushroomSlim(xTile * 16 + 9, yTile * 16 + 8));
+                addSprite(new LifeMushroomSlim(xTile * 16 + 9, yTile * 16 + 8), updateContext);
             } else {
-                mario.collectCoin();
+                mario.collectCoin(updateContext);
             }
         }
 
         if (features.contains(TileFeaturesSlim.BREAKABLE)) {
-            bumpInto(xTile, yTile - 1);
+            bumpInto(xTile, yTile - 1, updateContext);
             if (canBreakBricks)
                 level.setBlock(xTile, yTile, 0);
         }
     }
 
-    private void bumpInto(int xTile, int yTile) {
+    private void bumpInto(int xTile, int yTile, MarioUpdateContext updateContext) {
         LevelPart block = level.getBlock(xTile, yTile);
         if (TileFeaturesSlim.getTileType(block).contains(TileFeaturesSlim.PICKABLE)) {
-            this.mario.collectCoin();
+            this.mario.collectCoin(updateContext);
             level.setBlock(xTile, yTile, 0);
         }
 
         for (MarioSpriteSlim sprite : sprites) {
-            sprite.bumpCheck(xTile, yTile);
+            sprite.bumpCheck(xTile, yTile, updateContext);
         }
     }
 }

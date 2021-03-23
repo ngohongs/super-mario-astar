@@ -71,98 +71,98 @@ public class LifeMushroomSlim extends MarioSpriteSlim {
     }
 
     @Override
-    public void collideCheck() {
+    public void collideCheck(MarioUpdateContext updateContext) {
         if (!this.alive) {
             return;
         }
 
-        float xMarioD = world.mario.x - x;
-        float yMarioD = world.mario.y - y;
+        float xMarioD = updateContext.world.mario.x - x;
+        float yMarioD = updateContext.world.mario.y - y;
         if (xMarioD > -16 && xMarioD < 16) {
-            if (yMarioD > -height && yMarioD < world.mario.height) {
+            if (yMarioD > -height && yMarioD < updateContext.world.mario.height) {
                 //world.addEvent(EventType.COLLECT, this.type.getValue());
-                world.mario.collect1Up();
-                world.removeSprite(this);
+                updateContext.world.mario.collect1Up(updateContext);
+                updateContext.world.removeSprite(this, updateContext);
             }
         }
     }
 
-    private boolean isBlocking(float _x, float _y, float xa, float ya) {
+    private boolean isBlocking(float _x, float _y, float xa, float ya, MarioUpdateContext updateContext) {
         int x = (int) (_x / 16);
         int y = (int) (_y / 16);
         if (x == (int) (this.x / 16) && y == (int) (this.y / 16))
             return false;
 
-        return world.level.isBlocking(x, y, xa, ya);
+        return updateContext.world.level.isBlocking(x, y, xa, ya);
     }
 
     @Override
-    public void bumpCheck(int xTile, int yTile) {
+    public void bumpCheck(int xTile, int yTile, MarioUpdateContext updateContext) {
         if (!this.alive) {
             return;
         }
 
         if (x + width > xTile * 16 && x - width < xTile * 16 + 16 && yTile == (int) ((y - 1) / 16)) {
-            facing = -world.mario.facing;
+            facing = -updateContext.world.mario.facing;
             ya = -10;
         }
     }
 
-    private boolean move(float xa, float ya) {
+    private boolean move(float xa, float ya, MarioUpdateContext updateContext) {
         while (xa > 8) {
-            if (!move(8, 0))
+            if (!move(8, 0, updateContext))
                 return false;
             xa -= 8;
         }
         while (xa < -8) {
-            if (!move(-8, 0))
+            if (!move(-8, 0, updateContext))
                 return false;
             xa += 8;
         }
         while (ya > 8) {
-            if (!move(0, 8))
+            if (!move(0, 8, updateContext))
                 return false;
             ya -= 8;
         }
         while (ya < -8) {
-            if (!move(0, -8))
+            if (!move(0, -8, updateContext))
                 return false;
             ya += 8;
         }
 
         boolean collide = false;
         if (ya > 0) {
-            if (isBlocking(x + xa - width, y + ya, xa, 0))
+            if (isBlocking(x + xa - width, y + ya, xa, 0, updateContext))
                 collide = true;
-            else if (isBlocking(x + xa + width, y + ya, xa, 0))
+            else if (isBlocking(x + xa + width, y + ya, xa, 0, updateContext))
                 collide = true;
-            else if (isBlocking(x + xa - width, y + ya + 1, xa, ya))
+            else if (isBlocking(x + xa - width, y + ya + 1, xa, ya, updateContext))
                 collide = true;
-            else if (isBlocking(x + xa + width, y + ya + 1, xa, ya))
+            else if (isBlocking(x + xa + width, y + ya + 1, xa, ya, updateContext))
                 collide = true;
         }
         if (ya < 0) {
-            if (isBlocking(x + xa, y + ya - height, xa, ya))
+            if (isBlocking(x + xa, y + ya - height, xa, ya, updateContext))
                 collide = true;
-            else if (collide || isBlocking(x + xa - width, y + ya - height, xa, ya))
+            else if (collide || isBlocking(x + xa - width, y + ya - height, xa, ya, updateContext))
                 collide = true;
-            else if (collide || isBlocking(x + xa + width, y + ya - height, xa, ya))
+            else if (collide || isBlocking(x + xa + width, y + ya - height, xa, ya, updateContext))
                 collide = true;
         }
         if (xa > 0) {
-            if (isBlocking(x + xa + width, y + ya - height, xa, ya))
+            if (isBlocking(x + xa + width, y + ya - height, xa, ya, updateContext))
                 collide = true;
-            if (isBlocking(x + xa + width, y + ya - height / 2, xa, ya))
+            if (isBlocking(x + xa + width, y + ya - height / 2, xa, ya, updateContext))
                 collide = true;
-            if (isBlocking(x + xa + width, y + ya, xa, ya))
+            if (isBlocking(x + xa + width, y + ya, xa, ya, updateContext))
                 collide = true;
         }
         if (xa < 0) {
-            if (isBlocking(x + xa - width, y + ya - height, xa, ya))
+            if (isBlocking(x + xa - width, y + ya - height, xa, ya, updateContext))
                 collide = true;
-            if (isBlocking(x + xa - width, y + ya - height / 2, xa, ya))
+            if (isBlocking(x + xa - width, y + ya - height / 2, xa, ya, updateContext))
                 collide = true;
-            if (isBlocking(x + xa - width, y + ya, xa, ya))
+            if (isBlocking(x + xa - width, y + ya, xa, ya, updateContext))
                 collide = true;
         }
 
@@ -192,7 +192,7 @@ public class LifeMushroomSlim extends MarioSpriteSlim {
     }
 
     @Override
-    public void update() {
+    public void update(MarioUpdateContext updateContext) {
         if (!this.alive) {
             return;
         }
@@ -212,10 +212,10 @@ public class LifeMushroomSlim extends MarioSpriteSlim {
 
         xa = facing * sideWaysSpeed;
 
-        if (!move(xa, 0))
+        if (!move(xa, 0, updateContext))
             facing = -facing;
         onGround = false;
-        move(0, ya);
+        move(0, ya, updateContext);
 
         ya *= 0.85f;
         if (onGround) {

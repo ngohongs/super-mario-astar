@@ -12,7 +12,6 @@ public class MarioSlim extends MarioSpriteSlim {
     private static final int POWERUP_TIME = 3;
 
     int height = 24;
-    boolean[] actions;
     private int invulnerableTime;
     boolean onGround, wasOnGround;
     boolean isLarge;
@@ -35,7 +34,6 @@ public class MarioSlim extends MarioSpriteSlim {
         this.x = originalMario.x;
         this.y = originalMario.y;
         this.height = originalMario.height;
-        this.actions = originalMario.actions;
         this.wasOnGround = originalMario.wasOnGround;
         this.onGround = originalMario.onGround;
         this.isDucking = originalMario.isDucking;
@@ -72,7 +70,6 @@ public class MarioSlim extends MarioSpriteSlim {
                 Float.compare(that.xJumpSpeed, xJumpSpeed) == 0 &&
                 Float.compare(that.yJumpSpeed, yJumpSpeed) == 0 &&
                 Float.compare(that.xJumpStart, xJumpStart) == 0 &&
-                //Arrays.equals(actions, that.actions) &&
                 Float.compare(x, that.x) == 0 &&
                 Float.compare(y, that.y) == 0 &&
                 alive == that.alive;
@@ -83,7 +80,8 @@ public class MarioSlim extends MarioSpriteSlim {
         return type;
     }
 
-    public void update(int fireballsOnScreen) {
+    @Override
+    public void update(MarioUpdateContext updateContext) {
         if (!alive) return;
 
         if (invulnerableTime > 0) {
@@ -91,10 +89,10 @@ public class MarioSlim extends MarioSpriteSlim {
         }
         this.wasOnGround = this.onGround;
 
-        float sideWaysSpeed = actions[MarioActions.SPEED.getValue()] ? 1.2f : 0.6f;
+        float sideWaysSpeed = updateContext.actions[MarioActions.SPEED.getValue()] ? 1.2f : 0.6f;
 
         if (onGround) {
-            isDucking = actions[MarioActions.DOWN.getValue()] && isLarge;
+            isDucking = updateContext.actions[MarioActions.DOWN.getValue()] && isLarge;
         }
 
         if (isLarge) {
@@ -110,7 +108,7 @@ public class MarioSlim extends MarioSpriteSlim {
             facing = -1;
         }
 
-        if (actions[MarioActions.JUMP.getValue()] || (jumpTime < 0 && !onGround)) {
+        if (updateContext.actions[MarioActions.JUMP.getValue()] || (jumpTime < 0 && !onGround)) {
             if (jumpTime < 0) {
                 xa = xJumpSpeed;
                 ya = -jumpTime * yJumpSpeed;
@@ -121,8 +119,9 @@ public class MarioSlim extends MarioSpriteSlim {
                 jumpTime = 7;
                 ya = jumpTime * yJumpSpeed;
                 onGround = false;
-                if (!(isBlocking(x, y - 4 - height, 0, -4) || isBlocking(x - width, y - 4 - height, 0, -4)
-                        || isBlocking(x + width, y - 4 - height, 0, -4))) {
+                if (!(isBlocking(x, y - 4 - height, 0, -4, updateContext)
+                        || isBlocking(x - width, y - 4 - height, 0, -4, updateContext)
+                        || isBlocking(x + width, y - 4 - height, 0, -4, updateContext))) {
                     this.xJumpStart = this.x;
                     //this.world.addEvent(EventType.JUMP, 0);
                 }
@@ -135,33 +134,33 @@ public class MarioSlim extends MarioSpriteSlim {
             jumpTime = 0;
         }
 
-        if (actions[MarioActions.LEFT.getValue()] && !isDucking) {
+        if (updateContext.actions[MarioActions.LEFT.getValue()] && !isDucking) {
             xa -= sideWaysSpeed;
             if (jumpTime >= 0)
                 facing = -1;
         }
 
-        if (actions[MarioActions.RIGHT.getValue()] && !isDucking) {
+        if (updateContext.actions[MarioActions.RIGHT.getValue()] && !isDucking) {
             xa += sideWaysSpeed;
             if (jumpTime >= 0)
                 facing = 1;
         }
 
-        if (actions[MarioActions.SPEED.getValue()] && canShoot && isFire && fireballsOnScreen < 2) {
-            world.addSprite(new FireballSlim(x + facing * 6, y - 20, facing));
+        if (updateContext.actions[MarioActions.SPEED.getValue()] && canShoot && isFire && updateContext.fireballsOnScreen < 2) {
+            updateContext.world.addSprite(new FireballSlim(x + facing * 6, y - 20, facing), updateContext);
         }
 
-        canShoot = !actions[MarioActions.SPEED.getValue()];
+        canShoot = !updateContext.actions[MarioActions.SPEED.getValue()];
 
-        mayJump = onGround && !actions[MarioActions.JUMP.getValue()];
+        mayJump = onGround && !updateContext.actions[MarioActions.JUMP.getValue()];
 
         if (Math.abs(xa) < 0.5f) {
             xa = 0;
         }
 
         onGround = false;
-        move(xa, 0);
-        move(0, ya);
+        move(xa, 0, updateContext);
+        move(0, ya, updateContext);
         if (!wasOnGround && onGround && this.xJumpStart >= 0) {
             this.xJumpStart = -100;
         }
@@ -171,10 +170,10 @@ public class MarioSlim extends MarioSpriteSlim {
             xa = 0;
         }
 
-        if (x > world.level.exitTileX * 16) {
-            x = world.level.exitTileX * 16;
+        if (x > updateContext.world.level.exitTileX * 16) {
+            x = updateContext.world.level.exitTileX * 16;
             xa = 0;
-            this.world.win();
+            updateContext.world.win();
         }
 
         ya *= 0.85f;
@@ -189,80 +188,80 @@ public class MarioSlim extends MarioSpriteSlim {
         }
     }
 
-    private boolean isBlocking(float _x, float _y, float xa, float ya) {
+    private boolean isBlocking(float _x, float _y, float xa, float ya, MarioUpdateContext updateContext) {
         int xTile = (int) (_x / 16);
         int yTile = (int) (_y / 16);
         if (xTile == (int) (this.x / 16) && yTile == (int) (this.y / 16))
             return false;
 
-        boolean blocking = world.level.isBlocking(xTile, yTile, xa, ya);
-        LevelPart block = world.level.getBlock(xTile, yTile);
+        boolean blocking = updateContext.world.level.isBlocking(xTile, yTile, xa, ya);
+        LevelPart block = updateContext.world.level.getBlock(xTile, yTile);
 
         if (TileFeaturesSlim.getTileType(block).contains(TileFeaturesSlim.PICKABLE)) {
-            this.collectCoin();
-            world.level.setBlock(xTile, yTile, 0);
+            this.collectCoin(updateContext);
+            updateContext.world.level.setBlock(xTile, yTile, 0);
         }
         if (blocking && ya < 0) {
-            world.bump(xTile, yTile, isLarge);
+            updateContext.world.bump(xTile, yTile, isLarge, updateContext);
         }
         return blocking;
     }
 
-    private boolean move(float xa, float ya) {
+    private boolean move(float xa, float ya, MarioUpdateContext updateContext) {
         while (xa > 8) {
-            if (!move(8, 0))
+            if (!move(8, 0, updateContext))
                 return false;
             xa -= 8;
         }
         while (xa < -8) {
-            if (!move(-8, 0))
+            if (!move(-8, 0, updateContext))
                 return false;
             xa += 8;
         }
         while (ya > 8) {
-            if (!move(0, 8))
+            if (!move(0, 8, updateContext))
                 return false;
             ya -= 8;
         }
         while (ya < -8) {
-            if (!move(0, -8))
+            if (!move(0, -8, updateContext))
                 return false;
             ya += 8;
         }
 
         boolean collide = false;
         if (ya > 0) {
-            if (isBlocking(x + xa - width, y + ya, xa, 0))
+            if (isBlocking(x + xa - width, y + ya, xa, 0, updateContext))
                 collide = true;
-            else if (isBlocking(x + xa + width, y + ya, xa, 0))
+            else if (isBlocking(x + xa + width, y + ya, xa, 0, updateContext))
                 collide = true;
-            else if (isBlocking(x + xa - width, y + ya + 1, xa, ya))
+            else if (isBlocking(x + xa - width, y + ya + 1, xa, ya, updateContext))
                 collide = true;
-            else if (isBlocking(x + xa + width, y + ya + 1, xa, ya))
+            else if (isBlocking(x + xa + width, y + ya + 1, xa, ya, updateContext))
                 collide = true;
         }
         if (ya < 0) {
-            if (isBlocking(x + xa, y + ya - height, xa, ya))
+            if (isBlocking(x + xa, y + ya - height, xa, ya, updateContext))
                 collide = true;
-            else if (collide || isBlocking(x + xa - width, y + ya - height, xa, ya))
+            else if (collide || isBlocking(x + xa - width, y + ya - height, xa, ya, updateContext))
                 collide = true;
-            else if (collide || isBlocking(x + xa + width, y + ya - height, xa, ya))
+            else if (collide || isBlocking(x + xa + width, y + ya - height, xa, ya, updateContext))
                 collide = true;
         }
         if (xa > 0) {
-            if (isBlocking(x + xa + width, y + ya - height, xa, ya))
+            if (isBlocking(x + xa + width, y + ya - height, xa, ya, updateContext))
                 collide = true;
-            if (isBlocking(x + xa + width, y + ya - height / 2, xa, ya))
+            if (isBlocking(x + xa + width, y + ya - height / 2, xa, ya, updateContext))
                 collide = true;
-            if (isBlocking(x + xa + width, y + ya, xa, ya))
+            if (isBlocking(x + xa + width, y + ya, xa, ya, updateContext))
                 collide = true;
         }
         if (xa < 0) {
-            if (isBlocking(x + xa - width, y + ya - height, xa, ya))
+            if (isBlocking(x + xa - width, y + ya - height, xa, ya, updateContext))
                 collide = true;
-            if (isBlocking(x + xa - width, y + ya - height / 2, xa, ya))
+            if (isBlocking(x + xa - width, y + ya - height / 2, xa, ya, updateContext))
                 collide = true;
-            if (isBlocking(x + xa - width, y + ya, xa, ya))
+            if (isBlocking(x + xa - width, y + ya, xa, ya, updateContext))
                 collide = true;
         }
         if (collide) {
@@ -291,12 +290,12 @@ public class MarioSlim extends MarioSpriteSlim {
         }
     }
 
-    public void stomp(EnemySlim enemy) {
+    public void stomp(EnemySlim enemy, MarioUpdateContext updateContext) {
         if (!this.alive) {
             return;
         }
         float targetY = enemy.y - enemy.height / 2;
-        move(0, targetY - y);
+        move(0, targetY - y, updateContext);
 
         xJumpSpeed = 0;
         yJumpSpeed = -1.9f;
@@ -306,12 +305,12 @@ public class MarioSlim extends MarioSpriteSlim {
         invulnerableTime = 1;
     }
 
-    public void stomp(ShellSlim shell) {
+    public void stomp(ShellSlim shell, MarioUpdateContext updateContext) {
         if (!this.alive) {
             return;
         }
         float targetY = shell.y - shell.height / 2;
-        move(0, targetY - y);
+        move(0, targetY - y, updateContext);
 
         xJumpSpeed = 0;
         yJumpSpeed = -1.9f;
@@ -321,12 +320,12 @@ public class MarioSlim extends MarioSpriteSlim {
         invulnerableTime = 1;
     }
 
-    public void getHurt() {
+    public void getHurt(MarioUpdateContext updateContext) {
         if (invulnerableTime > 0 || !this.alive)
             return;
 
         if (isLarge) {
-            world.pauseTimer = 3 * POWERUP_TIME;
+            updateContext.world.pauseTimer = 3 * POWERUP_TIME;
             this.oldLarge = this.isLarge;
             this.oldFire = this.isFire;
             if (isFire) {
@@ -336,40 +335,40 @@ public class MarioSlim extends MarioSpriteSlim {
             }
             invulnerableTime = 32;
         } else {
-            if (this.world != null) {
-                this.world.lose();
+            if (updateContext.world != null) {
+                updateContext.world.lose();
             }
         }
     }
 
-    public void getFlower() {
+    public void getFlower(MarioUpdateContext updateContext) {
         if (!this.alive) {
             return;
         }
 
         if (!isFire) {
-            world.pauseTimer = 3 * POWERUP_TIME;
+            updateContext.world.pauseTimer = 3 * POWERUP_TIME;
             this.oldFire = this.isFire;
             this.oldLarge = this.isLarge;
             this.isFire = true;
             this.isLarge = true;
         } else {
-            this.collectCoin();
+            this.collectCoin(updateContext);
         }
     }
 
-    public void getMushroom() {
+    public void getMushroom(MarioUpdateContext updateContext) {
         if (!this.alive) {
             return;
         }
 
         if (!isLarge) {
-            world.pauseTimer = 3 * POWERUP_TIME;
+            updateContext.world.pauseTimer = 3 * POWERUP_TIME;
             this.oldFire = this.isFire;
             this.oldLarge = this.isLarge;
             this.isLarge = true;
         } else {
-            this.collectCoin();
+            this.collectCoin(updateContext);
         }
     }
 
@@ -381,13 +380,13 @@ public class MarioSlim extends MarioSpriteSlim {
         invulnerableTime = 1;
     }
 
-    public void stomp(BulletBillSlim bill) {
+    public void stomp(BulletBillSlim bill, MarioUpdateContext updateContext) {
         if (!this.alive) {
             return;
         }
 
         float targetY = bill.y - bill.height / 2;
-        move(0, targetY - y);
+        move(0, targetY - y, updateContext);
 
         xJumpSpeed = 0;
         yJumpSpeed = -1.9f;
@@ -397,22 +396,22 @@ public class MarioSlim extends MarioSpriteSlim {
         invulnerableTime = 1;
     }
 
-    void collect1Up() {
+    void collect1Up(MarioUpdateContext updateContext) {
         if (!this.alive) {
             return;
         }
 
-        this.world.lives++;
+        updateContext.world.lives++;
     }
 
-    void collectCoin() {
+    void collectCoin(MarioUpdateContext updateContext) {
         if (!this.alive) {
             return;
         }
 
-        this.world.coins++;
-        if (this.world.coins % 100 == 0) {
-            collect1Up();
+        updateContext.world.coins++;
+        if (updateContext.world.coins % 100 == 0) {
+            collect1Up(updateContext);
         }
     }
 

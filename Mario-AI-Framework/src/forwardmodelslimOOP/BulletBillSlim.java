@@ -39,32 +39,32 @@ class BulletBillSlim extends MarioSpriteSlim {
     }
 
     @Override
-    public void update() {
+    public void update(MarioUpdateContext updateContext) {
         if (!alive) return;
         x += facing * 4f;
     }
 
     @Override
-    public void collideCheck() {
+    public void collideCheck(MarioUpdateContext updateContext) {
         if (!alive) return;
 
-        float xMarioD = world.mario.x - x;
-        float yMarioD = world.mario.y - y;
+        float xMarioD = updateContext.world.mario.x - x;
+        float yMarioD = updateContext.world.mario.y - y;
         if (xMarioD > -16 && xMarioD < 16) {
-            if (yMarioD > -height && yMarioD < world.mario.height) {
-                if (world.mario.ya > 0 && yMarioD <= 0 && (!world.mario.onGround || !world.mario.wasOnGround)) {
-                    world.mario.stomp(this);
-                    this.world.removeSprite(this);
+            if (yMarioD > -height && yMarioD < updateContext.world.mario.height) {
+                if (updateContext.world.mario.ya > 0 && yMarioD <= 0 && (!updateContext.world.mario.onGround || !updateContext.world.mario.wasOnGround)) {
+                    updateContext.world.mario.stomp(this, updateContext);
+                    updateContext.world.removeSprite(this, updateContext);
                 } else {
                     //this.world.addEvent(EventType.HURT, this.type.getValue());
-                    world.mario.getHurt();
+                    updateContext.world.mario.getHurt(updateContext);
                 }
             }
         }
     }
 
     @Override
-    public boolean fireballCollideCheck(FireballSlim fireball) {
+    public boolean fireballCollideCheck(FireballSlim fireball, MarioUpdateContext updateContext) {
         if (!alive) return false;
 
         float xD = fireball.x - x;
@@ -77,7 +77,7 @@ class BulletBillSlim extends MarioSpriteSlim {
     }
 
     @Override
-    public boolean shellCollideCheck(ShellSlim shell) {
+    public boolean shellCollideCheck(ShellSlim shell, MarioUpdateContext updateContext) {
         if (!alive) return false;
 
         float xD = shell.x - x;
@@ -86,7 +86,7 @@ class BulletBillSlim extends MarioSpriteSlim {
         if (xD > -16 && xD < 16) {
             if (yD > -height && yD < ShellSlim.height) {
                 //this.world.addEvent(EventType.SHELL_KILL, this.type.getValue());
-                this.world.removeSprite(this);
+                updateContext.world.removeSprite(this, updateContext);
                 return true;
             }
         }
