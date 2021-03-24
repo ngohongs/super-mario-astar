@@ -368,7 +368,7 @@ public class MarioWorldSlim {
 
     private void bumpInto(int xTile, int yTile, MarioUpdateContext updateContext) {
         LevelPart block = level.getBlock(xTile, yTile);
-        if (TileFeaturesSlim.getTileType(block).contains(TileFeaturesSlim.PICKABLE)) {
+        if (block == LevelPart.COIN) {
             this.mario.collectCoin(updateContext);
             level.setBlock(xTile, yTile, 0);
         }

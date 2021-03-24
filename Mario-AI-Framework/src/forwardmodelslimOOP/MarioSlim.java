@@ -197,7 +197,7 @@ public class MarioSlim extends MarioSpriteSlim {
         boolean blocking = updateContext.world.level.isBlocking(xTile, yTile, xa, ya);
         LevelPart block = updateContext.world.level.getBlock(xTile, yTile);
 
-        if (TileFeaturesSlim.getTileType(block).contains(TileFeaturesSlim.PICKABLE)) {
+        if (block == LevelPart.COIN) {
             this.collectCoin(updateContext);
             updateContext.world.level.setBlock(xTile, yTile, 0);
         }
