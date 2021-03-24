@@ -213,44 +213,26 @@ public class MarioSlim extends MarioSpriteSlim {
             float stepX = Math.signum(xa) * 8;
             while (Math.abs(xa) > Math.abs(stepX)) {
                 xa -= stepX;
-                if (!moveStep(stepX, 0, updateContext))
+                if (!moveStepX(stepX, updateContext))
                     return;
             }
-            moveStep(xa, 0, updateContext);
+            moveStepX(xa, updateContext);
         } else {
             float stepY = Math.signum(ya) * 8;
             while (Math.abs(ya) > Math.abs(stepY)) {
                 ya -= stepY;
-                if (!moveStep(0, stepY, updateContext))
+                if (!moveStepY(stepY, updateContext))
                     return;
             }
-            moveStep(0, ya, updateContext);
+            moveStepY(ya, updateContext);
         }
     }
 
     // return true if move is successful, false if blocked
-    // either xa or ya is always zero
-    private boolean moveStep(float xa, float ya, MarioUpdateContext updateContext) {
+    private boolean moveStepX(float xa, MarioUpdateContext updateContext) {
+        float ya = 0;
         boolean collide = false;
-        if (ya > 0) {
-            if (isBlocking(x + xa - width, y + ya, xa, 0, updateContext))
-                collide = true;
-            else if (isBlocking(x + xa + width, y + ya, xa, 0, updateContext))
-                collide = true;
-            else if (isBlocking(x + xa - width, y + ya + 1, xa, ya, updateContext))
-                collide = true;
-            else if (isBlocking(x + xa + width, y + ya + 1, xa, ya, updateContext))
-                collide = true;
-        }
-        else if (ya < 0) {
-            if (isBlocking(x + xa, y + ya - height, xa, ya, updateContext))
-                collide = true;
-            else if (isBlocking(x + xa - width, y + ya - height, xa, ya, updateContext))
-                collide = true;
-            else if (isBlocking(x + xa + width, y + ya - height, xa, ya, updateContext))
-                collide = true;
-        }
-        else if (xa > 0) {
+        if (xa > 0) {
             if (isBlocking(x + xa + width, y + ya - height, xa, ya, updateContext))
                 collide = true;
             else if (isBlocking(x + xa + width, y + ya - height / 2, xa, ya, updateContext))
@@ -275,7 +257,39 @@ public class MarioSlim extends MarioSpriteSlim {
                 x = (int) ((x + width) / 16 + 1) * 16 - width - 1;
                 this.xa = 0;
             }
-            else if (ya < 0) {
+            return false;
+        } else {
+            x += xa;
+            y += ya;
+            return true;
+        }
+    }
+
+    // return true if move is successful, false if blocked
+    private boolean moveStepY(float ya, MarioUpdateContext updateContext) {
+        float xa = 0;
+        boolean collide = false;
+        if (ya > 0) {
+            if (isBlocking(x + xa - width, y + ya, xa, 0, updateContext))
+                collide = true;
+            else if (isBlocking(x + xa + width, y + ya, xa, 0, updateContext))
+                collide = true;
+            else if (isBlocking(x + xa - width, y + ya + 1, xa, ya, updateContext))
+                collide = true;
+            else if (isBlocking(x + xa + width, y + ya + 1, xa, ya, updateContext))
+                collide = true;
+        }
+        else if (ya < 0) {
+            if (isBlocking(x + xa, y + ya - height, xa, ya, updateContext))
+                collide = true;
+            else if (isBlocking(x + xa - width, y + ya - height, xa, ya, updateContext))
+                collide = true;
+            else if (isBlocking(x + xa + width, y + ya - height, xa, ya, updateContext))
+                collide = true;
+        }
+
+        if (collide) {
+            if (ya < 0) {
                 y = (int) ((y - height) / 16) * 16 + height;
                 jumpTime = 0;
                 this.ya = 0;
