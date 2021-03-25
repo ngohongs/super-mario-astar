@@ -1,5 +1,5 @@
 package forwardmodelslimOOP;
 
-public class StaticLevel {
-    static LevelPart[][] data;
+class StaticLevel {
+    LevelPart[][] data;
 }

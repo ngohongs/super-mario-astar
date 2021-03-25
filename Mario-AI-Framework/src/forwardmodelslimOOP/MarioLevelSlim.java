@@ -5,7 +5,6 @@ import engine.helper.SpriteType;
 
 import java.util.ArrayList;
 
-// TODO: remove magic numbers?
 // TODO: remove some of the magic numbers, sprite type?
 
 public class MarioLevelSlim {
@@ -15,6 +14,7 @@ public class MarioLevelSlim {
     private int tileHeight;
     int exitTileX;
 
+    private StaticLevel staticLevel;
     private static int cutoutTileWidth;
 
     private LevelPart[] levelCutout;
@@ -33,7 +33,8 @@ public class MarioLevelSlim {
         if (MarioLevelSlim.cutoutTileWidth > tileWidth)
             MarioLevelSlim.cutoutTileWidth = tileWidth;
 
-        StaticLevel.data = new LevelPart[level.levelTiles.length][level.levelTiles[0].length];
+        staticLevel = new StaticLevel();
+        staticLevel.data = new LevelPart[level.levelTiles.length][level.levelTiles[0].length];
         for (int x = 0; x < level.levelTiles.length; x++) {
             for (int y = 0; y < level.levelTiles[x].length; y++) {
                 LevelPart levelPart;
@@ -46,7 +47,7 @@ public class MarioLevelSlim {
                 else
                     levelPart = LevelPart.getLevelPart(level.spriteTemplates[x][y].getValue(), false);
 
-                StaticLevel.data[x][y] = levelPart;
+                staticLevel.data[x][y] = levelPart;
             }
         }
 
@@ -64,7 +65,7 @@ public class MarioLevelSlim {
                 if (x < 0 || x >= tileWidth)
                     levelCutout[column * tileHeight + y] = LevelPart.EMPTY;
                 else
-                    levelCutout[column * tileHeight + y] = StaticLevel.data[x][y];
+                    levelCutout[column * tileHeight + y] = staticLevel.data[x][y];
             }
             column++;
         }
@@ -136,7 +137,7 @@ public class MarioLevelSlim {
                     return;
                 int y = 0;
                 for (int i = cutoutArrayBeginning; i < cutoutArrayBeginning + tileHeight; i++) {
-                    levelCutout[i] = StaticLevel.data[newColumnIndex][y];
+                    levelCutout[i] = staticLevel.data[newColumnIndex][y];
                     y++;
                 }
                 currentCutoutCenter++;
@@ -151,7 +152,7 @@ public class MarioLevelSlim {
                     lastColumnIndex = (cutoutTileWidth * this.tileHeight) - tileHeight;
                 int y = 0;
                 for (int i = lastColumnIndex; i < lastColumnIndex + tileHeight; i++) {
-                    levelCutout[i] = StaticLevel.data[marioTileX - cutoutTileWidth / 2][y];
+                    levelCutout[i] = staticLevel.data[marioTileX - cutoutTileWidth / 2][y];
                     y++;
                 }
                 currentCutoutCenter--;
