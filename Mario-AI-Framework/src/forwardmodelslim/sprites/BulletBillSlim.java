@@ -57,7 +57,6 @@ public class BulletBillSlim extends MarioSpriteSlim {
                     updateContext.world.mario.stomp(this, updateContext);
                     updateContext.world.removeSprite(this, updateContext);
                 } else {
-                    //this.world.addEvent(EventType.HURT, this.type.getValue());
                     updateContext.world.mario.getHurt(updateContext);
                 }
             }
@@ -86,7 +85,6 @@ public class BulletBillSlim extends MarioSpriteSlim {
 
         if (xD > -16 && xD < 16) {
             if (yD > -height && yD < ShellSlim.height) {
-                //this.world.addEvent(EventType.SHELL_KILL, this.type.getValue());
                 updateContext.world.removeSprite(this, updateContext);
                 return true;
             }

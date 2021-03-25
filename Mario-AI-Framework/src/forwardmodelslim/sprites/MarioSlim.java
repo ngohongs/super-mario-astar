@@ -126,7 +126,6 @@ public class MarioSlim extends MarioSpriteSlim {
                         || isBlocking(x - width, y - 4 - height, -4, updateContext)
                         || isBlocking(x + width, y - 4 - height, -4, updateContext))) {
                     this.xJumpStart = this.x;
-                    //this.world.addEvent(EventType.JUMP, 0);
                 }
             } else if (jumpTime > 0) {
                 xa += xJumpSpeed;

@@ -82,7 +82,6 @@ public class LifeMushroomSlim extends MarioSpriteSlim {
         float yMarioD = updateContext.world.mario.y - y;
         if (xMarioD > -16 && xMarioD < 16) {
             if (yMarioD > -height && yMarioD < updateContext.world.mario.height) {
-                //world.addEvent(EventType.COLLECT, this.type.getValue());
                 updateContext.world.mario.collect1Up(updateContext);
                 updateContext.world.removeSprite(this, updateContext);
             }

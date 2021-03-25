@@ -142,10 +142,8 @@ public class ShellSlim extends MarioSpriteSlim {
                     }
                 } else {
                     if (facing != 0) {
-                        //world.addEvent(EventType.HURT, this.type.getValue());
                         updateContext.world.mario.getHurt(updateContext);
                     } else {
-                        //world.addEvent(EventType.KICK, this.type.getValue());
                         updateContext.world.mario.kick();
                         facing = updateContext.world.mario.facing;
                     }
@@ -286,7 +284,6 @@ public class ShellSlim extends MarioSpriteSlim {
 
         if (xD > -16 && xD < 16) {
             if (yD > -height && yD < height) {
-                //this.world.addEvent(EventType.SHELL_KILL, this.type.getValue());
                 if (this != shell) {
                     updateContext.world.removeSprite(shell, updateContext);
                 }

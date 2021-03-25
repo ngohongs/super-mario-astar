@@ -294,7 +294,6 @@ public class EnemySlim extends MarioSpriteSlim {
             if (yD > -height && yD < ShellSlim.height) {
                 xa = shell.facing * 2;
                 ya = -5;
-                //this.world.addEvent(EventType.SHELL_KILL, this.type.getValue());
                 updateContext.world.removeSprite(this, updateContext);
                 return true;
             }
@@ -318,7 +317,6 @@ public class EnemySlim extends MarioSpriteSlim {
 
                 xa = fireball.facing * 2;
                 ya = -5;
-                //this.world.addEvent(EventType.FIRE_KILL, this.type.getValue());
                 updateContext.world.removeSprite(this, updateContext);
                 return true;
             }

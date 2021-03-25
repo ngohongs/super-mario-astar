@@ -80,7 +80,6 @@ public class MushroomSlim extends MarioSpriteSlim {
         float yMarioD = updateContext.world.mario.y - y;
         if (xMarioD > -16 && xMarioD < 16) {
             if (yMarioD > -height && yMarioD < updateContext.world.mario.height) {
-                //world.addEvent(EventType.COLLECT, this.type.getValue());
                 updateContext.world.mario.getMushroom(updateContext);
                 updateContext.world.removeSprite(this, updateContext);
             }
