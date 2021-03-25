@@ -1,11 +1,6 @@
 package forwardmodelslim.core;
 
-//TODO: events?
-//TODO: is type even needed with concrete entities? Enemy uses it to know the concrete type, but other than that?
 //TODO: there is a bullet bill spawner - needs attention
-
-//TODO: is pauseTimer incremented somewhere?
-//TODO: currentTimer??
 
 import engine.core.MarioSprite;
 import engine.core.MarioWorld;

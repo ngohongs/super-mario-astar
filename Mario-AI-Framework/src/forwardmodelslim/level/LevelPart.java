@@ -2,7 +2,6 @@ package forwardmodelslim.level;
 
 import engine.helper.SpriteType;
 
-// TODO: can this be byte, not int?
 public enum LevelPart {
     // sprites - multiplied by -1 to avoid collisions with tiles
     // only sprites that are a part of the level layout

@@ -1,7 +1,5 @@
 package forwardmodelslim.sprites;
 
-//TODO: might be merged with MushroomSlim
-
 import engine.helper.SpriteType;
 import engine.sprites.LifeMushroom;
 import forwardmodelslim.core.MarioSpriteSlim;
