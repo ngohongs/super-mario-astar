@@ -165,7 +165,7 @@ public class MarioLevelSlim {
 
     public boolean isBlocking(int xTile, int yTile, float xa, float ya) {
         LevelPart block = this.getBlock(xTile, yTile);
-        ArrayList<TileFeaturesSlim> features = TileFeaturesSlim.getTileType(block);
+        ArrayList<TileFeaturesSlim> features = TileFeaturesSlim.getTileFeatures(block);
         boolean blocking = features.contains(TileFeaturesSlim.BLOCK_ALL);
         blocking |= (ya < 0) && features.contains(TileFeaturesSlim.BLOCK_UPPER);
         blocking |= (ya > 0) && features.contains(TileFeaturesSlim.BLOCK_LOWER);

@@ -263,8 +263,7 @@ public class MarioWorldSlim {
                 }
 
                 if (dir != 0) {
-                    ArrayList<TileFeaturesSlim> features = TileFeaturesSlim.getTileType(this.level.getBlock(x, y));
-                    if (features.contains(TileFeaturesSlim.SPAWNER)) {
+                    if (this.level.getBlock(x, y) == LevelPart.BULLET_BILL_CANNON) {
                         if (this.currentTick % 100 == 0) {
                             addSprite(new BulletBillSlim(x * 16 + 8 + dir * 8, y * 16 + 15, dir), updateContext);
                         }
@@ -340,7 +339,7 @@ public class MarioWorldSlim {
 
     public void bump(int xTile, int yTile, boolean canBreakBricks, MarioUpdateContext updateContext) {
         LevelPart block = this.level.getBlock(xTile, yTile);
-        ArrayList<TileFeaturesSlim> features = TileFeaturesSlim.getTileType(block);
+        ArrayList<TileFeaturesSlim> features = TileFeaturesSlim.getTileFeatures(block);
 
         if (features.contains(TileFeaturesSlim.BUMPABLE)) {
             bumpInto(xTile, yTile - 1, updateContext);
