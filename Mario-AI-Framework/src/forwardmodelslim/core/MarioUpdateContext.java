@@ -1,4 +1,7 @@
-package forwardmodelslimOOP;
+package forwardmodelslim.core;
+
+import forwardmodelslim.sprites.FireballSlim;
+import forwardmodelslim.sprites.ShellSlim;
 
 import java.util.ArrayList;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -11,8 +14,8 @@ public class MarioUpdateContext {
 
     public ArrayList<FireballSlim> fireballsToCheck = new ArrayList<>();
     public ArrayList<ShellSlim> shellsToCheck = new ArrayList<>();
-    public ArrayList<MarioSpriteSlim> addedSprites = new ArrayList<>();
-    public ArrayList<MarioSpriteSlim> removedSprites = new ArrayList<>();
+    ArrayList<MarioSpriteSlim> addedSprites = new ArrayList<>();
+    ArrayList<MarioSpriteSlim> removedSprites = new ArrayList<>();
 
     private static ConcurrentLinkedQueue<MarioUpdateContext> pool = new ConcurrentLinkedQueue<>();
 
@@ -22,7 +25,7 @@ public class MarioUpdateContext {
         return new MarioUpdateContext();
     }
 
-    public static void back(MarioUpdateContext ctx) {
+    static void back(MarioUpdateContext ctx) {
         pool.add(ctx);
     }
 }

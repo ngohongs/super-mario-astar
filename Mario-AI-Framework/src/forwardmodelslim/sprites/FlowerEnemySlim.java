@@ -1,17 +1,18 @@
-package forwardmodelslimOOP;
+package forwardmodelslim.sprites;
 
 import engine.helper.SpriteType;
 import engine.sprites.FlowerEnemy;
+import forwardmodelslim.core.MarioSpriteSlim;
+import forwardmodelslim.core.MarioUpdateContext;
 
 public class FlowerEnemySlim extends MarioSpriteSlim {
     private static final SpriteType type = SpriteType.ENEMY_FLOWER;
-    static final int width = 2;
 
     private float yStart;
     private int waitTime;
     private float ya;
 
-    FlowerEnemySlim(FlowerEnemy originalFlowerEnemy) {
+    public FlowerEnemySlim(FlowerEnemy originalFlowerEnemy) {
         this.x = originalFlowerEnemy.x;
         this.y = originalFlowerEnemy.y;
         this.yStart = originalFlowerEnemy.getyStart();
@@ -20,8 +21,9 @@ public class FlowerEnemySlim extends MarioSpriteSlim {
     }
 
     // this constructor calls update on itself - needs context with world set
-    FlowerEnemySlim(float x, float y, MarioUpdateContext updateContext) {
+    public FlowerEnemySlim(float x, float y, MarioUpdateContext updateContext) {
         this.x = x;
+        this.y = y;
         this.y -= 1;
         this.yStart = this.y;
         this.ya = -1;

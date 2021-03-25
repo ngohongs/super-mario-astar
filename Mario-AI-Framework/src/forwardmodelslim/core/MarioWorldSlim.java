@@ -1,4 +1,4 @@
-package forwardmodelslimOOP;
+package forwardmodelslim.core;
 
 //TODO: events?
 //TODO: is type even needed with concrete entities? Enemy uses it to know the concrete type, but other than that?
@@ -12,23 +12,27 @@ import engine.core.MarioWorld;
 import engine.helper.GameStatus;
 import engine.helper.SpriteType;
 import engine.sprites.*;
+import forwardmodelslim.level.LevelPart;
+import forwardmodelslim.level.MarioLevelSlim;
+import forwardmodelslim.level.TileFeaturesSlim;
+import forwardmodelslim.sprites.*;
 
 import java.util.ArrayList;
 
 public class MarioWorldSlim {
     private GameStatus gameStatus;
-    int pauseTimer;
+    public int pauseTimer;
     private int currentTimer;
     public float cameraX;
     public float cameraY;
     public MarioSlim mario;
     public MarioLevelSlim level;
     private int currentTick;
-    int coins, lives;
+    public int coins, lives;
 
     private ArrayList<MarioSpriteSlim> sprites;
 
-    public MarioWorldSlim(MarioWorld originalWorld, int levelCutoutTileWidth) {
+    MarioWorldSlim(MarioWorld originalWorld, int levelCutoutTileWidth) {
         this.gameStatus = originalWorld.gameStatus;
         this.pauseTimer = originalWorld.pauseTimer;
         this.currentTimer = originalWorld.currentTimer;
@@ -162,7 +166,7 @@ public class MarioWorldSlim {
         return enemies;
     }
 
-    void addSprite(MarioSpriteSlim sprite, MarioUpdateContext updateContext) {
+    public void addSprite(MarioSpriteSlim sprite, MarioUpdateContext updateContext) {
         updateContext.addedSprites.add(sprite);
         sprite.alive = true;
         }
@@ -172,7 +176,7 @@ public class MarioWorldSlim {
         sprite.alive = false;
     }
 
-    void win() {
+    public void win() {
         this.gameStatus = GameStatus.WIN;
     }
 

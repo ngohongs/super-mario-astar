@@ -1,4 +1,4 @@
-package forwardmodelslimOOP;
+package forwardmodelslim.core;
 
 public class MarioForwardModelSlim {
 
@@ -8,7 +8,7 @@ public class MarioForwardModelSlim {
         this.world = world;
     }
 
-    public void advance(boolean[] actions) {
+    void advance(boolean[] actions) {
         this.world.update(actions);
     }
 

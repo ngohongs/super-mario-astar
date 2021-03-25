@@ -1,9 +1,11 @@
-package forwardmodelslimOOP;
+package forwardmodelslim.sprites;
 
 import engine.helper.SpriteType;
 import engine.sprites.Enemy;
+import forwardmodelslim.core.MarioSpriteSlim;
+import forwardmodelslim.core.MarioUpdateContext;
 
-public class EnemySlim extends  MarioSpriteSlim {
+public class EnemySlim extends MarioSpriteSlim {
     public static final float GROUND_INERTIA = 0.89f;
     public static final float AIR_INERTIA = 0.89f;
     private static final int width = 4;
@@ -20,7 +22,7 @@ public class EnemySlim extends  MarioSpriteSlim {
     private boolean winged;
     private boolean noFireballDeath;
 
-    EnemySlim(Enemy originalEnemy) {
+    public EnemySlim(Enemy originalEnemy) {
         this.x = originalEnemy.x;
         this.y = originalEnemy.y;
         this.type = originalEnemy.type;
@@ -36,7 +38,7 @@ public class EnemySlim extends  MarioSpriteSlim {
         this.noFireballDeath = info.noFireballDeath;
     }
 
-    EnemySlim(float x, float y, int dir, SpriteType type) {
+    public EnemySlim(float x, float y, int dir, SpriteType type) {
         this.x = x;
         this.y = y;
         this.type = type;
@@ -192,25 +194,25 @@ public class EnemySlim extends  MarioSpriteSlim {
         float ya = 0;
         boolean collide = false;
         if (xa > 0) {
-            if (isBlocking(x + xa + width, y + ya - height, xa, ya, updateContext))
+            if (isBlocking(x + xa + width, y + ya - height, ya, updateContext))
                 collide = true;
-            else if (isBlocking(x + xa + width, y + ya - height / 2, xa, ya, updateContext))
+            else if (isBlocking(x + xa + width, y + ya - height / 2, ya, updateContext))
                 collide = true;
-            else if (isBlocking(x + xa + width, y + ya, xa, ya, updateContext))
+            else if (isBlocking(x + xa + width, y + ya, ya, updateContext))
                 collide = true;
             else if (avoidCliffs && onGround &&
-                    !updateContext.world.level.isBlocking((int) ((x + xa + width) / 16), (int) ((y) / 16 + 1), xa, 1))
+                    !updateContext.world.level.isBlocking((int) ((x + xa + width) / 16), (int) ((y) / 16 + 1), 1))
                 collide = true;
         }
         else if (xa < 0) {
-            if (isBlocking(x + xa - width, y + ya - height, xa, ya, updateContext))
+            if (isBlocking(x + xa - width, y + ya - height, ya, updateContext))
                 collide = true;
-            else if (isBlocking(x + xa - width, y + ya - height / 2, xa, ya, updateContext))
+            else if (isBlocking(x + xa - width, y + ya - height / 2, ya, updateContext))
                 collide = true;
-            else if (isBlocking(x + xa - width, y + ya, xa, ya, updateContext))
+            else if (isBlocking(x + xa - width, y + ya, ya, updateContext))
                 collide = true;
             else if (avoidCliffs && onGround
-                    && !updateContext.world.level.isBlocking((int) ((x + xa - width) / 16), (int) ((y) / 16 + 1), xa, 1))
+                    && !updateContext.world.level.isBlocking((int) ((x + xa - width) / 16), (int) ((y) / 16 + 1), 1))
                 collide = true;
         }
         if (collide) {
@@ -235,21 +237,21 @@ public class EnemySlim extends  MarioSpriteSlim {
         float xa = 0;
         boolean collide = false;
         if (ya > 0) {
-            if (isBlocking(x + xa - width, y + ya, xa, 0, updateContext))
+            if (isBlocking(x + xa - width, y + ya, 0, updateContext))
                 collide = true;
-            else if (isBlocking(x + xa + width, y + ya, xa, 0, updateContext))
+            else if (isBlocking(x + xa + width, y + ya, 0, updateContext))
                 collide = true;
-            else if (isBlocking(x + xa - width, y + ya + 1, xa, ya, updateContext))
+            else if (isBlocking(x + xa - width, y + ya + 1, ya, updateContext))
                 collide = true;
-            else if (isBlocking(x + xa + width, y + ya + 1, xa, ya, updateContext))
+            else if (isBlocking(x + xa + width, y + ya + 1, ya, updateContext))
                 collide = true;
         }
         else if (ya < 0) {
-            if (isBlocking(x + xa, y + ya - height, xa, ya, updateContext))
+            if (isBlocking(x + xa, y + ya - height, ya, updateContext))
                 collide = true;
-            else if (isBlocking(x + xa - width, y + ya - height, xa, ya, updateContext))
+            else if (isBlocking(x + xa - width, y + ya - height, ya, updateContext))
                 collide = true;
-            else if (isBlocking(x + xa + width, y + ya - height, xa, ya, updateContext))
+            else if (isBlocking(x + xa + width, y + ya - height, ya, updateContext))
                 collide = true;
         }
 
@@ -270,13 +272,13 @@ public class EnemySlim extends  MarioSpriteSlim {
         }
     }
 
-    private boolean isBlocking(float _x, float _y, float xa, float ya, MarioUpdateContext updateContext) {
+    private boolean isBlocking(float _x, float _y, float ya, MarioUpdateContext updateContext) {
         int x = (int) (_x / 16);
         int y = (int) (_y / 16);
         if (x == (int) (this.x / 16) && y == (int) (this.y / 16))
             return false;
 
-        return updateContext.world.level.isBlocking(x, y, xa, ya);
+        return updateContext.world.level.isBlocking(x, y, ya);
     }
 
     @Override

@@ -1,4 +1,4 @@
-package forwardmodelslimOOP;
+package forwardmodelslim.level;
 
 import engine.core.MarioLevel;
 import engine.helper.SpriteType;
@@ -12,7 +12,7 @@ public class MarioLevelSlim {
     private int tileWidth;
     public int height;
     private int tileHeight;
-    int exitTileX;
+    public int exitTileX;
 
     private StaticLevel staticLevel;
     private static int cutoutTileWidth;
@@ -22,7 +22,7 @@ public class MarioLevelSlim {
     private int cutoutArrayBeginning; // index of the current array beginning
     private int cutoutLeftBorderX;
 
-    MarioLevelSlim(MarioLevel level, int cutoutTileWidth, int marioTileX) {
+    public MarioLevelSlim(MarioLevel level, int cutoutTileWidth, int marioTileX) {
         this.width = level.width;
         this.tileWidth = level.tileWidth;
         this.height = level.height;
@@ -129,7 +129,7 @@ public class MarioLevelSlim {
         return null;
     }
 
-    void update(int marioTileX) {
+    public void update(int marioTileX) {
         if (currentCutoutCenter != marioTileX) {
             if (currentCutoutCenter < marioTileX) { // move right
                 int newColumnIndex = cutoutTileWidth % 2 == 0 ? marioTileX + cutoutTileWidth / 2 - 1 : marioTileX + cutoutTileWidth / 2;
@@ -164,7 +164,7 @@ public class MarioLevelSlim {
         }
     }
 
-    public boolean isBlocking(int xTile, int yTile, float xa, float ya) {
+    public boolean isBlocking(int xTile, int yTile, float ya) {
         LevelPart block = this.getBlock(xTile, yTile);
         ArrayList<TileFeaturesSlim> features = TileFeaturesSlim.getTileFeatures(block);
         boolean blocking = features.contains(TileFeaturesSlim.BLOCK_ALL);
@@ -200,7 +200,7 @@ public class MarioLevelSlim {
         levelCutout[calculateCutoutIndex(xTile, yTile)] = LevelPart.getLevelPart(index, true);
     }
 
-    SpriteType getSpriteType(int xTile, int yTile) {
+    public SpriteType getSpriteType(int xTile, int yTile) {
         if (xTile < 0 || yTile < 0 || xTile >= this.tileWidth || yTile >= this.tileHeight) {
             return SpriteType.NONE;
         }

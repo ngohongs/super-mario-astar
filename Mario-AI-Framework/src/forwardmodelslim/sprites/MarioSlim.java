@@ -1,8 +1,11 @@
-package forwardmodelslimOOP;
+package forwardmodelslim.sprites;
 
 import engine.helper.MarioActions;
 import engine.helper.SpriteType;
 import engine.sprites.Mario;
+import forwardmodelslim.level.LevelPart;
+import forwardmodelslim.core.MarioSpriteSlim;
+import forwardmodelslim.core.MarioUpdateContext;
 
 public class MarioSlim extends MarioSpriteSlim {
     private static final SpriteType type = SpriteType.MARIO;
@@ -11,10 +14,10 @@ public class MarioSlim extends MarioSpriteSlim {
     public static final float AIR_INERTIA = 0.89f;
     private static final int POWERUP_TIME = 3;
 
-    int height = 24;
+    int height;
     private int invulnerableTime;
     boolean onGround, wasOnGround;
-    boolean isLarge;
+    public boolean isLarge;
     private boolean isDucking, mayJump, canShoot, isFire, oldLarge, oldFire;
     private float xa;
     float ya;
@@ -22,7 +25,7 @@ public class MarioSlim extends MarioSpriteSlim {
     private int jumpTime;
     private float xJumpSpeed, yJumpSpeed, xJumpStart;
 
-    MarioSlim(Mario originalMario) {
+    public MarioSlim(Mario originalMario) {
         Mario.PrivateMarioCopyInfo info = originalMario.getPrivateCopyInfo();
         this.invulnerableTime = info.invulnerableTime;
         this.oldLarge = info.oldLarge;
@@ -119,9 +122,9 @@ public class MarioSlim extends MarioSpriteSlim {
                 jumpTime = 7;
                 ya = jumpTime * yJumpSpeed;
                 onGround = false;
-                if (!(isBlocking(x, y - 4 - height, 0, -4, updateContext)
-                        || isBlocking(x - width, y - 4 - height, 0, -4, updateContext)
-                        || isBlocking(x + width, y - 4 - height, 0, -4, updateContext))) {
+                if (!(isBlocking(x, y - 4 - height, -4, updateContext)
+                        || isBlocking(x - width, y - 4 - height, -4, updateContext)
+                        || isBlocking(x + width, y - 4 - height, -4, updateContext))) {
                     this.xJumpStart = this.x;
                     //this.world.addEvent(EventType.JUMP, 0);
                 }
@@ -188,13 +191,13 @@ public class MarioSlim extends MarioSpriteSlim {
         }
     }
 
-    private boolean isBlocking(float _x, float _y, float xa, float ya, MarioUpdateContext updateContext) {
+    private boolean isBlocking(float _x, float _y, float ya, MarioUpdateContext updateContext) {
         int xTile = (int) (_x / 16);
         int yTile = (int) (_y / 16);
         if (xTile == (int) (this.x / 16) && yTile == (int) (this.y / 16))
             return false;
 
-        boolean blocking = updateContext.world.level.isBlocking(xTile, yTile, xa, ya);
+        boolean blocking = updateContext.world.level.isBlocking(xTile, yTile, ya);
         LevelPart block = updateContext.world.level.getBlock(xTile, yTile);
 
         if (block == LevelPart.COIN) {
@@ -233,19 +236,19 @@ public class MarioSlim extends MarioSpriteSlim {
         float ya = 0;
         boolean collide = false;
         if (xa > 0) {
-            if (isBlocking(x + xa + width, y + ya - height, xa, ya, updateContext))
+            if (isBlocking(x + xa + width, y + ya - height, ya, updateContext))
                 collide = true;
-            else if (isBlocking(x + xa + width, y + ya - height / 2, xa, ya, updateContext))
+            else if (isBlocking(x + xa + width, y + ya - height / 2, ya, updateContext))
                 collide = true;
-            else if (isBlocking(x + xa + width, y + ya, xa, ya, updateContext))
+            else if (isBlocking(x + xa + width, y + ya, ya, updateContext))
                 collide = true;
         }
         else if (xa < 0) {
-            if (isBlocking(x + xa - width, y + ya - height, xa, ya, updateContext))
+            if (isBlocking(x + xa - width, y + ya - height, ya, updateContext))
                 collide = true;
-            else if (isBlocking(x + xa - width, y + ya - height / 2, xa, ya, updateContext))
+            else if (isBlocking(x + xa - width, y + ya - height / 2, ya, updateContext))
                 collide = true;
-            else if (isBlocking(x + xa - width, y + ya, xa, ya, updateContext))
+            else if (isBlocking(x + xa - width, y + ya, ya, updateContext))
                 collide = true;
         }
         if (collide) {
@@ -270,21 +273,21 @@ public class MarioSlim extends MarioSpriteSlim {
         float xa = 0;
         boolean collide = false;
         if (ya > 0) {
-            if (isBlocking(x + xa - width, y + ya, xa, 0, updateContext))
+            if (isBlocking(x + xa - width, y + ya, 0, updateContext))
                 collide = true;
-            else if (isBlocking(x + xa + width, y + ya, xa, 0, updateContext))
+            else if (isBlocking(x + xa + width, y + ya, 0, updateContext))
                 collide = true;
-            else if (isBlocking(x + xa - width, y + ya + 1, xa, ya, updateContext))
+            else if (isBlocking(x + xa - width, y + ya + 1, ya, updateContext))
                 collide = true;
-            else if (isBlocking(x + xa + width, y + ya + 1, xa, ya, updateContext))
+            else if (isBlocking(x + xa + width, y + ya + 1, ya, updateContext))
                 collide = true;
         }
         else if (ya < 0) {
-            if (isBlocking(x + xa, y + ya - height, xa, ya, updateContext))
+            if (isBlocking(x + xa, y + ya - height, ya, updateContext))
                 collide = true;
-            else if (isBlocking(x + xa - width, y + ya - height, xa, ya, updateContext))
+            else if (isBlocking(x + xa - width, y + ya - height, ya, updateContext))
                 collide = true;
-            else if (isBlocking(x + xa + width, y + ya - height, xa, ya, updateContext))
+            else if (isBlocking(x + xa + width, y + ya - height, ya, updateContext))
                 collide = true;
         }
 
@@ -342,7 +345,7 @@ public class MarioSlim extends MarioSpriteSlim {
 
         if (isLarge) {
             updateContext.world.pauseTimer = 3 * POWERUP_TIME;
-            this.oldLarge = this.isLarge;
+            this.oldLarge = true;
             this.oldFire = this.isFire;
             if (isFire) {
                 this.isFire = false;
@@ -357,14 +360,14 @@ public class MarioSlim extends MarioSpriteSlim {
         }
     }
 
-    public void getFlower(MarioUpdateContext updateContext) {
+    void getFlower(MarioUpdateContext updateContext) {
         if (!this.alive) {
             return;
         }
 
         if (!isFire) {
             updateContext.world.pauseTimer = 3 * POWERUP_TIME;
-            this.oldFire = this.isFire;
+            this.oldFire = false;
             this.oldLarge = this.isLarge;
             this.isFire = true;
             this.isLarge = true;
@@ -373,7 +376,7 @@ public class MarioSlim extends MarioSpriteSlim {
         }
     }
 
-    public void getMushroom(MarioUpdateContext updateContext) {
+    void getMushroom(MarioUpdateContext updateContext) {
         if (!this.alive) {
             return;
         }
@@ -381,14 +384,14 @@ public class MarioSlim extends MarioSpriteSlim {
         if (!isLarge) {
             updateContext.world.pauseTimer = 3 * POWERUP_TIME;
             this.oldFire = this.isFire;
-            this.oldLarge = this.isLarge;
+            this.oldLarge = false;
             this.isLarge = true;
         } else {
             this.collectCoin(updateContext);
         }
     }
 
-    public void kick(ShellSlim shell) {
+    void kick() {
         if (!this.alive) {
             return;
         }
@@ -420,7 +423,7 @@ public class MarioSlim extends MarioSpriteSlim {
         updateContext.world.lives++;
     }
 
-    void collectCoin(MarioUpdateContext updateContext) {
+    public void collectCoin(MarioUpdateContext updateContext) {
         if (!this.alive) {
             return;
         }

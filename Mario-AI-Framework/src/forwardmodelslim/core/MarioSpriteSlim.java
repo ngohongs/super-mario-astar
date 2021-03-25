@@ -1,8 +1,10 @@
-package forwardmodelslimOOP;
+package forwardmodelslim.core;
 
 import engine.helper.SpriteType;
+import forwardmodelslim.sprites.FireballSlim;
+import forwardmodelslim.sprites.ShellSlim;
 
-abstract class MarioSpriteSlim {
+public abstract class MarioSpriteSlim {
     public float x, y;
     public boolean alive;
 

@@ -1,7 +1,9 @@
-package forwardmodelslimOOP;
+package forwardmodelslim.sprites;
 
 import engine.helper.SpriteType;
 import engine.sprites.Shell;
+import forwardmodelslim.core.MarioSpriteSlim;
+import forwardmodelslim.core.MarioUpdateContext;
 
 public class ShellSlim extends MarioSpriteSlim {
     public static final float GROUND_INERTIA = 0.89f;
@@ -15,7 +17,7 @@ public class ShellSlim extends MarioSpriteSlim {
     private float xa, ya;
     int facing;
 
-    ShellSlim(Shell originalShell) {
+    public ShellSlim(Shell originalShell) {
         this.x = originalShell.x;
         this.y = originalShell.y;
         this.xa = originalShell.xa;
@@ -144,7 +146,7 @@ public class ShellSlim extends MarioSpriteSlim {
                         updateContext.world.mario.getHurt(updateContext);
                     } else {
                         //world.addEvent(EventType.KICK, this.type.getValue());
-                        updateContext.world.mario.kick(this);
+                        updateContext.world.mario.kick();
                         facing = updateContext.world.mario.facing;
                     }
                 }
@@ -256,7 +258,7 @@ public class ShellSlim extends MarioSpriteSlim {
         if (x == (int) (this.x / 16) && y == (int) (this.y / 16))
             return false;
 
-        boolean blocking = updateContext.world.level.isBlocking(x, y, xa, ya);
+        boolean blocking = updateContext.world.level.isBlocking(x, y, ya);
 
         if (blocking && ya == 0 && xa != 0) {
             updateContext.world.bump(x, y, true, updateContext);

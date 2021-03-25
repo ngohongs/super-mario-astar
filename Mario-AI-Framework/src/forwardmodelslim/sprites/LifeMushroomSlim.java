@@ -1,9 +1,11 @@
-package forwardmodelslimOOP;
+package forwardmodelslim.sprites;
 
 //TODO: might be merged with MushroomSlim
 
 import engine.helper.SpriteType;
 import engine.sprites.LifeMushroom;
+import forwardmodelslim.core.MarioSpriteSlim;
+import forwardmodelslim.core.MarioUpdateContext;
 
 public class LifeMushroomSlim extends MarioSpriteSlim {
     public static final float GROUND_INERTIA = 0.89f;
@@ -17,7 +19,7 @@ public class LifeMushroomSlim extends MarioSpriteSlim {
     private boolean onGround;
     private int life;
 
-    LifeMushroomSlim(LifeMushroom originalLifeMushroom) {
+    public LifeMushroomSlim(LifeMushroom originalLifeMushroom) {
         this.x = originalLifeMushroom.x;
         this.y = originalLifeMushroom.y;
         this.xa = originalLifeMushroom.xa;
@@ -27,7 +29,7 @@ public class LifeMushroomSlim extends MarioSpriteSlim {
         this.life = originalLifeMushroom.getLife();
     }
 
-    LifeMushroomSlim(float x, float y) {
+    public LifeMushroomSlim(float x, float y) {
         this.x = x;
         this.y = y;
         this.facing = 1;
@@ -87,13 +89,13 @@ public class LifeMushroomSlim extends MarioSpriteSlim {
         }
     }
 
-    private boolean isBlocking(float _x, float _y, float xa, float ya, MarioUpdateContext updateContext) {
+    private boolean isBlocking(float _x, float _y, float ya, MarioUpdateContext updateContext) {
         int x = (int) (_x / 16);
         int y = (int) (_y / 16);
         if (x == (int) (this.x / 16) && y == (int) (this.y / 16))
             return false;
 
-        return updateContext.world.level.isBlocking(x, y, xa, ya);
+        return updateContext.world.level.isBlocking(x, y, ya);
     }
 
     @Override
@@ -134,19 +136,19 @@ public class LifeMushroomSlim extends MarioSpriteSlim {
         float ya = 0;
         boolean collide = false;
         if (xa > 0) {
-            if (isBlocking(x + xa + width, y + ya - height, xa, ya, updateContext))
+            if (isBlocking(x + xa + width, y + ya - height, ya, updateContext))
                 collide = true;
-            else if (isBlocking(x + xa + width, y + ya - height / 2, xa, ya, updateContext))
+            else if (isBlocking(x + xa + width, y + ya - height / 2, ya, updateContext))
                 collide = true;
-            else if (isBlocking(x + xa + width, y + ya, xa, ya, updateContext))
+            else if (isBlocking(x + xa + width, y + ya, ya, updateContext))
                 collide = true;
         }
         else if (xa < 0) {
-            if (isBlocking(x + xa - width, y + ya - height, xa, ya, updateContext))
+            if (isBlocking(x + xa - width, y + ya - height, ya, updateContext))
                 collide = true;
-            else if (isBlocking(x + xa - width, y + ya - height / 2, xa, ya, updateContext))
+            else if (isBlocking(x + xa - width, y + ya - height / 2, ya, updateContext))
                 collide = true;
-            else if (isBlocking(x + xa - width, y + ya, xa, ya, updateContext))
+            else if (isBlocking(x + xa - width, y + ya, ya, updateContext))
                 collide = true;
         }
         if (collide) {
@@ -171,21 +173,21 @@ public class LifeMushroomSlim extends MarioSpriteSlim {
         float xa = 0;
         boolean collide = false;
         if (ya > 0) {
-            if (isBlocking(x + xa - width, y + ya, xa, 0, updateContext))
+            if (isBlocking(x + xa - width, y + ya, 0, updateContext))
                 collide = true;
-            else if (isBlocking(x + xa + width, y + ya, xa, 0, updateContext))
+            else if (isBlocking(x + xa + width, y + ya, 0, updateContext))
                 collide = true;
-            else if (isBlocking(x + xa - width, y + ya + 1, xa, ya, updateContext))
+            else if (isBlocking(x + xa - width, y + ya + 1, ya, updateContext))
                 collide = true;
-            else if (isBlocking(x + xa + width, y + ya + 1, xa, ya, updateContext))
+            else if (isBlocking(x + xa + width, y + ya + 1, ya, updateContext))
                 collide = true;
         }
         else if (ya < 0) {
-            if (isBlocking(x + xa, y + ya - height, xa, ya, updateContext))
+            if (isBlocking(x + xa, y + ya - height, ya, updateContext))
                 collide = true;
-            else if (isBlocking(x + xa - width, y + ya - height, xa, ya, updateContext))
+            else if (isBlocking(x + xa - width, y + ya - height, ya, updateContext))
                 collide = true;
-            else if (isBlocking(x + xa + width, y + ya - height, xa, ya, updateContext))
+            else if (isBlocking(x + xa + width, y + ya - height, ya, updateContext))
                 collide = true;
         }
 

@@ -1,4 +1,4 @@
-package forwardmodelslimOOP;
+package forwardmodelslim.level;
 
 class StaticLevel {
     LevelPart[][] data;

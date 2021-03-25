@@ -1,4 +1,4 @@
-package forwardmodelslimOOP;
+package forwardmodelslim.core;
 
 import engine.core.MarioForwardModel;
 import engine.core.MarioWorld;
