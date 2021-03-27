@@ -19,7 +19,7 @@ public class MarioLevelSlim {
 
     private LevelPart[] levelCutout;
     private int currentCutoutCenter;
-    private int cutoutArrayBeginning; // index of the current array beginning
+    private int cutoutArrayBeginningIndex; // index of the current array beginning
     private int cutoutLeftBorderX;
 
     public MarioLevelSlim(MarioLevel level, int cutoutTileWidth, int marioTileX) {
@@ -53,11 +53,27 @@ public class MarioLevelSlim {
 
         levelCutout = new LevelPart[cutoutTileWidth * this.tileHeight];
         currentCutoutCenter = marioTileX;
-        cutoutArrayBeginning = 0;
+        cutoutArrayBeginningIndex = 0;
         cutoutLeftBorderX = marioTileX - cutoutTileWidth / 2;
 
         int copyStart = marioTileX - cutoutTileWidth / 2;
         int copyEnd = cutoutTileWidth % 2 == 0 ? marioTileX + cutoutTileWidth / 2 - 1 : marioTileX + cutoutTileWidth / 2;
+
+        // cutout shifted to not overlap the map if needed
+        if (copyStart < 0) {
+            copyStart = 0;
+            copyEnd = copyStart + cutoutTileWidth - 1;
+            currentCutoutCenter = cutoutTileWidth / 2;
+            cutoutLeftBorderX = 0;
+        }
+        else if (copyEnd >= tileWidth) {
+            copyStart = (tileWidth - 1) - (cutoutTileWidth - 1);
+            copyEnd = tileWidth - 1;
+            int centerShift = cutoutTileWidth % 2 == 0 ? cutoutTileWidth / 2 - 1 : cutoutTileWidth / 2;
+            currentCutoutCenter = (tileWidth - 1) - centerShift;
+            cutoutLeftBorderX = copyStart;
+
+        }
 
         int column = 0;
         for (int x = copyStart; x <= copyEnd; x++) {
@@ -82,7 +98,7 @@ public class MarioLevelSlim {
                 tileHeight == that.tileHeight &&
                 exitTileX == that.exitTileX &&
                 currentCutoutCenter == that.currentCutoutCenter &&
-                cutoutArrayBeginning == that.cutoutArrayBeginning &&
+                cutoutArrayBeginningIndex == that.cutoutArrayBeginningIndex &&
                 cutoutLeftBorderX == that.cutoutLeftBorderX;
         if (propertiesEqual)
             System.out.println("LEVEL PROPERTIES EQUAL");
@@ -135,23 +151,23 @@ public class MarioLevelSlim {
 
     public void update(int marioTileX) {
         if (currentCutoutCenter != marioTileX) {
-            if (currentCutoutCenter < marioTileX) { // move right
+            if (currentCutoutCenter < marioTileX && cutoutLeftBorderX + cutoutTileWidth != tileWidth) { // move right
                 int newColumnIndex = cutoutTileWidth % 2 == 0 ? marioTileX + cutoutTileWidth / 2 - 1 : marioTileX + cutoutTileWidth / 2;
                 if (newColumnIndex >= tileWidth) // beyond end of level
                     return;
                 int y = 0;
-                for (int i = cutoutArrayBeginning; i < cutoutArrayBeginning + tileHeight; i++) {
+                for (int i = cutoutArrayBeginningIndex; i < cutoutArrayBeginningIndex + tileHeight; i++) {
                     levelCutout[i] = staticLevel.data[newColumnIndex][y];
                     y++;
                 }
                 currentCutoutCenter++;
                 cutoutLeftBorderX++;
-                cutoutArrayBeginning = (cutoutArrayBeginning + tileHeight) % (cutoutTileWidth * this.tileHeight);
+                cutoutArrayBeginningIndex = (cutoutArrayBeginningIndex + tileHeight) % (cutoutTileWidth * this.tileHeight);
             }
-            else { // move left
+            else if (cutoutLeftBorderX - 1 >= 0) { // move left
                 if (cutoutLeftBorderX <= 0) // left cutout border <= beginning of level
                     return;
-                int lastColumnIndex = cutoutArrayBeginning - tileHeight;
+                int lastColumnIndex = cutoutArrayBeginningIndex - tileHeight;
                 if (lastColumnIndex < 0)
                     lastColumnIndex = (cutoutTileWidth * this.tileHeight) - tileHeight;
                 int y = 0;
@@ -161,9 +177,9 @@ public class MarioLevelSlim {
                 }
                 currentCutoutCenter--;
                 cutoutLeftBorderX--;
-                cutoutArrayBeginning -= tileHeight;
-                if (cutoutArrayBeginning < 0)
-                    cutoutArrayBeginning = (cutoutTileWidth * this.tileHeight) - tileHeight;
+                cutoutArrayBeginningIndex -= tileHeight;
+                if (cutoutArrayBeginningIndex < 0)
+                    cutoutArrayBeginningIndex = (cutoutTileWidth * this.tileHeight) - tileHeight;
             }
         }
     }
@@ -213,6 +229,6 @@ public class MarioLevelSlim {
 
     private int calculateCutoutIndex(int x, int y) {
         int cutoutX = x - cutoutLeftBorderX;
-        return (cutoutArrayBeginning + cutoutX * tileHeight + y) % (cutoutTileWidth * this.tileHeight);
+        return (cutoutArrayBeginningIndex + cutoutX * tileHeight + y) % (cutoutTileWidth * this.tileHeight);
     }
 }
