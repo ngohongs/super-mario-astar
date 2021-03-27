@@ -25,10 +25,10 @@ public class FlowerEnemySlim extends MarioSpriteSlim {
     public FlowerEnemySlim(float x, float y, MarioUpdateContext updateContext) {
         this.x = x;
         this.y = y;
-        this.y -= 1;
         this.alive = true;
         this.yStart = this.y;
         this.ya = -1;
+        this.y -= 1;
         for (int i = 0; i < 4; i++) {
             this.update(updateContext);
         }
