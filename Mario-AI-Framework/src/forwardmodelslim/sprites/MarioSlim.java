@@ -55,7 +55,7 @@ public class MarioSlim extends MarioSpriteSlim {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         MarioSlim that = (MarioSlim) o;
-        return  height == that.height &&
+        boolean equal = height == that.height &&
                 invulnerableTime == that.invulnerableTime &&
                 onGround == that.onGround &&
                 wasOnGround == that.wasOnGround &&
@@ -76,6 +76,14 @@ public class MarioSlim extends MarioSpriteSlim {
                 Float.compare(x, that.x) == 0 &&
                 Float.compare(y, that.y) == 0 &&
                 alive == that.alive;
+        if (equal) {
+            System.out.println("    MARIO EQUAL");
+            return true;
+        }
+        else {
+            System.out.println("    MARIO NOT EQUAL");
+            return false;
+        }
     }
 
     @Override

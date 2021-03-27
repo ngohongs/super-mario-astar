@@ -62,7 +62,7 @@ public class EnemySlim extends MarioSpriteSlim {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         EnemySlim that = (EnemySlim) o;
-        return  Float.compare(that.xa, xa) == 0 &&
+        boolean equal = Float.compare(that.xa, xa) == 0 &&
                 Float.compare(that.ya, ya) == 0 &&
                 facing == that.facing &&
                 height == that.height &&
@@ -74,6 +74,14 @@ public class EnemySlim extends MarioSpriteSlim {
                 Float.compare(x, that.x) == 0 &&
                 Float.compare(y, that.y) == 0 &&
                 alive == that.alive;
+        if (equal) {
+            System.out.println("    ENEMY EQUAL");
+            return true;
+        }
+        else {
+            System.out.println("    ENEMY NOT EQUAL");
+            return false;
+        }
     }
 
     @Override

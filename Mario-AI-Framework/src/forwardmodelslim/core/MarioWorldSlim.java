@@ -103,18 +103,16 @@ public class MarioWorldSlim {
     private boolean areSpritesEqual(ArrayList<MarioSpriteSlim> sprites1, ArrayList<MarioSpriteSlim> sprites2) {
         for (MarioSpriteSlim sprite1 : sprites1) {
             boolean found = false;
+            System.out.println("  Comparing sprite " + sprite1);
             for (MarioSpriteSlim sprite2 : sprites2) {
-                if (sprite1.getType() == sprite2.getType() &&
-                        Float.compare(sprite1.x, sprite2.x) == 0 &&
-                        Float.compare(sprite1.y, sprite2.y) == 0) {
-                    if (sprite1.equals(sprite2)) {
-                        found = true;
-                        break;
-                    }
+                if (sprite1.equals(sprite2)) {
+                    found = true;
+                    break;
                 }
             }
             if (!found) {
                 System.out.println("SPRITES NOT EQUAL");
+                System.out.println("    Sprite not equal: " + sprite1);
                 return false;
             }
         }

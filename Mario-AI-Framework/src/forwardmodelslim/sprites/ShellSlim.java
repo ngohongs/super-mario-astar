@@ -39,13 +39,21 @@ public class ShellSlim extends MarioSpriteSlim {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ShellSlim that = (ShellSlim) o;
-        return  onGround == that.onGround &&
+        boolean equal = onGround == that.onGround &&
                 Float.compare(that.xa, xa) == 0 &&
                 Float.compare(that.ya, ya) == 0 &&
                 facing == that.facing &&
                 Float.compare(x, that.x) == 0 &&
                 Float.compare(y, that.y) == 0 &&
                 alive == that.alive;
+        if (equal) {
+            System.out.println("    SHELL EQUAL");
+            return true;
+        }
+        else {
+            System.out.println("    SHELL NOT EQUAL");
+            return false;
+        }
     }
 
     @Override

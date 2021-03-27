@@ -76,32 +76,36 @@ public class MarioLevelSlim {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         MarioLevelSlim that = (MarioLevelSlim) o;
-        boolean equal = width == that.width &&
+        boolean propertiesEqual = width == that.width &&
                 tileWidth == that.tileWidth &&
                 height == that.height &&
                 tileHeight == that.tileHeight &&
                 exitTileX == that.exitTileX &&
                 currentCutoutCenter == that.currentCutoutCenter &&
                 cutoutArrayBeginning == that.cutoutArrayBeginning &&
-                cutoutLeftBorderX == that.cutoutLeftBorderX &&
-                compareCutouts(levelCutout, that.levelCutout);
-        if (equal) {
-            System.out.println("LEVEL EQUAL");
-            return true;
-        }
-        else {
-            System.out.println("LEVEL NOT EQUAL");
-            return false;
-        }
+                cutoutLeftBorderX == that.cutoutLeftBorderX;
+        if (propertiesEqual)
+            System.out.println("LEVEL PROPERTIES EQUAL");
+        else
+            System.out.println("LEVEL PROPERTIES NOT EQUAL");
+
+        boolean cutoutsEqual = compareCutouts(levelCutout, that.levelCutout);
+
+        return propertiesEqual && cutoutsEqual;
     }
 
     private boolean compareCutouts(LevelPart[] a1, LevelPart[] a2) {
-        if (a1.length != a2.length)
+        if (a1.length != a2.length) {
+            System.out.println("LEVEL CUTOUTS NOT EQUAL");
             return false;
-        for (int i = 0; i < a1.length; i++) {
-            if (a1[i].getValue() != a2[i].getValue())
-                return false;
         }
+        for (int i = 0; i < a1.length; i++) {
+            if (a1[i].getValue() != a2[i].getValue()) {
+                System.out.println("LEVEL CUTOUTS NOT EQUAL");
+                return false;
+            }
+        }
+        System.out.println("LEVEL CUTOUTS EQUAL");
         return true;
     }
 

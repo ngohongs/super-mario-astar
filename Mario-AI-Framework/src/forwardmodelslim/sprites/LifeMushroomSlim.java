@@ -40,7 +40,7 @@ public class LifeMushroomSlim extends MarioSpriteSlim {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         LifeMushroomSlim that = (LifeMushroomSlim) o;
-        return  Float.compare(that.xa, xa) == 0 &&
+        boolean equal = Float.compare(that.xa, xa) == 0 &&
                 Float.compare(that.ya, ya) == 0 &&
                 facing == that.facing &&
                 onGround == that.onGround &&
@@ -48,6 +48,14 @@ public class LifeMushroomSlim extends MarioSpriteSlim {
                 Float.compare(x, that.x) == 0 &&
                 Float.compare(y, that.y) == 0 &&
                 alive == that.alive;
+        if (equal) {
+            System.out.println("    LIFE MUSHROOM EQUAL");
+            return true;
+        }
+        else {
+            System.out.println("    LIFE MUSHROOM NOT EQUAL");
+            return false;
+        }
     }
 
     @Override

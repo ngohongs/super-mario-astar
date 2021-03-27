@@ -28,10 +28,18 @@ public class FireFlowerSlim extends MarioSpriteSlim {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         FireFlowerSlim that = (FireFlowerSlim) o;
-        return life == that.life  &&
+        boolean equal = life == that.life  &&
                 Float.compare(x, that.x) == 0 &&
                 Float.compare(y, that.y) == 0 &&
                 alive == that.alive;
+        if (equal) {
+            System.out.println("    FIRE FLOWER EQUAL");
+            return true;
+        }
+        else {
+            System.out.println("    FIRE FLOWER NOT EQUAL");
+            return false;
+        }
     }
 
     @Override

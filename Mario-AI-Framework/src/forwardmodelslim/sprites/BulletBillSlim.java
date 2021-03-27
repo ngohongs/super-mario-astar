@@ -28,10 +28,18 @@ public class BulletBillSlim extends MarioSpriteSlim {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         BulletBillSlim that = (BulletBillSlim) o;
-        return  facing == that.facing &&
+        boolean equal =  facing == that.facing &&
                 Float.compare(x, that.x) == 0 &&
                 Float.compare(y, that.y) == 0 &&
                 alive == that.alive;
+        if (equal) {
+            System.out.println("    BULLET BILL EQUAL");
+            return true;
+        }
+        else {
+            System.out.println("    BULLET BILL NOT EQUAL");
+            return false;
+        }
     }
 
     @Override
