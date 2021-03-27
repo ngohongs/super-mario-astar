@@ -98,29 +98,36 @@ public class MarioLevelSlim {
                 tileHeight == that.tileHeight &&
                 exitTileX == that.exitTileX &&
                 currentCutoutCenter == that.currentCutoutCenter &&
-                cutoutArrayBeginningIndex == that.cutoutArrayBeginningIndex &&
                 cutoutLeftBorderX == that.cutoutLeftBorderX;
         if (propertiesEqual)
             System.out.println("LEVEL PROPERTIES EQUAL");
         else
             System.out.println("LEVEL PROPERTIES NOT EQUAL");
 
-        boolean cutoutsEqual = compareCutouts(levelCutout, that.levelCutout);
+        boolean cutoutsEqual = compareCutouts(this, that);
 
         return propertiesEqual && cutoutsEqual;
     }
 
-    private boolean compareCutouts(LevelPart[] a1, LevelPart[] a2) {
+    private boolean compareCutouts(MarioLevelSlim l1, MarioLevelSlim l2) {
+        LevelPart[] a1 = l1.levelCutout;
+        LevelPart[] a2 = l2.levelCutout;
+
         if (a1.length != a2.length) {
             System.out.println("LEVEL CUTOUTS NOT EQUAL");
             return false;
         }
+
+        int i1, i2;
         for (int i = 0; i < a1.length; i++) {
-            if (a1[i].getValue() != a2[i].getValue()) {
+            i1 = (i + l1.cutoutArrayBeginningIndex) % a1.length;
+            i2 = (i + l2.cutoutArrayBeginningIndex) % a2.length;
+            if (a1[i1].getValue() != a2[i2].getValue()) {
                 System.out.println("LEVEL CUTOUTS NOT EQUAL");
                 return false;
             }
         }
+
         System.out.println("LEVEL CUTOUTS EQUAL");
         return true;
     }

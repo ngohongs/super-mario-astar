@@ -96,6 +96,12 @@ public class MarioWorldSlim {
         else
             System.out.println("WORLD PROPERTIES NOT EQUAL");
 
+        // align level cutouts if game is not running
+        if (this.gameStatus != GameStatus.RUNNING)
+            this.level.update((int) this.mario.x / 16);
+        if (that.gameStatus != GameStatus.RUNNING)
+            that.level.update((int) that.mario.x / 16);
+
         return worldProperties & level.equals(that.level) &
                 areSpritesEqual(this.sprites, that.sprites);
     }
