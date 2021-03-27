@@ -216,6 +216,7 @@ public class MarioLevelSlim {
         return LevelPart.checkLevelBlock(toReturn);
     }
 
+    // a block that is set is necessarily dynamic
     public void setBlock(int xTile, int yTile, int index) {
         if (xTile < 0 || yTile < 0 || xTile > this.tileWidth - 1 || yTile > this.tileHeight - 1) {
             return;
@@ -223,8 +224,8 @@ public class MarioLevelSlim {
 
         if (levelCutout[calculateCutoutIndex(xTile, yTile)] == LevelPart.PIPE_TOP_LEFT_WITH_FLOWER)
             levelCutout[calculateCutoutIndex(xTile, yTile)] = LevelPart.PIPE_TOP_LEFT_WITHOUT_FLOWER;
-        // a block that is set is necessarily dynamic
-        levelCutout[calculateCutoutIndex(xTile, yTile)] = LevelPart.getLevelPart(index, true);
+        else
+            levelCutout[calculateCutoutIndex(xTile, yTile)] = LevelPart.getLevelPart(index, true);
     }
 
     public SpriteType getSpriteType(int xTile, int yTile) {
@@ -236,6 +237,9 @@ public class MarioLevelSlim {
 
     private int calculateCutoutIndex(int x, int y) {
         int cutoutX = x - cutoutLeftBorderX;
+        // TODO: only for testing
+        if (cutoutX < 0 || cutoutX >= cutoutTileWidth)
+            throw new IllegalStateException("Cutout not wide enough");
         return (cutoutArrayBeginningIndex + cutoutX * tileHeight + y) % (cutoutTileWidth * this.tileHeight);
     }
 }

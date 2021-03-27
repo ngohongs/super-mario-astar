@@ -19,40 +19,48 @@ public class MainSlim {
     }
 
     public static void main(String[] args) {
-        // set up original OOP world
-        String level = getLevel("./levels/original/lvl-1.txt");
-        MarioWorld originalWorld = new MarioWorld(null);
-        originalWorld.visuals = false;
-        originalWorld.initializeLevel(level, 1000 * 200);
-        originalWorld.mario.isLarge = false;
-        originalWorld.mario.isFire = false;
-        originalWorld.update(new boolean[MarioActions.numberOfActions()]);
+        for (int i = 1; i < 16; i++) {
+            // set up original OOP world
+            String level = getLevel("./levels/original/lvl-" + i + ".txt");
+            MarioWorld setupWorld = new MarioWorld(null);
+            setupWorld.visuals = false;
+            setupWorld.initializeLevel(level, 1000 * 200);
+            setupWorld.mario.isLarge = false;
+            setupWorld.mario.isFire = false;
+            setupWorld.update(new boolean[MarioActions.numberOfActions()]);
 
-        // set level cutout width
-        int levelCutoutTileWidth = 19;
+            // set level cutout width
+            int levelCutoutTileWidth = 35;
 
-        // create original OOP forward model
-        MarioForwardModel originalModel = new MarioForwardModel(originalWorld.clone());
+            // create original OOP forward model
+            MarioForwardModel originalModel = new MarioForwardModel(setupWorld.clone());
 
-        // convert to slim OOP forward model
-        MarioForwardModelSlim slimModel = Converter.convert(originalModel, levelCutoutTileWidth);
+            // convert to slim OOP forward model
+            MarioForwardModelSlim slimModel = Converter.convert(originalModel, levelCutoutTileWidth);
 
-        // advance both models TODO: more complicated actions, test more worlds
-        boolean[] actions = { false, false, false, false, false };
-        originalModel.advance(actions);
-        slimModel.advance(actions);
+            // advance both models TODO: more complicated actions, test more worlds
+            boolean[] actions = { false, true, false, false, false }; // left, right, down, speed, jump
+            for (int j = 0; j < 100; j++) {
+                originalModel.advance(actions);
+                slimModel.advance(actions);
+            }
 
-        // make a control slim model
-        MarioForwardModelSlim controlSlimModel = Converter.convert(originalModel, levelCutoutTileWidth);
+            // make a control slim model
+            MarioForwardModelSlim controlSlimModel = Converter.convert(originalModel, levelCutoutTileWidth);
 
-        // compare the two slim models
-        if (slimModel.equals(controlSlimModel)) {
-            System.out.println("-------------");
-            System.out.println("EQUAL");
+            // compare the two slim models
+            if (slimModel.equals(controlSlimModel)) {
+                System.out.println("-------------");
+                System.out.println("EQUAL");
+                System.out.println("-------------");
+            }
+            else {
+                System.out.println("-------------");
+                System.out.println("NOT EQUAL");
+                return;
+            }
         }
-        else {
-            System.out.println("-------------");
-            System.out.println("NOT EQUAL");
-        }
+        System.out.println("-------------");
+        System.out.println("ALL EQUAL");
     }
 }
