@@ -26,6 +26,7 @@ public class FlowerEnemySlim extends MarioSpriteSlim {
         this.x = x;
         this.y = y;
         this.y -= 1;
+        this.alive = true;
         this.yStart = this.y;
         this.ya = -1;
         for (int i = 0; i < 4; i++) {

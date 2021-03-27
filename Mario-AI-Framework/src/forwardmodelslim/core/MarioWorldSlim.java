@@ -69,7 +69,11 @@ public class MarioWorldSlim {
         if (levelCutoutTileWidth < 19)
             levelCutoutTileWidth = 19;
 
-        assert mario != null;
+        if (this.mario == null) {
+            this.mario = new MarioSlim(originalWorld.mario);
+            this.sprites.add(mario);
+        }
+
         this.level = new MarioLevelSlim(originalWorld.level, levelCutoutTileWidth, (int) mario.x / 16);
     }
 
