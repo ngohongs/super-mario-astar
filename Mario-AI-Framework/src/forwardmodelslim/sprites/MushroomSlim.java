@@ -20,6 +20,7 @@ public class MushroomSlim extends MarioSpriteSlim {
     public MushroomSlim(Mushroom originalMushroom) {
         this.x = originalMushroom.x;
         this.y = originalMushroom.y;
+        this.alive = originalMushroom.alive;
         this.xa = originalMushroom.xa;
         this.ya = originalMushroom.ya;
         this.facing = originalMushroom.facing;

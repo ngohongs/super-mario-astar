@@ -15,6 +15,7 @@ public class FlowerEnemySlim extends MarioSpriteSlim {
     public FlowerEnemySlim(FlowerEnemy originalFlowerEnemy) {
         this.x = originalFlowerEnemy.x;
         this.y = originalFlowerEnemy.y;
+        this.alive = originalFlowerEnemy.alive;
         this.yStart = originalFlowerEnemy.getyStart();
         this.waitTime = originalFlowerEnemy.getWaitTime();
         this.ya = originalFlowerEnemy.ya;

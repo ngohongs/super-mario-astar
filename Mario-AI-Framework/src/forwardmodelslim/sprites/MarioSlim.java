@@ -36,6 +36,7 @@ public class MarioSlim extends MarioSpriteSlim {
 
         this.x = originalMario.x;
         this.y = originalMario.y;
+        this.alive = originalMario.alive;
         this.height = originalMario.height;
         this.wasOnGround = originalMario.wasOnGround;
         this.onGround = originalMario.onGround;

@@ -25,6 +25,7 @@ public class EnemySlim extends MarioSpriteSlim {
     public EnemySlim(Enemy originalEnemy) {
         this.x = originalEnemy.x;
         this.y = originalEnemy.y;
+        this.alive = originalEnemy.alive;
         this.type = originalEnemy.type;
         this.xa = originalEnemy.xa;
         this.ya = originalEnemy.ya;

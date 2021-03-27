@@ -20,6 +20,7 @@ public class ShellSlim extends MarioSpriteSlim {
     public ShellSlim(Shell originalShell) {
         this.x = originalShell.x;
         this.y = originalShell.y;
+        this.alive = originalShell.alive;
         this.xa = originalShell.xa;
         this.ya = originalShell.ya;
         this.facing = originalShell.facing;

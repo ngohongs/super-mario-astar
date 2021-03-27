@@ -19,6 +19,7 @@ public class FireballSlim extends MarioSpriteSlim {
     public FireballSlim(Fireball originalFireball) {
         this.x = originalFireball.x;
         this.y = originalFireball.y;
+        this.alive = originalFireball.alive;
         this.xa = originalFireball.xa;
         this.ya = originalFireball.ya;
         this.facing = originalFireball.facing;

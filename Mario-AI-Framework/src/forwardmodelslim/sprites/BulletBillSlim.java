@@ -14,6 +14,7 @@ public class BulletBillSlim extends MarioSpriteSlim {
     public BulletBillSlim(BulletBill originalBulletBill) {
         this.x = originalBulletBill.x;
         this.y = originalBulletBill.y;
+        this.alive = originalBulletBill.alive;
         this.facing = originalBulletBill.facing;
     }
 

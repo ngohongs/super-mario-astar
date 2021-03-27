@@ -14,6 +14,7 @@ public class FireFlowerSlim extends MarioSpriteSlim {
     public FireFlowerSlim(FireFlower originalFireFlower) {
         this.x = originalFireFlower.x;
         this.y = originalFireFlower.y;
+        this.alive = originalFireFlower.alive;
         this.life = originalFireFlower.getLife();
     }
 

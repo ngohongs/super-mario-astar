@@ -74,7 +74,6 @@ public class MarioWorldSlim {
     }
 
     private void setupSprite(MarioSpriteSlim sprite) {
-        sprite.alive = true;
         this.sprites.add(sprite);
     }
 
@@ -168,7 +167,7 @@ public class MarioWorldSlim {
     public void addSprite(MarioSpriteSlim sprite, MarioUpdateContext updateContext) {
         updateContext.addedSprites.add(sprite);
         sprite.alive = true;
-        }
+    }
 
     public void removeSprite(MarioSpriteSlim sprite, MarioUpdateContext updateContext) {
         updateContext.removedSprites.add(sprite);
