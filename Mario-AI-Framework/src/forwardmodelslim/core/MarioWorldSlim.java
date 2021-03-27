@@ -41,25 +41,25 @@ public class MarioWorldSlim {
 
         for (MarioSprite originalSprite : originalWorld.sprites) {
             if (originalSprite instanceof BulletBill)
-                setupSprite(new BulletBillSlim((BulletBill) originalSprite));
+                this.sprites.add(new BulletBillSlim((BulletBill) originalSprite));
             else if (originalSprite instanceof FlowerEnemy)
-                setupSprite(new FlowerEnemySlim((FlowerEnemy) originalSprite));
+                this.sprites.add(new FlowerEnemySlim((FlowerEnemy) originalSprite));
             else if (originalSprite instanceof Enemy)
-                setupSprite(new EnemySlim((Enemy) originalSprite));
+                this.sprites.add(new EnemySlim((Enemy) originalSprite));
             else if (originalSprite instanceof Fireball)
-                setupSprite(new FireballSlim((Fireball) originalSprite));
+                this.sprites.add(new FireballSlim((Fireball) originalSprite));
             else if (originalSprite instanceof FireFlower)
-                setupSprite(new FireFlowerSlim((FireFlower) originalSprite));
+                this.sprites.add(new FireFlowerSlim((FireFlower) originalSprite));
             else if (originalSprite instanceof LifeMushroom)
-                setupSprite(new LifeMushroomSlim((LifeMushroom) originalSprite));
+                this.sprites.add(new LifeMushroomSlim((LifeMushroom) originalSprite));
             else if (originalSprite instanceof Mario) {
                 mario = new MarioSlim((Mario) originalSprite);
-                setupSprite(mario);
+                this.sprites.add(mario);
             }
             else if (originalSprite instanceof Mushroom)
-                setupSprite(new MushroomSlim((Mushroom) originalSprite));
+                this.sprites.add(new MushroomSlim((Mushroom) originalSprite));
             else if (originalSprite instanceof Shell)
-                setupSprite(new ShellSlim((Shell) originalSprite));
+                this.sprites.add(new ShellSlim((Shell) originalSprite));
             else
                 throw new IllegalArgumentException();
         }
@@ -71,10 +71,6 @@ public class MarioWorldSlim {
 
         assert mario != null;
         this.level = new MarioLevelSlim(originalWorld.level, levelCutoutTileWidth, (int) mario.x / 16);
-    }
-
-    private void setupSprite(MarioSpriteSlim sprite) {
-        this.sprites.add(sprite);
     }
 
     @Override
@@ -167,6 +163,7 @@ public class MarioWorldSlim {
     public void addSprite(MarioSpriteSlim sprite, MarioUpdateContext updateContext) {
         updateContext.addedSprites.add(sprite);
         sprite.alive = true;
+        sprite.update(updateContext);
     }
 
     public void removeSprite(MarioSpriteSlim sprite, MarioUpdateContext updateContext) {
@@ -247,8 +244,6 @@ public class MarioWorldSlim {
             }
         }
 
-        this.level.update((int) mario.x / 16);
-
         for (int x = (int) cameraX / 16 - 1; x <= (int) (cameraX + marioGameWidth) / 16 + 1; x++) {
             for (int y = (int) cameraY / 16 - 1; y <= (int) (cameraY + marioGameHeight) / 16 + 1; y++) {
                 int dir = 0;
@@ -310,6 +305,8 @@ public class MarioWorldSlim {
             }
         }
         updateContext.fireballsToCheck.clear();
+
+        this.level.update((int) mario.x / 16);
 
         sprites.addAll(0, updateContext.addedSprites);
         sprites.removeAll(updateContext.removedSprites);
