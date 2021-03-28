@@ -178,7 +178,7 @@ public class MarioLevelSlim {
                 cutoutLeftBorderX++;
                 cutoutArrayBeginningIndex = (cutoutArrayBeginningIndex + tileHeight) % (cutoutTileWidth * this.tileHeight);
             }
-            else if (cutoutLeftBorderX - 1 >= 0) { // move left
+            else if (currentCutoutCenter > marioTileX && cutoutLeftBorderX - 1 >= 0) { // move left
                 if (cutoutLeftBorderX <= 0) // left cutout border <= beginning of level
                     return;
                 int lastColumnIndex = cutoutArrayBeginningIndex - tileHeight;
