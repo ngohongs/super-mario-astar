@@ -53,6 +53,8 @@ public class Mario extends MarioSprite {
         sprite.facing = this.facing;
         sprite.isLarge = isLarge;
         sprite.isFire = isFire;
+        sprite.oldLarge = oldLarge;
+        sprite.oldFire = oldFire;
         sprite.wasOnGround = wasOnGround;
         sprite.onGround = onGround;
         sprite.isDucking = isDucking;
