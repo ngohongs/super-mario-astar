@@ -10,6 +10,8 @@ import javax.swing.JFrame;
 import agents.human.Agent;
 import engine.helper.GameStatus;
 import engine.helper.MarioActions;
+import forwardmodelslim.core.Converter;
+import forwardmodelslim.core.MarioForwardModelSlim;
 
 public class MarioGame {
     /**
@@ -67,7 +69,7 @@ public class MarioGame {
     /**
      * Create a mario game with a different forward model where the player on certain event
      *
-     * @param killPlayer events that will kill the player
+     * @param killEvents events that will kill the player
      */
     public MarioGame(MarioEvent[] killEvents) {
         this.killEvents = killEvents;
@@ -230,6 +232,11 @@ public class MarioGame {
         this.world.update(new boolean[MarioActions.numberOfActions()]);
         long currentTime = System.currentTimeMillis();
 
+        // add slim model to test it
+        int levelCutoutTileWidth = 25;
+        MarioForwardModel originalModel = new MarioForwardModel(this.world.clone());
+        MarioForwardModelSlim slimModel = Converter.convert(originalModel, levelCutoutTileWidth);
+
         //initialize graphics
         VolatileImage renderTarget = null;
         Graphics backBuffer = null;
@@ -259,6 +266,18 @@ public class MarioGame {
                 }
                 // update world
                 this.world.update(actions);
+
+                // advance slim model
+                slimModel.advance(actions);
+
+                // test slim model
+                originalModel = new MarioForwardModel(this.world.clone());
+                MarioForwardModelSlim controlSlimModel = Converter.convert(originalModel, levelCutoutTileWidth);
+                if (!slimModel.equals(controlSlimModel)) {
+                    System.out.println("NOT EQUAL");
+                    return null;
+                }
+
                 gameEvents.addAll(this.world.lastFrameEvents);
                 agentEvents.add(new MarioAgentEvent(actions, this.world.mario.x,
                         this.world.mario.y, (this.world.mario.isLarge ? 1 : 0) + (this.world.mario.isFire ? 1 : 0),

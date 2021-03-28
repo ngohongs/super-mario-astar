@@ -8,7 +8,7 @@ public class MarioForwardModelSlim {
         this.world = world;
     }
 
-    void advance(boolean[] actions) {
+    public void advance(boolean[] actions) {
         this.world.update(actions);
     }
 
