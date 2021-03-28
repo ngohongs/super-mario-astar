@@ -41,6 +41,13 @@ public class MarioLevelSlim {
                 if (level.levelTiles[x][y] != 0) {
                     if (level.levelTiles[x][y] == 39 || level.levelTiles[x][y] == 40)
                         levelPart = LevelPart.EMPTY; // flag is ignored
+                    // pipe top left - might have flower
+                    else if (level.levelTiles[x][y] == 18) {
+                        if (level.spriteTemplates[x][y] == SpriteType.ENEMY_FLOWER)
+                            levelPart = LevelPart.PIPE_TOP_LEFT_WITH_FLOWER;
+                        else
+                            levelPart = LevelPart.PIPE_TOP_LEFT_WITHOUT_FLOWER;
+                    }
                     else
                         levelPart = LevelPart.getLevelPart(level.levelTiles[x][y], true);
                 }
