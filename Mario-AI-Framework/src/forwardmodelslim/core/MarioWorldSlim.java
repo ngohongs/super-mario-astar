@@ -66,8 +66,8 @@ public class MarioWorldSlim {
 
         // minimum width because world.update method might look this far
         // TODO: is this large enough?
-        if (levelCutoutTileWidth < 25)
-            levelCutoutTileWidth = 25;
+        if (levelCutoutTileWidth < 27)
+            levelCutoutTileWidth = 27;
 
         if (this.mario == null) {
             this.mario = new MarioSlim(originalWorld.mario);

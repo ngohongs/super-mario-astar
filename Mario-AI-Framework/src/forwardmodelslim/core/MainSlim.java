@@ -30,7 +30,7 @@ public class MainSlim {
             setupWorld.update(new boolean[MarioActions.numberOfActions()]);
 
             // set level cutout width
-            int levelCutoutTileWidth = 25;
+            int levelCutoutTileWidth = 0;
 
             // create original OOP forward model
             MarioForwardModel originalModel = new MarioForwardModel(setupWorld.clone());

@@ -233,7 +233,7 @@ public class MarioGame {
         long currentTime = System.currentTimeMillis();
 
         // add slim model to test it
-        int levelCutoutTileWidth = 25;
+        int levelCutoutTileWidth = 0;
         MarioForwardModel originalModel = new MarioForwardModel(this.world.clone());
         MarioForwardModelSlim slimModel = Converter.convert(originalModel, levelCutoutTileWidth);
 
