@@ -37,6 +37,7 @@ public class Fireball extends MarioSprite {
         Fireball f = new Fireball(false, this.x, this.y, this.facing);
         f.xa = this.xa;
         f.ya = this.ya;
+        f.alive = this.alive;
         f.initialCode = this.initialCode;
         f.width = this.width;
         f.height = this.height;

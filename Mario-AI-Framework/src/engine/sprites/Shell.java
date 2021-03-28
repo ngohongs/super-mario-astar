@@ -41,6 +41,7 @@ public class Shell extends MarioSprite {
         Shell sprite = new Shell(false, this.x, this.y, this.shellType, this.initialCode);
         sprite.xa = this.xa;
         sprite.ya = this.ya;
+        sprite.alive = this.alive;
         sprite.width = this.width;
         sprite.height = this.height;
         sprite.facing = this.facing;

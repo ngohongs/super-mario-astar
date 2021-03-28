@@ -30,6 +30,8 @@ public class FlowerEnemy extends Enemy {
         FlowerEnemy sprite = new FlowerEnemy(false, this.x, this.y);
         sprite.xa = this.xa;
         sprite.ya = this.ya;
+        sprite.alive = this.alive;
+        sprite.facing = this.facing;
         sprite.initialCode = this.initialCode;
         sprite.width = this.width;
         sprite.height = this.height;

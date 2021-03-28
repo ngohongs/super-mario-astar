@@ -37,6 +37,7 @@ public class Mushroom extends MarioSprite {
         Mushroom m = new Mushroom(false, this.x, this.y);
         m.xa = this.xa;
         m.ya = this.ya;
+        m.alive = this.alive;
         m.initialCode = this.initialCode;
         m.width = this.width;
         m.height = this.height;

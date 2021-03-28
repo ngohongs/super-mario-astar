@@ -58,6 +58,7 @@ public class Enemy extends MarioSprite {
         Enemy e = new Enemy(false, this.x, this.y, this.facing, this.type);
         e.xa = this.xa;
         e.ya = this.ya;
+        e.alive = this.alive;
         e.initialCode = this.initialCode;
         e.width = this.width;
         e.height = this.height;
