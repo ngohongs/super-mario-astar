@@ -30,7 +30,7 @@ public class MainSlim {
             setupWorld.update(new boolean[MarioActions.numberOfActions()]);
 
             // set level cutout width
-            int levelCutoutTileWidth = 35;
+            int levelCutoutTileWidth = 25;
 
             // create original OOP forward model
             MarioForwardModel originalModel = new MarioForwardModel(setupWorld.clone());
@@ -40,7 +40,7 @@ public class MainSlim {
 
             // advance both models TODO: more complicated actions, test more worlds
             boolean[] actions = { false, true, false, false, false }; // left, right, down, speed, jump
-            for (int j = 0; j < 100; j++) {
+            for (int j = 0; j < 1000; j++) {
                 originalModel.advance(actions);
                 slimModel.advance(actions);
             }
