@@ -127,7 +127,6 @@ public class FireballSlim extends MarioSpriteSlim {
             return false;
         } else {
             x += xa;
-            y += ya;
             return true;
         }
     }
@@ -166,7 +165,6 @@ public class FireballSlim extends MarioSpriteSlim {
             }
             return false;
         } else {
-            x += xa;
             y += ya;
             return true;
         }

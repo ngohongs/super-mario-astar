@@ -271,7 +271,6 @@ public class MarioSlim extends MarioSpriteSlim {
             return false;
         } else {
             x += xa;
-            y += ya;
             return true;
         }
     }
@@ -311,7 +310,6 @@ public class MarioSlim extends MarioSpriteSlim {
             }
             return false;
         } else {
-            x += xa;
             y += ya;
             return true;
         }

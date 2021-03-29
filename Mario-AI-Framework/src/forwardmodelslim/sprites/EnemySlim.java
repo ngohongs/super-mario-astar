@@ -236,7 +236,6 @@ public class EnemySlim extends MarioSpriteSlim {
             return false;
         } else {
             x += xa;
-            y += ya;
             return true;
         }
     }
@@ -275,7 +274,6 @@ public class EnemySlim extends MarioSpriteSlim {
             }
             return false;
         } else {
-            x += xa;
             y += ya;
             return true;
         }

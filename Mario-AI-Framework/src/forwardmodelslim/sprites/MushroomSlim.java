@@ -169,7 +169,6 @@ public class MushroomSlim extends MarioSpriteSlim {
             return false;
         } else {
             x += xa;
-            y += ya;
             return true;
         }
     }
@@ -208,7 +207,6 @@ public class MushroomSlim extends MarioSpriteSlim {
             }
             return false;
         } else {
-            x += xa;
             y += ya;
             return true;
         }
