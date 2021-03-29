@@ -258,6 +258,11 @@ public class MarioGame {
                 //get actions
                 agentTimer = new MarioTimer(MarioGame.maxTime);
                 boolean[] actions = this.agent.getActions(new MarioForwardModel(this.world.clone()), agentTimer);
+                // create a copy to prevent actions from changing during updates
+                boolean[] actionsCopy = new boolean[5];
+                for (int i = 0; i < 5; i++) {
+                    actionsCopy[i] = actions[i];
+                }
                 if (MarioGame.verbose) {
                     if (agentTimer.getRemainingTime() < 0 && Math.abs(agentTimer.getRemainingTime()) > MarioGame.graceTime) {
                         System.out.println("The Agent is slowing down the game by: "
@@ -265,10 +270,10 @@ public class MarioGame {
                     }
                 }
                 // update world
-                this.world.update(actions);
+                this.world.update(actionsCopy);
 
                 // advance slim model
-                slimModel.advance(actions);
+                slimModel.advance(actionsCopy);
 
                 // test slim model
                 originalModel = new MarioForwardModel(this.world.clone());

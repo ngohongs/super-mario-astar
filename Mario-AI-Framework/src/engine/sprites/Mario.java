@@ -44,6 +44,8 @@ public class Mario extends MarioSprite {
     @Override
     public MarioSprite clone() {
         Mario sprite = new Mario(false, x - 8, y - 15);
+        sprite.x = this.x;
+        sprite.y = this.y;
         sprite.alive = this.alive;
         sprite.xa = this.xa;
         sprite.ya = this.ya;
