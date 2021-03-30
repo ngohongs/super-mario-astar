@@ -15,6 +15,7 @@ public class FlowerEnemy extends Enemy {
         this.yStart = this.y;
         this.ya = -1;
         this.y -= 1;
+
         for (int i = 0; i < 4; i++) {
             this.update();
         }
@@ -28,6 +29,8 @@ public class FlowerEnemy extends Enemy {
     @Override
     public MarioSprite clone() {
         FlowerEnemy sprite = new FlowerEnemy(false, this.x, this.y);
+        sprite.x = this.x;
+        sprite.y = this.y;
         sprite.xa = this.xa;
         sprite.ya = this.ya;
         sprite.alive = this.alive;
