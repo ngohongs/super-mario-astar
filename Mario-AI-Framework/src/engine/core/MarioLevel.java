@@ -282,14 +282,15 @@ public class MarioLevel {
         level.exitTileX = this.exitTileX;
         level.exitTileY = this.exitTileY;
         level.levelTiles = new int[this.levelTiles.length][this.levelTiles[0].length];
+        level.spriteTemplates = new SpriteType[this.levelTiles.length][this.levelTiles[0].length];
         //level.lastSpawnTime = new int[this.levelTiles.length][this.levelTiles[0].length];
         for (int x = 0; x < level.levelTiles.length; x++) {
             for (int y = 0; y < level.levelTiles[x].length; y++) {
                 level.levelTiles[x][y] = this.levelTiles[x][y];
+                level.spriteTemplates[x][y] = this.spriteTemplates[x][y];
                 //level.lastSpawnTime[x][y] = this.lastSpawnTime[x][y];
             }
         }
-        level.spriteTemplates = this.spriteTemplates;
         return level;
     }
 
