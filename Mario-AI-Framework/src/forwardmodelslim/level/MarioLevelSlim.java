@@ -4,6 +4,7 @@ import engine.core.MarioLevel;
 import engine.helper.SpriteType;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 // TODO: remove some of the magic numbers, sprite type?
 
@@ -18,6 +19,7 @@ public class MarioLevelSlim {
     private static int cutoutTileWidth;
 
     private LevelPart[] levelCutout;
+    private boolean[] aliveFlags;
     private int currentCutoutCenter;
     private int cutoutArrayBeginningIndex; // index of the current array beginning
     private int cutoutLeftBorderX;
@@ -34,7 +36,8 @@ public class MarioLevelSlim {
             MarioLevelSlim.cutoutTileWidth = tileWidth;
 
         staticLevel = new StaticLevel();
-        staticLevel.data = new LevelPart[level.levelTiles.length][level.levelTiles[0].length];
+        staticLevel.data = new StaticLevel.LevelTile[level.levelTiles.length][level.levelTiles[0].length];
+        int dynamicTileCounter = 0;
         for (int x = 0; x < level.levelTiles.length; x++) {
             for (int y = 0; y < level.levelTiles[x].length; y++) {
                 LevelPart levelPart;
@@ -54,11 +57,18 @@ public class MarioLevelSlim {
                 else
                     levelPart = LevelPart.getLevelPart(level.spriteTemplates[x][y].getValue(), false);
 
-                staticLevel.data[x][y] = levelPart;
+                if (LevelPart.isDynamic(levelPart)) {
+                    staticLevel.data[x][y] = new StaticLevel.LevelTile(dynamicTileCounter, levelPart);
+                    dynamicTileCounter++;
+                }
+                else
+                    staticLevel.data[x][y] = new StaticLevel.LevelTile(-1, levelPart);
             }
         }
 
         levelCutout = new LevelPart[cutoutTileWidth * this.tileHeight];
+        aliveFlags = new boolean[dynamicTileCounter];
+        Arrays.fill(aliveFlags, true);
         currentCutoutCenter = marioTileX;
         cutoutArrayBeginningIndex = 0;
         cutoutLeftBorderX = marioTileX - cutoutTileWidth / 2;
@@ -88,7 +98,8 @@ public class MarioLevelSlim {
                 if (x < 0 || x >= tileWidth)
                     levelCutout[column * tileHeight + y] = LevelPart.EMPTY;
                 else
-                    levelCutout[column * tileHeight + y] = staticLevel.data[x][y];
+                    // no need for alive check, still initializing
+                    levelCutout[column * tileHeight + y] = staticLevel.data[x][y].levelPart;
             }
             column++;
         }
@@ -171,7 +182,10 @@ public class MarioLevelSlim {
                     return;
                 int y = 0;
                 for (int i = cutoutArrayBeginningIndex; i < cutoutArrayBeginningIndex + tileHeight; i++) {
-                    levelCutout[i] = staticLevel.data[newColumnIndex][y];
+                    if (staticLevel.data[newColumnIndex][y].id == -1 || aliveFlags[staticLevel.data[newColumnIndex][y].id])
+                        levelCutout[i] = staticLevel.data[newColumnIndex][y].levelPart;
+                    else
+                        levelCutout[i] = LevelPart.getUsedState(staticLevel.data[newColumnIndex][y].levelPart);
                     y++;
                 }
                 currentCutoutCenter++;
@@ -181,12 +195,17 @@ public class MarioLevelSlim {
             else if (currentCutoutCenter > marioTileX && cutoutLeftBorderX - 1 >= 0) { // move left
                 if (cutoutLeftBorderX <= 0) // left cutout border <= beginning of level
                     return;
-                int lastColumnIndex = cutoutArrayBeginningIndex - tileHeight;
-                if (lastColumnIndex < 0)
-                    lastColumnIndex = (cutoutTileWidth * this.tileHeight) - tileHeight;
+                int cutoutLastColumnIndex = cutoutArrayBeginningIndex - tileHeight;
+                if (cutoutLastColumnIndex < 0)
+                    cutoutLastColumnIndex = (cutoutTileWidth * this.tileHeight) - tileHeight;
+                int newColumnIndex = marioTileX - cutoutTileWidth / 2;
                 int y = 0;
-                for (int i = lastColumnIndex; i < lastColumnIndex + tileHeight; i++) {
-                    levelCutout[i] = staticLevel.data[marioTileX - cutoutTileWidth / 2][y];
+                for (int i = cutoutLastColumnIndex; i < cutoutLastColumnIndex + tileHeight; i++) {
+                    if (staticLevel.data[newColumnIndex][y].id == -1
+                            || aliveFlags[staticLevel.data[newColumnIndex][y].id])
+                        levelCutout[i] = staticLevel.data[newColumnIndex][y].levelPart;
+                    else
+                        levelCutout[i] = LevelPart.getUsedState(staticLevel.data[newColumnIndex][y].levelPart);
                     y++;
                 }
                 currentCutoutCenter--;
@@ -229,10 +248,14 @@ public class MarioLevelSlim {
             return;
         }
 
-        if (levelCutout[calculateCutoutIndex(xTile, yTile)] == LevelPart.PIPE_TOP_LEFT_WITH_FLOWER)
+        if (levelCutout[calculateCutoutIndex(xTile, yTile)] == LevelPart.PIPE_TOP_LEFT_WITH_FLOWER) {
             levelCutout[calculateCutoutIndex(xTile, yTile)] = LevelPart.PIPE_TOP_LEFT_WITHOUT_FLOWER;
-        else
+            aliveFlags[staticLevel.data[xTile][yTile].id] = false;
+        }
+        else {
             levelCutout[calculateCutoutIndex(xTile, yTile)] = LevelPart.getLevelPart(index, true);
+            aliveFlags[staticLevel.data[xTile][yTile].id] = false;
+        }
     }
 
     public SpriteType getSpriteType(int xTile, int yTile) {

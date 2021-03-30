@@ -22,8 +22,8 @@
 - '2': Invisible coin bock - is pass through from above
 - 'D': Used block - after coin/mushroom block
 - 'S': Normal Brick Block - bumpable
-- 'C': Coing Brick Block - brick with hidden coin
-- 'U': Musrhoom Brick Block - brick with hidden mushroom
+- 'C': Coin Brick Block - brick with hidden coin
+- 'U': Mushroom Brick Block - brick with hidden mushroom
 - 'L': 1 up Block - brick with mushroom that adds a life
 - 'o': Coin
 - 't': Empty Pipe

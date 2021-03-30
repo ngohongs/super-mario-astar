@@ -96,7 +96,7 @@ public enum LevelPart {
         }
     }
 
-    static boolean IsDynamic(LevelPart levelPart) {
+    static boolean isDynamic(LevelPart levelPart) {
         switch (levelPart) {
             case GOOMBA:
             case GOOMBA_WINGED:
@@ -117,7 +117,6 @@ public enum LevelPart {
             case POWER_UP_BRICK_BLOCK:
             case HEALTH_UP_BRICK_BLOCK:
             case PIPE_TOP_LEFT_WITH_FLOWER:
-            case PIPE_TOP_LEFT_WITHOUT_FLOWER:
                 return true;
             case EMPTY:
             case GROUND_BLOCK:
@@ -137,7 +136,36 @@ public enum LevelPart {
             case JUMP_THROUGH_BLOCK_BACKGROUND:
             case PIPE_SINGLE_TOP:
             case PIPE_SINGLE_BODY:
+            case PIPE_TOP_LEFT_WITHOUT_FLOWER:
                 return false;
+            default:
+                throw new IllegalArgumentException();
+        }
+    }
+
+    static LevelPart getUsedState(LevelPart levelPart) {
+        switch (levelPart) {
+            case GOOMBA:
+            case GOOMBA_WINGED:
+            case RED_KOOPA:
+            case RED_KOOPA_WINGED:
+            case GREEN_KOOPA:
+            case GREEN_KOOPA_WINGED:
+            case SPIKY:
+            case SPIKY_WINGED:
+            case NORMAL_BRICK_BLOCK:
+            case COIN:
+                return EMPTY;
+            case COIN_BRICK_BLOCK:
+            case POWER_UP_QUESTION_BLOCK:
+            case COIN_QUESTION_BLOCK:
+            case INVISIBLE_HEALTH_UP_BLOCK:
+            case INVISIBLE_COIN_BLOCK:
+            case POWER_UP_BRICK_BLOCK:
+            case HEALTH_UP_BRICK_BLOCK:
+                return USED;
+            case PIPE_TOP_LEFT_WITH_FLOWER:
+                return PIPE_TOP_LEFT_WITHOUT_FLOWER;
             default:
                 throw new IllegalArgumentException();
         }
