@@ -38,7 +38,7 @@ public class MainSlim {
             // convert to slim OOP forward model
             MarioForwardModelSlim slimModel = Converter.convert(originalModel, levelCutoutTileWidth);
 
-            // advance both models TODO: more complicated actions, test more worlds
+            // advance both models
             boolean[] actions = { false, true, false, false, false }; // left, right, down, speed, jump
             for (int j = 0; j < 1000; j++) {
                 originalModel.advance(actions);

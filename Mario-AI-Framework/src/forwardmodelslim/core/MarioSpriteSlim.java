@@ -13,12 +13,8 @@ public abstract class MarioSpriteSlim {
 
     public void collideCheck(MarioUpdateContext updateContext) { }
     public void bumpCheck(int xTile, int yTile, MarioUpdateContext updateContext) { }
-    public boolean shellCollideCheck(ShellSlim shell, MarioUpdateContext updateContext) {
-        return false;
-    }
-    public boolean fireballCollideCheck(FireballSlim fireball, MarioUpdateContext updateContext) {
-        return false;
-    }
+    public boolean shellCollideCheck(ShellSlim shell, MarioUpdateContext updateContext) { return false; }
+    public boolean fireballCollideCheck(FireballSlim fireball, MarioUpdateContext updateContext) { return false; }
 
     public abstract MarioSpriteSlim clone();
 }

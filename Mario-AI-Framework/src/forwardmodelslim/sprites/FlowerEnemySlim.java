@@ -7,6 +7,8 @@ import forwardmodelslim.level.SpriteTypeSlim;
 
 public class FlowerEnemySlim extends MarioSpriteSlim {
     private static final SpriteTypeSlim type = SpriteTypeSlim.ENEMY_FLOWER;
+    private static final int width = 2;
+    private static final int height = 12;
 
     private float yStart;
     private int waitTime;
@@ -79,6 +81,21 @@ public class FlowerEnemySlim extends MarioSpriteSlim {
     }
 
     @Override
+    public void collideCheck(MarioUpdateContext updateContext) {
+        if (!this.alive) {
+            return;
+        }
+
+        float xMarioD = updateContext.world.mario.x - x;
+        float yMarioD = updateContext.world.mario.y - y;
+        if (xMarioD > -width * 2 - 4 && xMarioD < width * 2 + 4) {
+            if (yMarioD > -height && yMarioD < updateContext.world.mario.height) {
+               updateContext.world.mario.getHurt(updateContext);
+            }
+        }
+    }
+
+    @Override
     public void update(MarioUpdateContext updateContext) {
         if (!this.alive) {
             return;
@@ -105,5 +122,55 @@ public class FlowerEnemySlim extends MarioSpriteSlim {
             }
         }
         y += ya;
+    }
+
+    @Override
+    public boolean shellCollideCheck(ShellSlim shell, MarioUpdateContext updateContext) {
+        if (!this.alive) {
+            return false;
+        }
+
+        float xD = shell.x - x;
+        float yD = shell.y - y;
+
+        if (xD > -16 && xD < 16) {
+            if (yD > -height && yD < ShellSlim.height) {
+                ya = -5;
+                updateContext.world.removeSprite(this, updateContext);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public boolean fireballCollideCheck(FireballSlim fireball, MarioUpdateContext updateContext) {
+        if (!this.alive) {
+            return false;
+        }
+
+        float xD = fireball.x - x;
+        float yD = fireball.y - y;
+
+        if (xD > -16 && xD < 16) {
+            if (yD > -height && yD < FireballSlim.height) {
+                ya = -5;
+                updateContext.world.removeSprite(this, updateContext);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public void bumpCheck(int xTile, int yTile, MarioUpdateContext updateContext) {
+        if (!this.alive) {
+            return;
+        }
+
+        if (x + width > xTile * 16 && x - width < xTile * 16 + 16 && yTile == (int) ((y - 1) / 16)) {
+            ya = -5;
+            updateContext.world.removeSprite(this, updateContext);
+        }
     }
 }

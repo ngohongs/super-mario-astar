@@ -6,8 +6,6 @@ import engine.helper.SpriteType;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-// TODO: remove some of the magic numbers, sprite type?
-
 public class MarioLevelSlim {
     public int width;
     private int tileWidth;
