@@ -1,12 +1,12 @@
 package forwardmodelslim.sprites;
 
-import engine.helper.SpriteType;
 import engine.sprites.FlowerEnemy;
 import forwardmodelslim.core.MarioSpriteSlim;
 import forwardmodelslim.core.MarioUpdateContext;
+import forwardmodelslim.level.SpriteTypeSlim;
 
 public class FlowerEnemySlim extends MarioSpriteSlim {
-    private static final SpriteType type = SpriteType.ENEMY_FLOWER;
+    private static final SpriteTypeSlim type = SpriteTypeSlim.ENEMY_FLOWER;
 
     private float yStart;
     private int waitTime;
@@ -56,7 +56,7 @@ public class FlowerEnemySlim extends MarioSpriteSlim {
     }
 
     @Override
-    public SpriteType getType() {
+    public SpriteTypeSlim getType() {
         return type;
     }
 

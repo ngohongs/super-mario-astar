@@ -258,9 +258,9 @@ public class MarioLevelSlim {
         }
     }
 
-    public SpriteType getSpriteType(int xTile, int yTile) {
+    public SpriteTypeSlim getSpriteType(int xTile, int yTile) {
         if (xTile < 0 || yTile < 0 || xTile >= this.tileWidth || yTile >= this.tileHeight) {
-            return SpriteType.NONE;
+            return SpriteTypeSlim.NONE;
         }
         return LevelPart.getLevelSprite(levelCutout[calculateCutoutIndex(xTile, yTile)]);
     }

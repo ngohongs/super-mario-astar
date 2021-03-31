@@ -1,14 +1,14 @@
 package forwardmodelslim.sprites;
 
-import engine.helper.SpriteType;
 import engine.sprites.Fireball;
 import forwardmodelslim.core.MarioSpriteSlim;
 import forwardmodelslim.core.MarioUpdateContext;
+import forwardmodelslim.level.SpriteTypeSlim;
 
 public class FireballSlim extends MarioSpriteSlim {
     public static final float GROUND_INERTIA = 0.89f;
     public static final float AIR_INERTIA = 0.89f;
-    private static final SpriteType type = SpriteType.FIREBALL;
+    private static final SpriteTypeSlim type = SpriteTypeSlim.FIREBALL;
     private static final int width = 4;
     static final int height = 8;
 
@@ -57,7 +57,7 @@ public class FireballSlim extends MarioSpriteSlim {
     }
 
     @Override
-    public SpriteType getType() {
+    public SpriteTypeSlim getType() {
         return type;
     }
 

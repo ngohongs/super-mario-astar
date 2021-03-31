@@ -1,6 +1,6 @@
 package forwardmodelslim.core;
 
-import engine.helper.SpriteType;
+import forwardmodelslim.level.SpriteTypeSlim;
 import forwardmodelslim.sprites.FireballSlim;
 import forwardmodelslim.sprites.ShellSlim;
 
@@ -8,7 +8,7 @@ public abstract class MarioSpriteSlim {
     public float x, y;
     public boolean alive;
 
-    public abstract SpriteType getType();
+    public abstract SpriteTypeSlim getType();
     public abstract void update(MarioUpdateContext updateContext);
 
     public void collideCheck(MarioUpdateContext updateContext) { }

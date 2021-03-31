@@ -5,7 +5,7 @@ package forwardmodelslim.core;
 import engine.core.MarioSprite;
 import engine.core.MarioWorld;
 import engine.helper.GameStatus;
-import engine.helper.SpriteType;
+import forwardmodelslim.level.SpriteTypeSlim;
 import engine.sprites.*;
 import forwardmodelslim.level.LevelPart;
 import forwardmodelslim.level.MarioLevelSlim;
@@ -237,13 +237,13 @@ public class MarioWorldSlim {
         updateContext.fireballsOnScreen = 0;
         for (MarioSpriteSlim sprite : sprites) {
             if (sprite.x < cameraX - 64 || sprite.x > cameraX + marioGameWidth + 64 || sprite.y > this.level.height + 32) {
-                if (sprite.getType() == SpriteType.MARIO) {
+                if (sprite.getType() == SpriteTypeSlim.MARIO) {
                     this.lose();
                 }
                 this.removeSprite(sprite, updateContext);
                 continue;
             }
-            if (sprite.getType() == SpriteType.FIREBALL) {
+            if (sprite.getType() == SpriteTypeSlim.FIREBALL) {
                 updateContext.fireballsOnScreen += 1;
             }
         }
@@ -256,8 +256,8 @@ public class MarioWorldSlim {
                 if (x * 16 + 8 < mario.x - 16)
                     dir = 1;
 
-                SpriteType spriteType = level.getSpriteType(x, y);
-                if (spriteType != SpriteType.NONE) {
+                SpriteTypeSlim spriteType = level.getSpriteType(x, y);
+                if (spriteType != SpriteTypeSlim.NONE) {
                     MarioSpriteSlim newSprite = this.spawnEnemy(spriteType, x, y, dir);
                     this.addSprite(newSprite, updateContext);
                     level.setBlock(x, y, 0); // remove sprite when it is spawned
@@ -323,8 +323,8 @@ public class MarioWorldSlim {
         MarioUpdateContext.back(updateContext);
     }
 
-    private MarioSpriteSlim spawnEnemy(SpriteType type, int x, int y, int dir) {
-        if (type == SpriteType.ENEMY_FLOWER) {
+    private MarioSpriteSlim spawnEnemy(SpriteTypeSlim type, int x, int y, int dir) {
+        if (type == SpriteTypeSlim.ENEMY_FLOWER) {
             // flower enemy constructor needs to call update - which uses world
             MarioUpdateContext updateContext = MarioUpdateContext.get();
             updateContext.world = this;

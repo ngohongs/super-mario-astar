@@ -4,13 +4,14 @@ import engine.helper.SpriteType;
 import engine.sprites.Enemy;
 import forwardmodelslim.core.MarioSpriteSlim;
 import forwardmodelslim.core.MarioUpdateContext;
+import forwardmodelslim.level.SpriteTypeSlim;
 
 public class EnemySlim extends MarioSpriteSlim {
     public static final float GROUND_INERTIA = 0.89f;
     public static final float AIR_INERTIA = 0.89f;
     private static final int width = 4;
 
-    private SpriteType type;
+    private SpriteTypeSlim type;
 
     private float xa, ya;
     private int facing;
@@ -26,7 +27,7 @@ public class EnemySlim extends MarioSpriteSlim {
         this.x = originalEnemy.x;
         this.y = originalEnemy.y;
         this.alive = originalEnemy.alive;
-        this.type = originalEnemy.type;
+        this.type = SpriteTypeSlim.convertFromSpriteType(originalEnemy.type);
         this.xa = originalEnemy.xa;
         this.ya = originalEnemy.ya;
         this.facing = originalEnemy.facing;
@@ -39,18 +40,18 @@ public class EnemySlim extends MarioSpriteSlim {
         this.noFireballDeath = info.noFireballDeath;
     }
 
-    public EnemySlim(float x, float y, int dir, SpriteType type) {
+    public EnemySlim(float x, float y, int dir, SpriteTypeSlim type) {
         this.x = x;
         this.y = y;
         this.type = type;
         this.height = 24;
-        if (this.type != SpriteType.RED_KOOPA && this.type != SpriteType.GREEN_KOOPA
-                && this.type != SpriteType.RED_KOOPA_WINGED && this.type != SpriteType.GREEN_KOOPA_WINGED) {
+        if (this.type != SpriteTypeSlim.RED_KOOPA && this.type != SpriteTypeSlim.GREEN_KOOPA
+                && this.type != SpriteTypeSlim.RED_KOOPA_WINGED && this.type != SpriteTypeSlim.GREEN_KOOPA_WINGED) {
             this.height = 12;
         }
         this.winged = this.type.getValue() % 2 == 1;
-        this.avoidCliffs = this.type == SpriteType.RED_KOOPA || this.type == SpriteType.RED_KOOPA_WINGED;
-        this.noFireballDeath = this.type == SpriteType.SPIKY || this.type == SpriteType.SPIKY_WINGED;
+        this.avoidCliffs = this.type == SpriteTypeSlim.RED_KOOPA || this.type == SpriteTypeSlim.RED_KOOPA_WINGED;
+        this.noFireballDeath = this.type == SpriteTypeSlim.SPIKY || this.type == SpriteTypeSlim.SPIKY_WINGED;
         this.onGround = false;
         this.facing = dir;
         if (this.facing == 0) {
@@ -86,7 +87,7 @@ public class EnemySlim extends MarioSpriteSlim {
     }
 
     @Override
-    public SpriteType getType() {
+    public SpriteTypeSlim getType() {
         return type;
     }
 
@@ -116,16 +117,16 @@ public class EnemySlim extends MarioSpriteSlim {
         float yMarioD = updateContext.world.mario.y - y;
         if (xMarioD > -width * 2 - 4 && xMarioD < width * 2 + 4) {
             if (yMarioD > -height && yMarioD < updateContext.world.mario.height) {
-                if (type != SpriteType.SPIKY && type != SpriteType.SPIKY_WINGED && type != SpriteType.ENEMY_FLOWER &&
+                if (type != SpriteTypeSlim.SPIKY && type != SpriteTypeSlim.SPIKY_WINGED && type != SpriteTypeSlim.ENEMY_FLOWER &&
                         updateContext.world.mario.ya > 0 && yMarioD <= 0 && (!updateContext.world.mario.onGround || !updateContext.world.mario.wasOnGround)) {
                     updateContext.world.mario.stomp(this, updateContext);
                     if (winged) {
                         winged = false;
                         ya = 0;
                     } else {
-                        if (type == SpriteType.GREEN_KOOPA || type == SpriteType.GREEN_KOOPA_WINGED) {
+                        if (type == SpriteTypeSlim.GREEN_KOOPA || type == SpriteTypeSlim.GREEN_KOOPA_WINGED) {
                             updateContext.world.addSprite(new ShellSlim(x, y), updateContext);
-                        } else if (type == SpriteType.RED_KOOPA || type == SpriteType.RED_KOOPA_WINGED) {
+                        } else if (type == SpriteTypeSlim.RED_KOOPA || type == SpriteTypeSlim.RED_KOOPA_WINGED) {
                             updateContext.world.addSprite(new ShellSlim(x, y), updateContext);
                         }
                         updateContext.world.removeSprite(this, updateContext);
