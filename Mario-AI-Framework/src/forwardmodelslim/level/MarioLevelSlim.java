@@ -18,7 +18,7 @@ public class MarioLevelSlim {
     private StaticLevel staticLevel;
     private static int cutoutTileWidth;
 
-    private LevelPart[] levelCutout;
+    private byte[] levelCutout;
     private boolean[] aliveFlags;
     private int currentCutoutCenter;
     private int cutoutArrayBeginningIndex; // index of the current array beginning
@@ -66,7 +66,7 @@ public class MarioLevelSlim {
             }
         }
 
-        levelCutout = new LevelPart[cutoutTileWidth * this.tileHeight];
+        levelCutout = new byte[cutoutTileWidth * this.tileHeight];
         aliveFlags = new boolean[dynamicTileCounter];
         Arrays.fill(aliveFlags, true);
         currentCutoutCenter = marioTileX;
@@ -96,10 +96,10 @@ public class MarioLevelSlim {
         for (int x = copyStart; x <= copyEnd; x++) {
             for (int y = 0; y < this.tileHeight; y++) {
                 if (x < 0 || x >= tileWidth)
-                    levelCutout[column * tileHeight + y] = LevelPart.EMPTY;
+                    levelCutout[column * tileHeight + y] = LevelPart.EMPTY.getValue();
                 else
                     // no need for alive check, still initializing
-                    levelCutout[column * tileHeight + y] = staticLevel.data[x][y].levelPart;
+                    levelCutout[column * tileHeight + y] = staticLevel.data[x][y].levelPart.getValue();
             }
             column++;
         }
@@ -128,8 +128,8 @@ public class MarioLevelSlim {
     }
 
     private boolean compareCutouts(MarioLevelSlim l1, MarioLevelSlim l2) {
-        LevelPart[] a1 = l1.levelCutout;
-        LevelPart[] a2 = l2.levelCutout;
+        byte[] a1 = l1.levelCutout;
+        byte[] a2 = l2.levelCutout;
 
         if (a1.length != a2.length) {
             System.out.println("LEVEL CUTOUTS NOT EQUAL");
@@ -140,7 +140,7 @@ public class MarioLevelSlim {
         for (int i = 0; i < a1.length; i++) {
             i1 = (i + l1.cutoutArrayBeginningIndex) % a1.length;
             i2 = (i + l2.cutoutArrayBeginningIndex) % a2.length;
-            if (a1[i1].getValue() != a2[i2].getValue()) {
+            if (a1[i1] != a2[i2]) {
                 System.out.println("LEVEL CUTOUTS NOT EQUAL");
                 return false;
             }
@@ -183,9 +183,9 @@ public class MarioLevelSlim {
                 int y = 0;
                 for (int i = cutoutArrayBeginningIndex; i < cutoutArrayBeginningIndex + tileHeight; i++) {
                     if (staticLevel.data[newColumnIndex][y].id == -1 || aliveFlags[staticLevel.data[newColumnIndex][y].id])
-                        levelCutout[i] = staticLevel.data[newColumnIndex][y].levelPart;
+                        levelCutout[i] = staticLevel.data[newColumnIndex][y].levelPart.getValue();
                     else
-                        levelCutout[i] = LevelPart.getUsedState(staticLevel.data[newColumnIndex][y].levelPart);
+                        levelCutout[i] = LevelPart.getUsedState(staticLevel.data[newColumnIndex][y].levelPart).getValue();
                     y++;
                 }
                 currentCutoutCenter++;
@@ -203,9 +203,9 @@ public class MarioLevelSlim {
                 for (int i = cutoutLastColumnIndex; i < cutoutLastColumnIndex + tileHeight; i++) {
                     if (staticLevel.data[newColumnIndex][y].id == -1
                             || aliveFlags[staticLevel.data[newColumnIndex][y].id])
-                        levelCutout[i] = staticLevel.data[newColumnIndex][y].levelPart;
+                        levelCutout[i] = staticLevel.data[newColumnIndex][y].levelPart.getValue();
                     else
-                        levelCutout[i] = LevelPart.getUsedState(staticLevel.data[newColumnIndex][y].levelPart);
+                        levelCutout[i] = LevelPart.getUsedState(staticLevel.data[newColumnIndex][y].levelPart).getValue();
                     y++;
                 }
                 currentCutoutCenter--;
@@ -218,8 +218,8 @@ public class MarioLevelSlim {
     }
 
     public boolean isBlocking(int xTile, int yTile, float ya) {
-        LevelPart block = this.getBlock(xTile, yTile);
-        ArrayList<TileFeaturesSlim> features = TileFeaturesSlim.getTileFeatures(block);
+        byte blockValue = this.getBlockValue(xTile, yTile);
+        ArrayList<TileFeaturesSlim> features = TileFeaturesSlim.getTileFeatures(blockValue);
         boolean blocking = features.contains(TileFeaturesSlim.BLOCK_ALL);
         blocking |= (ya < 0) && features.contains(TileFeaturesSlim.BLOCK_UPPER);
         blocking |= (ya > 0) && features.contains(TileFeaturesSlim.BLOCK_LOWER);
@@ -227,7 +227,7 @@ public class MarioLevelSlim {
         return blocking;
     }
 
-    public LevelPart getBlock(int xTile, int yTile) {
+    public byte getBlockValue(int xTile, int yTile) {
         if (xTile < 0) {
             xTile = 0;
         }
@@ -235,10 +235,10 @@ public class MarioLevelSlim {
             xTile = this.tileWidth - 1;
         }
         if (yTile < 0 || yTile > this.tileHeight - 1) {
-            return LevelPart.EMPTY;
+            return LevelPart.EMPTY.getValue();
         }
 
-        LevelPart toReturn = levelCutout[calculateCutoutIndex(xTile, yTile)];
+        byte toReturn = levelCutout[calculateCutoutIndex(xTile, yTile)];
         return LevelPart.checkLevelBlock(toReturn);
     }
 
@@ -248,12 +248,12 @@ public class MarioLevelSlim {
             return;
         }
 
-        if (levelCutout[calculateCutoutIndex(xTile, yTile)] == LevelPart.PIPE_TOP_LEFT_WITH_FLOWER) {
-            levelCutout[calculateCutoutIndex(xTile, yTile)] = LevelPart.PIPE_TOP_LEFT_WITHOUT_FLOWER;
+        if (levelCutout[calculateCutoutIndex(xTile, yTile)] == LevelPart.PIPE_TOP_LEFT_WITH_FLOWER.getValue()) {
+            levelCutout[calculateCutoutIndex(xTile, yTile)] = LevelPart.PIPE_TOP_LEFT_WITHOUT_FLOWER.getValue();
             aliveFlags[staticLevel.data[xTile][yTile].id] = false;
         }
         else {
-            levelCutout[calculateCutoutIndex(xTile, yTile)] = LevelPart.getLevelPart(index, true);
+            levelCutout[calculateCutoutIndex(xTile, yTile)] = (byte) index;
             aliveFlags[staticLevel.data[xTile][yTile].id] = false;
         }
     }

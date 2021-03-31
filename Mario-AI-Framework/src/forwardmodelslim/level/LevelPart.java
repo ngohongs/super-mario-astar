@@ -5,57 +5,57 @@ import engine.helper.SpriteType;
 public enum LevelPart {
     // sprites - multiplied by -1 to avoid collisions with tiles
     // only sprites that are a part of the level layout
-    GOOMBA(-2),
-    GOOMBA_WINGED(-3),
-    RED_KOOPA(-4),
-    RED_KOOPA_WINGED(-5),
-    GREEN_KOOPA(-6),
-    GREEN_KOOPA_WINGED(-7),
-    SPIKY(-8),
-    SPIKY_WINGED(-9),
-    ENEMY_FLOWER(-11),
+    GOOMBA((byte) -2),
+    GOOMBA_WINGED((byte) -3),
+    RED_KOOPA((byte) -4),
+    RED_KOOPA_WINGED((byte) -5),
+    GREEN_KOOPA((byte) -6),
+    GREEN_KOOPA_WINGED((byte) -7),
+    SPIKY((byte) -8),
+    SPIKY_WINGED((byte) -9),
+    ENEMY_FLOWER((byte) -11),
 
     // special
-    PIPE_TOP_LEFT_WITH_FLOWER(100), // ENEMY_FLOWER is here
-    PIPE_TOP_LEFT_WITHOUT_FLOWER(101), // ENEMY_FLOWER was already spawned
+    PIPE_TOP_LEFT_WITH_FLOWER((byte) 100), // ENEMY_FLOWER is here
+    PIPE_TOP_LEFT_WITHOUT_FLOWER((byte) 101), // ENEMY_FLOWER was already spawned
 
     // tiles
-    EMPTY(0),
-    GROUND_BLOCK(1),
-    PYRAMID_BLOCK(2),
-    BULLET_BILL_CANNON(3),
-    BULLET_BILL_BASE(4),
-    BULLET_BILL_COLUMN(5),
-    NORMAL_BRICK_BLOCK(6),
-    COIN_BRICK_BLOCK(7),
-    POWER_UP_QUESTION_BLOCK(8),
-    COIN_QUESTION_BLOCK(11),
-    USED(14),
-    COIN(15),
-    PIPE_TOP_LEFT(18),
-    PIPE_TOP_RIGHT(19),
-    PIPE_BODY_LEFT(20),
-    PIPE_BODY_RIGHT(21),
+    EMPTY((byte) 0),
+    GROUND_BLOCK((byte) 1),
+    PYRAMID_BLOCK((byte) 2),
+    BULLET_BILL_CANNON((byte) 3),
+    BULLET_BILL_BASE((byte) 4),
+    BULLET_BILL_COLUMN((byte) 5),
+    NORMAL_BRICK_BLOCK((byte) 6),
+    COIN_BRICK_BLOCK((byte) 7),
+    POWER_UP_QUESTION_BLOCK((byte) 8),
+    COIN_QUESTION_BLOCK((byte) 11),
+    USED((byte) 14),
+    COIN((byte) 15),
+    PIPE_TOP_LEFT((byte) 18),
+    PIPE_TOP_RIGHT((byte) 19),
+    PIPE_BODY_LEFT((byte) 20),
+    PIPE_BODY_RIGHT((byte) 21),
     // TODO: 39 = flag, 40 = flag pole, needed?
-    JUMP_THROUGH_BLOCK_ALONE(43),
-    JUMP_THROUGH_BLOCK_LEFT(44),
-    JUMP_THROUGH_BLOCK_RIGHT(45),
-    JUMP_THROUGH_BLOCK_CENTER(46),
-    JUMP_THROUGH_BLOCK_BACKGROUND(47),
-    INVISIBLE_HEALTH_UP_BLOCK(48),
-    INVISIBLE_COIN_BLOCK(49),
-    POWER_UP_BRICK_BLOCK(50),
-    HEALTH_UP_BRICK_BLOCK(51),
-    PIPE_SINGLE_TOP(52),
-    PIPE_SINGLE_BODY(53);
+    JUMP_THROUGH_BLOCK_ALONE((byte) 43),
+    JUMP_THROUGH_BLOCK_LEFT((byte) 44),
+    JUMP_THROUGH_BLOCK_RIGHT((byte) 45),
+    JUMP_THROUGH_BLOCK_CENTER((byte) 46),
+    JUMP_THROUGH_BLOCK_BACKGROUND((byte) 47),
+    INVISIBLE_HEALTH_UP_BLOCK((byte) 48),
+    INVISIBLE_COIN_BLOCK((byte) 49),
+    POWER_UP_BRICK_BLOCK((byte) 50),
+    HEALTH_UP_BRICK_BLOCK((byte) 51),
+    PIPE_SINGLE_TOP((byte) 52),
+    PIPE_SINGLE_BODY((byte) 53);
 
-    private int value;
+    private byte value;
 
-    LevelPart(int value) {
+    LevelPart(byte value) {
         this.value = value;
     }
 
-    int getValue() {
+    public byte getValue() {
         return value;
     }
 
@@ -71,28 +71,27 @@ public enum LevelPart {
         throw new IllegalArgumentException();
     }
 
-    static LevelPart checkLevelBlock(LevelPart levelPart) {
-        if (levelPart == PIPE_TOP_LEFT_WITH_FLOWER ||
-            levelPart == PIPE_TOP_LEFT_WITHOUT_FLOWER)
-            return PIPE_TOP_LEFT;
-        if (levelPart.value < 0)
-            return EMPTY;
+    static byte checkLevelBlock(byte levelPartValue) {
+        if (levelPartValue == PIPE_TOP_LEFT_WITH_FLOWER.getValue() ||
+            levelPartValue == PIPE_TOP_LEFT_WITHOUT_FLOWER.getValue())
+            return PIPE_TOP_LEFT.getValue();
+        if (levelPartValue < 0)
+            return EMPTY.getValue();
         else
-            return levelPart;
+            return levelPartValue;
     }
 
-    static SpriteType getLevelSprite(LevelPart levelPart) {
-        if (levelPart == PIPE_TOP_LEFT_WITH_FLOWER)
-            return SpriteType.getSpriteType(-ENEMY_FLOWER.value);
-        if (levelPart == PIPE_TOP_LEFT_WITHOUT_FLOWER)
+    static SpriteType getLevelSprite(byte levelPartValue) {
+        if (levelPartValue == PIPE_TOP_LEFT_WITH_FLOWER.getValue())
+            return SpriteType.getSpriteType((byte) -ENEMY_FLOWER.value);
+        if (levelPartValue == PIPE_TOP_LEFT_WITHOUT_FLOWER.getValue())
             return SpriteType.NONE;
 
-        int value = levelPart.value;
-        if (value >= 0)
+        if (levelPartValue >= 0)
             return SpriteType.NONE;
         else {
-            value *= -1;
-            return SpriteType.getSpriteType(value);
+            levelPartValue *= -1;
+            return SpriteType.getSpriteType(levelPartValue);
         }
     }
 

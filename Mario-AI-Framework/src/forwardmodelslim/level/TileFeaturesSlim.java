@@ -14,48 +14,48 @@ public enum TileFeaturesSlim {
     ANIMATED,
     SPAWNER;
 
-    public static ArrayList<TileFeaturesSlim> getTileFeatures(LevelPart levelPart) {
-        switch (levelPart) {
-            case GROUND_BLOCK:
-            case PYRAMID_BLOCK:
-            case USED:
-            case PIPE_TOP_LEFT:
-            case PIPE_TOP_RIGHT:
-            case PIPE_BODY_LEFT:
-            case PIPE_BODY_RIGHT:
-            case BULLET_BILL_BASE:
-            case BULLET_BILL_COLUMN:
-            case PIPE_SINGLE_TOP:
-            case PIPE_SINGLE_BODY:
-            case PIPE_TOP_LEFT_WITH_FLOWER:
-            case PIPE_TOP_LEFT_WITHOUT_FLOWER:
+    public static ArrayList<TileFeaturesSlim> getTileFeatures(byte levelPartValue) {
+        switch (levelPartValue) {
+            case 1: //GROUND_BLOCK
+            case 2: //PYRAMID_BLOCK:
+            case 14: //USED:
+            case 18: //PIPE_TOP_LEFT:
+            case 19: //PIPE_TOP_RIGHT:
+            case 20: //PIPE_BODY_LEFT:
+            case 21: //PIPE_BODY_RIGHT:
+            case 4: //BULLET_BILL_BASE:
+            case 5: //BULLET_BILL_COLUMN:
+            case 52: //PIPE_SINGLE_TOP:
+            case 53: //PIPE_SINGLE_BODY:
+            case 100: //PIPE_TOP_LEFT_WITH_FLOWER:
+            case 101: //PIPE_TOP_LEFT_WITHOUT_FLOWER:
                 return blockAll;
-            case JUMP_THROUGH_BLOCK_ALONE:
-            case JUMP_THROUGH_BLOCK_LEFT:
-            case JUMP_THROUGH_BLOCK_RIGHT:
-            case JUMP_THROUGH_BLOCK_CENTER:
+            case 43: //JUMP_THROUGH_BLOCK_ALONE:
+            case 44: //JUMP_THROUGH_BLOCK_LEFT:
+            case 45: //JUMP_THROUGH_BLOCK_RIGHT:
+            case 46: //JUMP_THROUGH_BLOCK_CENTER:
                 return blockLower;
-            case INVISIBLE_HEALTH_UP_BLOCK:
+            case 48: //INVISIBLE_HEALTH_UP_BLOCK:
                 return blockUpper_life_bumpable;
-            case INVISIBLE_COIN_BLOCK:
+            case 49: //INVISIBLE_COIN_BLOCK:
                 return bumpable_blockUpper;
-            case BULLET_BILL_CANNON:
+            case 3: //BULLET_BILL_CANNON:
                 return blockAll_spawner;
-            case POWER_UP_QUESTION_BLOCK:
+            case 8: //POWER_UP_QUESTION_BLOCK:
                 return blockAll_special_bumpable_animated;
-            case COIN_QUESTION_BLOCK:
+            case 11: //COIN_QUESTION_BLOCK:
                 return blockAll_bumpable_animated;
-            case NORMAL_BRICK_BLOCK:
+            case 6: //NORMAL_BRICK_BLOCK:
                 return blockAll_breakable;
-            case COIN_BRICK_BLOCK:
+            case 7: //COIN_BRICK_BLOCK:
                 return blockAll_bumpable;
-            case COIN:
+            case 15: //COIN:
                 return pickable_animated;
-            case POWER_UP_BRICK_BLOCK:
+            case 50: //POWER_UP_BRICK_BLOCK:
                 return blockAll_special_bumpable;
-            case HEALTH_UP_BRICK_BLOCK:
+            case 51: //HEALTH_UP_BRICK_BLOCK:
                 return blockAll_life_bumpable;
-            case EMPTY:
+            case 0: //EMPTY:
             default:
                 return empty;
         }

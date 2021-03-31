@@ -264,7 +264,7 @@ public class MarioWorldSlim {
                 }
 
                 if (dir != 0) {
-                    if (this.level.getBlock(x, y) == LevelPart.BULLET_BILL_CANNON) {
+                    if (this.level.getBlockValue(x, y) == LevelPart.BULLET_BILL_CANNON.getValue()) {
                         if (this.currentTick % 100 == 0) {
                             addSprite(new BulletBillSlim(x * 16 + 8 + dir * 8, y * 16 + 15, dir), updateContext);
                         }
@@ -341,8 +341,8 @@ public class MarioWorldSlim {
     }
 
     public void bump(int xTile, int yTile, boolean canBreakBricks, MarioUpdateContext updateContext) {
-        LevelPart block = this.level.getBlock(xTile, yTile);
-        ArrayList<TileFeaturesSlim> features = TileFeaturesSlim.getTileFeatures(block);
+        byte blockValue = this.level.getBlockValue(xTile, yTile);
+        ArrayList<TileFeaturesSlim> features = TileFeaturesSlim.getTileFeatures(blockValue);
 
         if (features.contains(TileFeaturesSlim.BUMPABLE)) {
             bumpInto(xTile, yTile - 1, updateContext);
@@ -369,8 +369,8 @@ public class MarioWorldSlim {
     }
 
     private void bumpInto(int xTile, int yTile, MarioUpdateContext updateContext) {
-        LevelPart block = level.getBlock(xTile, yTile);
-        if (block == LevelPart.COIN) {
+        byte blockValue = level.getBlockValue(xTile, yTile);
+        if (blockValue == LevelPart.COIN.getValue()) {
             this.mario.collectCoin(updateContext);
             level.setBlock(xTile, yTile, 0);
         }
