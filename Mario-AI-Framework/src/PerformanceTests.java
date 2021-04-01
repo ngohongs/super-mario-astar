@@ -1,7 +1,15 @@
+import engine.core.MarioForwardModel;
+import engine.core.MarioWorld;
+import engine.helper.MarioActions;
+import forwardmodelslim.core.Converter;
+import forwardmodelslim.core.MarioForwardModelSlim;
 import forwardmodelslim.level.LevelPart;
 import sun.misc.Unsafe;
 
+import java.io.IOException;
 import java.lang.reflect.Field;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 /**
  * *******************************************************************************
@@ -56,7 +64,63 @@ public class PerformanceTests {
         return unsafe;
     }
 
+    private static String getLevel(String filepath) {
+        String content = "";
+        try {
+            content = new String(Files.readAllBytes(Paths.get(filepath)));
+        } catch (IOException ignored) {
+        }
+        return content;
+    }
+
     public static void main(String[] args) {
+        //testArrayCopies();
+        testClones();
+    }
+
+    private static void testClones() {
+        String level = getLevel("./levels/original/lvl-1.txt");
+        MarioWorld setupWorld = new MarioWorld(null);
+        setupWorld.visuals = false;
+        setupWorld.initializeLevel(level, 1000 * 200);
+        setupWorld.mario.isLarge = false;
+        setupWorld.mario.isFire = false;
+        setupWorld.update(new boolean[MarioActions.numberOfActions()]);
+
+        MarioForwardModel originalModel = new MarioForwardModel(setupWorld.clone());
+        MarioForwardModelSlim slimModel = Converter.convert(originalModel, 0);
+
+        for (int i = 0; i < 1000; i++) {
+            originalModel.clone();
+        }
+        long time = System.currentTimeMillis();
+        for (int i = 0; i < 1000000; i++) {
+            originalModel.clone();
+        }
+        long duration = System.currentTimeMillis() - time;
+        System.out.println("ORIGINAL MODEL");
+        System.out.println("TIME: " + duration + " ms");
+        System.out.print("Clones per second: ");
+        System.out.print(String.format("%,.0f", 1000000 / (duration / 1000.0)));
+        System.out.println(" clones");
+
+        for (int i = 0; i < 1000; i++) {
+            slimModel.clone();
+        }
+        time = System.currentTimeMillis();
+        for (int i = 0; i < 1000000; i++) {
+            slimModel.clone();
+        }
+        duration = System.currentTimeMillis() - time;
+        System.out.println("--------------");
+        System.out.println("SLIM MODEL");
+        System.out.println("TIME: " + duration + " ms");
+        System.out.print("Clones per second: ");
+        System.out.print(String.format("%,.0f", 1000000 / (duration / 1000.0)));
+        System.out.println(" clones");
+    }
+
+    private static void testArrayCopies() {
         unsafe = getUnsafe();
         LevelPart[] levelParts = new LevelPart[400];
         int[] ints = new int[400];
