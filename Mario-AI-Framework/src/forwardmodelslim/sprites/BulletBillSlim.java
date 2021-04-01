@@ -11,6 +11,8 @@ public class BulletBillSlim extends MarioSpriteSlim {
 
     private int facing;
 
+    private BulletBillSlim() { }
+
     public BulletBillSlim(BulletBill originalBulletBill) {
         this.x = originalBulletBill.x;
         this.y = originalBulletBill.y;
@@ -41,6 +43,15 @@ public class BulletBillSlim extends MarioSpriteSlim {
             System.out.println("    BULLET BILL NOT EQUAL");
             return false;
         }
+    }
+
+    public MarioSpriteSlim clone() {
+        BulletBillSlim clone = new BulletBillSlim();
+        clone.x = this.x;
+        clone.y = this.y;
+        clone.alive = this.alive;
+        clone.facing = this.facing;
+        return clone;
     }
 
     @Override
@@ -99,11 +110,6 @@ public class BulletBillSlim extends MarioSpriteSlim {
             }
         }
         return false;
-    }
-
-    @Override
-    public BulletBillSlim clone() {
-        return null;
     }
 }
 

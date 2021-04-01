@@ -1,6 +1,5 @@
 package forwardmodelslim.sprites;
 
-import engine.helper.SpriteType;
 import engine.sprites.Enemy;
 import forwardmodelslim.core.MarioSpriteSlim;
 import forwardmodelslim.core.MarioUpdateContext;
@@ -22,6 +21,8 @@ public class EnemySlim extends MarioSpriteSlim {
     private boolean avoidCliffs;
     private boolean winged;
     private boolean noFireballDeath;
+
+    private EnemySlim() { }
 
     public EnemySlim(Enemy originalEnemy) {
         this.x = originalEnemy.x;
@@ -91,20 +92,21 @@ public class EnemySlim extends MarioSpriteSlim {
         return type;
     }
 
-    @Override
     public MarioSpriteSlim clone() {
-        /*Enemy e = new Enemy(false, this.x, this.y, this.facing, this.type);
-        e.xa = this.xa;
-        e.ya = this.ya;
-        e.initialCode = this.initialCode;
-        e.width = this.width;
-        e.height = this.height;
-        e.onGround = this.onGround;
-        e.winged = this.winged;
-        e.avoidCliffs = this.avoidCliffs;
-        e.noFireballDeath = this.noFireballDeath;
-        return e;*/
-        return null;
+        EnemySlim clone = new EnemySlim();
+        clone.x = this.x;
+        clone.y = this.y;
+        clone.alive = this.alive;
+        clone.type = this.type;
+        clone.xa = this.xa;
+        clone.ya = this.ya;
+        clone.facing = this.facing;
+        clone.height = this.height;
+        clone.onGround = this.onGround;
+        clone.avoidCliffs = this.avoidCliffs;
+        clone.winged = this.winged;
+        clone.noFireballDeath = this.noFireballDeath;
+        return clone;
     }
 
     @Override

@@ -17,6 +17,8 @@ public class ShellSlim extends MarioSpriteSlim {
     private float xa, ya;
     int facing;
 
+    private ShellSlim() { }
+
     public ShellSlim(Shell originalShell) {
         this.x = originalShell.x;
         this.y = originalShell.y;
@@ -62,17 +64,16 @@ public class ShellSlim extends MarioSpriteSlim {
         return type;
     }
 
-    @Override
     public MarioSpriteSlim clone() {
-        /*Shell sprite = new Shell(false, this.x, this.y, this.shellType, this.initialCode);
-        sprite.xa = this.xa;
-        sprite.ya = this.ya;
-        sprite.width = this.width;
-        sprite.height = this.height;
-        sprite.facing = this.facing;
-        sprite.onGround = this.onGround;
-        return sprite;*/
-        return null;
+        ShellSlim clone = new ShellSlim();
+        clone.x = this.x;
+        clone.y = this.y;
+        clone.alive = this.alive;
+        clone.onGround = this.onGround;
+        clone.xa = this.xa;
+        clone.ya = this.ya;
+        clone.facing = this.facing;
+        return clone;
     }
 
     @Override

@@ -27,6 +27,8 @@ public class MarioWorldSlim {
 
     private ArrayList<MarioSpriteSlim> sprites;
 
+    private MarioWorldSlim() { }
+
     MarioWorldSlim(MarioWorld originalWorld, int levelCutoutTileWidth) {
         this.gameStatus = originalWorld.gameStatus;
         this.pauseTimer = originalWorld.pauseTimer;
@@ -126,32 +128,31 @@ public class MarioWorldSlim {
     }
 
     public MarioWorldSlim clone() {
-        /*MarioWorld world = new MarioWorld(this.killEvents);
-        world.visuals = false;
-        world.cameraX = this.cameraX;
-        world.cameraY = this.cameraY;
-        world.fireballsOnScreen = this.fireballsOnScreen;
-        world.gameStatus = this.gameStatus;
-        world.pauseTimer = this.pauseTimer;
-        world.currentTimer = this.currentTimer;
-        world.currentTick = this.currentTick;
-        world.level = this.level.clone();
-        for (MarioSprite sprite : this.sprites) {
-            MarioSprite cloneSprite = sprite.clone();
-            cloneSprite.world = world;
-            if (cloneSprite.type == SpriteType.MARIO) {
-                world.mario = (Mario) cloneSprite;
-            }
-            world.sprites.add(cloneSprite);
+        MarioWorldSlim clone = new MarioWorldSlim();
+        clone.gameStatus = this.gameStatus;
+        clone.pauseTimer = this.pauseTimer;
+        clone.currentTimer = this.currentTimer;
+        clone.cameraX = this.cameraX;
+        clone.cameraY = this.cameraY;
+        clone.currentTick = this.currentTick;
+        clone.coins = this.coins;
+        clone.lives = this.lives;
+
+        clone.level = this.level.clone();
+
+        clone.sprites = new ArrayList<>();
+
+        for (MarioSpriteSlim sprite : this.sprites) {
+            MarioSpriteSlim spriteClone = sprite.clone();
+            clone.sprites.add(spriteClone);
+            if (spriteClone.getType() == SpriteTypeSlim.MARIO)
+                clone.mario = (MarioSlim) spriteClone;
         }
-        if (world.mario == null) {
-            world.mario = (Mario) this.mario.clone();
-        }
-        //stats
-        world.coins = this.coins;
-        world.lives = this.lives;
-        return world;*/
-        return null;
+
+        if (clone.mario == null)
+            clone.mario = (MarioSlim) this.mario.clone();
+
+        return clone;
     }
 
     public ArrayList<MarioSpriteSlim> getEnemies() {

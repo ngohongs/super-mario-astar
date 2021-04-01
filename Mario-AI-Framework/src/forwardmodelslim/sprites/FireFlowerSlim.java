@@ -11,6 +11,8 @@ public class FireFlowerSlim extends MarioSpriteSlim {
 
     private int life;
 
+    private FireFlowerSlim() { }
+
     public FireFlowerSlim(FireFlower originalFireFlower) {
         this.x = originalFireFlower.x;
         this.y = originalFireFlower.y;
@@ -48,18 +50,13 @@ public class FireFlowerSlim extends MarioSpriteSlim {
         return type;
     }
 
-    @Override
     public MarioSpriteSlim clone() {
-        /*FireFlower f = new FireFlower(false, x, y);
-        f.xa = this.xa;
-        f.ya = this.ya;
-        f.initialCode = this.initialCode;
-        f.width = this.width;
-        f.height = this.height;
-        f.facing = this.facing;
-        f.life = this.life;
-        return f;*/
-        return null;
+        FireFlowerSlim clone = new FireFlowerSlim();
+        clone.x = this.x;
+        clone.y = this.y;
+        clone.alive = this.alive;
+        clone.life = this.life;
+        return clone;
     }
 
     @Override

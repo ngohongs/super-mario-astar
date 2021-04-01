@@ -16,6 +16,8 @@ public class FireballSlim extends MarioSpriteSlim {
     int facing;
     private boolean onGround;
 
+    private FireballSlim() { }
+
     public FireballSlim(Fireball originalFireball) {
         this.x = originalFireball.x;
         this.y = originalFireball.y;
@@ -61,17 +63,16 @@ public class FireballSlim extends MarioSpriteSlim {
         return type;
     }
 
-    @Override
     public MarioSpriteSlim clone() {
-        /*Fireball f = new Fireball(false, this.x, this.y, this.facing);
-        f.xa = this.xa;
-        f.ya = this.ya;
-        f.initialCode = this.initialCode;
-        f.width = this.width;
-        f.height = this.height;
-        f.onGround = this.onGround;
-        return f;*/
-        return null;
+        FireballSlim clone = new FireballSlim();
+        clone.x = this.x;
+        clone.y = this.y;
+        clone.alive = this.alive;
+        clone.xa = this.xa;
+        clone.ya = this.ya;
+        clone.facing = this.facing;
+        clone.onGround = this.onGround;
+        return clone;
     }
 
     // either xa or ya is always zero

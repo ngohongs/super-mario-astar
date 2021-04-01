@@ -21,6 +21,6 @@ public class MarioForwardModelSlim {
     }
 
     public MarioForwardModelSlim clone() {
-        return null;
+        return new MarioForwardModelSlim(this.world.clone());
     }
 }

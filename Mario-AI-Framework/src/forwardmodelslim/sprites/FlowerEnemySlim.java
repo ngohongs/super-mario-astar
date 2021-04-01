@@ -14,6 +14,8 @@ public class FlowerEnemySlim extends MarioSpriteSlim {
     private int waitTime;
     private float ya;
 
+    private FlowerEnemySlim() { }
+
     public FlowerEnemySlim(FlowerEnemy originalFlowerEnemy) {
         this.x = originalFlowerEnemy.x;
         this.y = originalFlowerEnemy.y;
@@ -62,22 +64,15 @@ public class FlowerEnemySlim extends MarioSpriteSlim {
         return type;
     }
 
-    @Override
     public MarioSpriteSlim clone() {
-        /*FlowerEnemy sprite = new FlowerEnemy(false, this.x, this.y);
-        sprite.xa = this.xa;
-        sprite.ya = this.ya;
-        sprite.initialCode = this.initialCode;
-        sprite.width = this.width;
-        sprite.height = this.height;
-        sprite.onGround = this.onGround;
-        sprite.winged = this.winged;
-        sprite.avoidCliffs = this.avoidCliffs;
-        sprite.noFireballDeath = this.noFireballDeath;
-        sprite.yStart = yStart;
-        sprite.waitTime = waitTime;
-        return sprite;*/
-        return null;
+        FlowerEnemySlim clone = new FlowerEnemySlim();
+        clone.x = this.x;
+        clone.y = this.y;
+        clone.alive = this.alive;
+        clone.yStart = this.yStart;
+        clone.waitTime = this.waitTime;
+        clone.ya = this.ya;
+        return clone;
     }
 
     @Override

@@ -272,6 +272,10 @@ public class MarioGame {
                 // update world
                 this.world.update(actionsCopy);
 
+                // clone slim model and advance it
+                MarioForwardModelSlim slimClone = slimModel.clone();
+                slimClone.advance(actionsCopy);
+
                 // advance slim model
                 slimModel.advance(actionsCopy);
 
@@ -279,7 +283,13 @@ public class MarioGame {
                 originalModel = new MarioForwardModel(this.world.clone());
                 MarioForwardModelSlim controlSlimModel = Converter.convert(originalModel, levelCutoutTileWidth);
                 if (!slimModel.equals(controlSlimModel)) {
-                    System.out.println("NOT EQUAL");
+                    System.out.println("SLIM MODEL NOT EQUAL");
+                    return null;
+                }
+
+                // test slim model clone
+                if (!slimClone.equals(controlSlimModel)) {
+                    System.out.println("SLIM MODEL CLONE NOT EQUAL");
                     return null;
                 }
 

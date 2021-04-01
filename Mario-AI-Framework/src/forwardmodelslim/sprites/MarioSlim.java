@@ -25,6 +25,8 @@ public class MarioSlim extends MarioSpriteSlim {
     private int jumpTime;
     private float xJumpSpeed, yJumpSpeed, xJumpStart;
 
+    private MarioSlim() { }
+
     public MarioSlim(Mario originalMario) {
         Mario.PrivateMarioCopyInfo info = originalMario.getPrivateCopyInfo();
         this.invulnerableTime = info.invulnerableTime;
@@ -90,6 +92,32 @@ public class MarioSlim extends MarioSpriteSlim {
     @Override
     public SpriteTypeSlim getType() {
         return type;
+    }
+
+    public MarioSpriteSlim clone() {
+        MarioSlim clone = new MarioSlim();
+        clone.x = this.x;
+        clone.y = this.y;
+        clone.alive = this.alive;
+        clone.height = this.height;
+        clone.invulnerableTime = this.invulnerableTime;
+        clone.onGround = this.onGround;
+        clone.wasOnGround = this.wasOnGround;
+        clone.isLarge = this.isLarge;
+        clone.isDucking = this.isDucking;
+        clone.mayJump = this.mayJump;
+        clone.canShoot = this.canShoot;
+        clone.isFire = this.isFire;
+        clone.oldLarge = this.oldLarge;
+        clone.oldFire = this.oldFire;
+        clone.xa = this.xa;
+        clone.ya = this.ya;
+        clone.facing = this.facing;
+        clone.jumpTime = this.jumpTime;
+        clone.xJumpSpeed = this.xJumpSpeed;
+        clone.yJumpSpeed = this.yJumpSpeed;
+        clone.xJumpStart = this.xJumpStart;
+        return clone;
     }
 
     @Override
@@ -438,9 +466,5 @@ public class MarioSlim extends MarioSpriteSlim {
         if (updateContext.world.coins % 100 == 0) {
             collect1Up(updateContext);
         }
-    }
-
-    public MarioSlim clone() {
-        return null;
     }
 }

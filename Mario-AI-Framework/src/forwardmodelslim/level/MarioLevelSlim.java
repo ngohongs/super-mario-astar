@@ -22,6 +22,8 @@ public class MarioLevelSlim {
     private int cutoutArrayBeginningIndex; // index of the current array beginning
     private int cutoutLeftBorderX;
 
+    private MarioLevelSlim() { }
+
     public MarioLevelSlim(MarioLevel level, int cutoutTileWidth, int marioTileX) {
         this.width = level.width;
         this.tileWidth = level.tileWidth;
@@ -149,27 +151,24 @@ public class MarioLevelSlim {
     }
 
     public MarioLevelSlim clone() {
-        /*MarioLevel level = new MarioLevel("", false);
-        level.width = this.width;
-        level.height = this.height;
-        level.tileWidth = this.tileWidth;
-        level.tileHeight = this.tileHeight;
-        level.totalCoins = this.totalCoins;
-        level.marioTileX = this.marioTileX;
-        level.marioTileY = this.marioTileY;
-        level.exitTileX = this.exitTileX;
-        level.exitTileY = this.exitTileY;
-        level.levelTiles = new int[this.levelTiles.length][this.levelTiles[0].length];
-        level.lastSpawnTime = new int[this.levelTiles.length][this.levelTiles[0].length];
-        for (int x = 0; x < level.levelTiles.length; x++) {
-            for (int y = 0; y < level.levelTiles[x].length; y++) {
-                level.levelTiles[x][y] = this.levelTiles[x][y];
-                level.lastSpawnTime[x][y] = this.lastSpawnTime[x][y];
-            }
-        }
-        level.spriteTemplates = this.spriteTemplates;
-        return level;*/
-        return null;
+        MarioLevelSlim clone = new MarioLevelSlim();
+        clone.width = this.width;
+        clone.tileWidth = this.tileWidth;
+        clone.height = this.height;
+        clone.tileHeight = this.tileHeight;
+        clone.exitTileX = this.exitTileX;
+        clone.staticLevel = this.staticLevel;
+        clone.currentCutoutCenter = this.currentCutoutCenter;
+        clone.cutoutArrayBeginningIndex = this.cutoutArrayBeginningIndex;
+        clone.cutoutLeftBorderX = this.cutoutLeftBorderX;
+
+        clone.levelCutout = new byte[this.levelCutout.length];
+        System.arraycopy(this.levelCutout, 0, clone.levelCutout, 0, this.levelCutout.length);
+
+        clone.aliveFlags = new boolean[this.aliveFlags.length];
+        System.arraycopy(this.aliveFlags, 0, clone.aliveFlags, 0, this.aliveFlags.length);
+
+        return clone;
     }
 
     public void update(int marioTileX) {

@@ -17,6 +17,8 @@ public class LifeMushroomSlim extends MarioSpriteSlim {
     private boolean onGround;
     private int life;
 
+    private LifeMushroomSlim() { }
+
     public LifeMushroomSlim(LifeMushroom originalLifeMushroom) {
         this.x = originalLifeMushroom.x;
         this.y = originalLifeMushroom.y;
@@ -64,19 +66,17 @@ public class LifeMushroomSlim extends MarioSpriteSlim {
         return type;
     }
 
-    @Override
     public MarioSpriteSlim clone() {
-        /*LifeMushroom m = new LifeMushroom(false, this.x, this.y);
-        m.xa = this.xa;
-        m.ya = this.ya;
-        m.initialCode = this.initialCode;
-        m.width = this.width;
-        m.height = this.height;
-        m.facing = this.facing;
-        m.life = this.life;
-        m.onGround = this.onGround;
-        return m;*/
-        return null;
+        LifeMushroomSlim clone = new LifeMushroomSlim();
+        clone.x = this.x;
+        clone.y = this.y;
+        clone.alive = this.alive;
+        clone.xa = this.xa;
+        clone.ya = this.ya;
+        clone.facing = this.facing;
+        clone.onGround = this.onGround;
+        clone.life = this.life;
+        return clone;
     }
 
     @Override
