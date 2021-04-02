@@ -6,20 +6,20 @@ import forwardmodelslim.core.MarioUpdateContext;
 import forwardmodelslim.level.SpriteTypeSlim;
 
 public class EnemySlim extends MarioSpriteSlim {
-    private static final byte GOOMBA = 2;
-    private static final byte GOOMBA_WINGED = 3;
-    private static final byte RED_KOOPA = 4;
-    private static final byte RED_KOOPA_WINGED = 5;
-    private static final byte GREEN_KOOPA = 6;
-    private static final byte GREEN_KOOPA_WINGED = 7;
-    private static final byte SPIKY = 8;
-    private static final byte SPIKY_WINGED = 9;
+    private static final int GOOMBA = 2;
+    private static final int GOOMBA_WINGED = 3;
+    private static final int RED_KOOPA = 4;
+    private static final int RED_KOOPA_WINGED = 5;
+    private static final int GREEN_KOOPA = 6;
+    private static final int GREEN_KOOPA_WINGED = 7;
+    private static final int SPIKY = 8;
+    private static final int SPIKY_WINGED = 9;
 
     public static final float GROUND_INERTIA = 0.89f;
     public static final float AIR_INERTIA = 0.89f;
     private static final int width = 4;
 
-    private byte typeCode;
+    private int typeCode;
 
     private float xa, ya;
     private int facing;
@@ -37,7 +37,7 @@ public class EnemySlim extends MarioSpriteSlim {
         this.x = originalEnemy.x;
         this.y = originalEnemy.y;
         this.alive = originalEnemy.alive;
-        this.typeCode = (byte) originalEnemy.type.getValue();
+        this.typeCode = originalEnemy.type.getValue();
         this.xa = originalEnemy.xa;
         this.ya = originalEnemy.ya;
         this.facing = originalEnemy.facing;
@@ -69,7 +69,7 @@ public class EnemySlim extends MarioSpriteSlim {
         }
     }
 
-    private byte convertSpriteTypeSlim(SpriteTypeSlim type) {
+    private int convertSpriteTypeSlim(SpriteTypeSlim type) {
         switch (type) {
             case GOOMBA:
                 return GOOMBA;

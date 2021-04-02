@@ -29,7 +29,7 @@ public enum SpriteTypeSlim {
         return value;
     }
 
-    public static SpriteTypeSlim getSpriteTypeSlim(byte value) {
+    public static SpriteTypeSlim getSpriteTypeSlim(int value) {
         for (SpriteTypeSlim spriteTypeSlim : SpriteTypeSlim.values()) {
             if (spriteTypeSlim.value == value)
                 return spriteTypeSlim;

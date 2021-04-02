@@ -13,12 +13,12 @@ import forwardmodelslim.sprites.*;
 import java.util.ArrayList;
 
 public class MarioWorldSlim {
-    private static final byte RUNNING = 0;
-    private static final byte WIN = 1;
-    private static final byte LOSE = 2;
-    private static final byte TIME_OUT = 3;
+    private static final int RUNNING = 0;
+    private static final int WIN = 1;
+    private static final int LOSE = 2;
+    private static final int TIME_OUT = 3;
 
-    private byte gameStatusCode;
+    private int gameStatusCode;
     public int pauseTimer;
     private int currentTimer;
     public float cameraX;
@@ -82,7 +82,7 @@ public class MarioWorldSlim {
         this.level = new MarioLevelSlim(originalWorld.level, levelCutoutTileWidth, (int) mario.x / 16);
     }
 
-    private byte convertGameStatus(GameStatus gameStatus) {
+    private int convertGameStatus(GameStatus gameStatus) {
         switch (gameStatus) {
             case RUNNING:
                 return RUNNING;
