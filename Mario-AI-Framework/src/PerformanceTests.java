@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Arrays;
 
 /**
  * *******************************************************************************
@@ -74,8 +75,8 @@ public class PerformanceTests {
     }
 
     public static void main(String[] args) {
-        //testArrayCopies();
-        testClones();
+        testArrayCopies();
+        //testClones();
     }
 
     private static void testClones() {
@@ -265,6 +266,68 @@ public class PerformanceTests {
         long time = end - start;
         System.out.println("levelParts: " + time);
 */
+
+        System.out.println("---------------");
+
+        // bools, arrays.copyof
+        for (int i = 0; i < 10000; i++) {
+            boolsCopy = Arrays.copyOf(bools, bools.length);
+        }
+        start = System.currentTimeMillis();
+        for (int i = 0; i < 10000000; i++) {
+            boolsCopy = Arrays.copyOf(bools, bools.length);
+        }
+        end = System.currentTimeMillis();
+        time = end - start;
+        System.out.println("bools - arrays.copyof: " + time);
+
+        // bytes, arrays.copyof
+        for (int i = 0; i < 10000; i++) {
+            bytesCopy = Arrays.copyOf(bytes, bytes.length);
+        }
+        start = System.currentTimeMillis();
+        for (int i = 0; i < 10000000; i++) {
+            bytesCopy = Arrays.copyOf(bytes, bytes.length);
+        }
+        end = System.currentTimeMillis();
+        time = end - start;
+        System.out.println("bytes - arrays.copyof: " + time);
+
+        // ints, arrays.copyof
+        for (int i = 0; i < 10000; i++) {
+            intsCopy = Arrays.copyOf(ints, ints.length);
+        }
+        start = System.currentTimeMillis();
+        for (int i = 0; i < 10000000; i++) {
+            intsCopy = Arrays.copyOf(ints, ints.length);
+        }
+        end = System.currentTimeMillis();
+        time = end - start;
+        System.out.println("ints - arrays.copyof: " + time);
+
+        // level parts, arrays.copyof
+        for (int i = 0; i < 10000; i++) {
+            levelPartsCopy = Arrays.copyOf(levelParts, levelParts.length);
+        }
+        start = System.currentTimeMillis();
+        for (int i = 0; i < 10000000; i++) {
+            levelPartsCopy = Arrays.copyOf(levelParts, levelParts.length);
+        }
+        end = System.currentTimeMillis();
+        time = end - start;
+        System.out.println("levelParts - arrays.copyof: " + time);
+
+        // floats, arrays.copyof
+        for (int i = 0; i < 10000; i++) {
+            floatsCopy = Arrays.copyOf(floats, floats.length);
+        }
+        start = System.currentTimeMillis();
+        for (int i = 0; i < 10000000; i++) {
+            floatsCopy = Arrays.copyOf(floats, floats.length);
+        }
+        end = System.currentTimeMillis();
+        time = end - start;
+        System.out.println("floats - arrays.copyof: " + time);
 
         // trying to prevent optimization
         ints[0] = intsCopy[0];
