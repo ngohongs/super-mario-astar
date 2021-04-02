@@ -1,7 +1,5 @@
 package forwardmodelslim.core;
 
-//TODO: there is a bullet bill spawner - needs attention
-
 import engine.core.MarioSprite;
 import engine.core.MarioWorld;
 import engine.helper.GameStatus;
@@ -15,7 +13,12 @@ import forwardmodelslim.sprites.*;
 import java.util.ArrayList;
 
 public class MarioWorldSlim {
-    private GameStatus gameStatus;
+    private static final byte RUNNING = 0;
+    private static final byte WIN = 1;
+    private static final byte LOSE = 2;
+    private static final byte TIME_OUT = 3;
+
+    private byte gameStatusCode;
     public int pauseTimer;
     private int currentTimer;
     public float cameraX;
@@ -30,7 +33,7 @@ public class MarioWorldSlim {
     private MarioWorldSlim() { }
 
     MarioWorldSlim(MarioWorld originalWorld, int levelCutoutTileWidth) {
-        this.gameStatus = originalWorld.gameStatus;
+        this.gameStatusCode = convertGameStatus(originalWorld.gameStatus);
         this.pauseTimer = originalWorld.pauseTimer;
         this.currentTimer = originalWorld.currentTimer;
         this.cameraX = originalWorld.cameraX;
@@ -79,6 +82,21 @@ public class MarioWorldSlim {
         this.level = new MarioLevelSlim(originalWorld.level, levelCutoutTileWidth, (int) mario.x / 16);
     }
 
+    private byte convertGameStatus(GameStatus gameStatus) {
+        switch (gameStatus) {
+            case RUNNING:
+                return RUNNING;
+            case WIN:
+                return WIN;
+            case LOSE:
+                return LOSE;
+            case TIME_OUT:
+                return TIME_OUT;
+            default:
+                throw new IllegalArgumentException();
+        }
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -91,16 +109,16 @@ public class MarioWorldSlim {
                 currentTick == that.currentTick &&
                 coins == that.coins &&
                 lives == that.lives &&
-                gameStatus == that.gameStatus;
+                gameStatusCode == that.gameStatusCode;
         if (worldProperties)
             System.out.println("WORLD PROPERTIES EQUAL");
         else
             System.out.println("WORLD PROPERTIES NOT EQUAL");
 
-        // align level cutouts if game is not running
-        if (this.gameStatus != GameStatus.RUNNING)
+        // align level cutouts if game is not running TODO: is actually needed?
+        if (this.gameStatusCode != RUNNING)
             this.level.update((int) this.mario.x / 16);
-        if (that.gameStatus != GameStatus.RUNNING)
+        if (that.gameStatusCode != RUNNING)
             that.level.update((int) that.mario.x / 16);
 
         return worldProperties & level.equals(that.level) &
@@ -129,7 +147,7 @@ public class MarioWorldSlim {
 
     public MarioWorldSlim clone() {
         MarioWorldSlim clone = new MarioWorldSlim();
-        clone.gameStatus = this.gameStatus;
+        clone.gameStatusCode = this.gameStatusCode;
         clone.pauseTimer = this.pauseTimer;
         clone.currentTimer = this.currentTimer;
         clone.cameraX = this.cameraX;
@@ -177,16 +195,16 @@ public class MarioWorldSlim {
     }
 
     public void win() {
-        this.gameStatus = GameStatus.WIN;
+        this.gameStatusCode = WIN;
     }
 
     public void lose() {
-        this.gameStatus = GameStatus.LOSE;
+        this.gameStatusCode = LOSE;
         this.mario.alive = false;
     }
 
     private void timeout() {
-        this.gameStatus = GameStatus.TIME_OUT;
+        this.gameStatusCode = TIME_OUT;
         this.mario.alive = false;
     }
 
@@ -195,7 +213,7 @@ public class MarioWorldSlim {
     }
 
     public void update(boolean[] actions) {
-        if (this.gameStatus != GameStatus.RUNNING) {
+        if (this.gameStatusCode != RUNNING) {
             return;
         }
         if (this.pauseTimer > 0) {

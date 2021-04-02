@@ -6,11 +6,20 @@ import forwardmodelslim.core.MarioUpdateContext;
 import forwardmodelslim.level.SpriteTypeSlim;
 
 public class EnemySlim extends MarioSpriteSlim {
+    private static final byte GOOMBA = 2;
+    private static final byte GOOMBA_WINGED = 3;
+    private static final byte RED_KOOPA = 4;
+    private static final byte RED_KOOPA_WINGED = 5;
+    private static final byte GREEN_KOOPA = 6;
+    private static final byte GREEN_KOOPA_WINGED = 7;
+    private static final byte SPIKY = 8;
+    private static final byte SPIKY_WINGED = 9;
+
     public static final float GROUND_INERTIA = 0.89f;
     public static final float AIR_INERTIA = 0.89f;
     private static final int width = 4;
 
-    private SpriteTypeSlim type;
+    private byte typeCode;
 
     private float xa, ya;
     private int facing;
@@ -28,7 +37,7 @@ public class EnemySlim extends MarioSpriteSlim {
         this.x = originalEnemy.x;
         this.y = originalEnemy.y;
         this.alive = originalEnemy.alive;
-        this.type = SpriteTypeSlim.convertFromSpriteType(originalEnemy.type);
+        this.typeCode = (byte) originalEnemy.type.getValue();
         this.xa = originalEnemy.xa;
         this.ya = originalEnemy.ya;
         this.facing = originalEnemy.facing;
@@ -44,19 +53,42 @@ public class EnemySlim extends MarioSpriteSlim {
     public EnemySlim(float x, float y, int dir, SpriteTypeSlim type) {
         this.x = x;
         this.y = y;
-        this.type = type;
+        this.typeCode = convertSpriteTypeSlim(type);
         this.height = 24;
-        if (this.type != SpriteTypeSlim.RED_KOOPA && this.type != SpriteTypeSlim.GREEN_KOOPA
-                && this.type != SpriteTypeSlim.RED_KOOPA_WINGED && this.type != SpriteTypeSlim.GREEN_KOOPA_WINGED) {
+        if (this.typeCode != RED_KOOPA && this.typeCode != GREEN_KOOPA
+                && this.typeCode != RED_KOOPA_WINGED && this.typeCode != GREEN_KOOPA_WINGED) {
             this.height = 12;
         }
-        this.winged = this.type.getValue() % 2 == 1;
-        this.avoidCliffs = this.type == SpriteTypeSlim.RED_KOOPA || this.type == SpriteTypeSlim.RED_KOOPA_WINGED;
-        this.noFireballDeath = this.type == SpriteTypeSlim.SPIKY || this.type == SpriteTypeSlim.SPIKY_WINGED;
+        this.winged = this.typeCode % 2 == 1;
+        this.avoidCliffs = this.typeCode == RED_KOOPA || this.typeCode == RED_KOOPA_WINGED;
+        this.noFireballDeath = this.typeCode == SPIKY || this.typeCode == SPIKY_WINGED;
         this.onGround = false;
         this.facing = dir;
         if (this.facing == 0) {
             this.facing = 1;
+        }
+    }
+
+    private byte convertSpriteTypeSlim(SpriteTypeSlim type) {
+        switch (type) {
+            case GOOMBA:
+                return GOOMBA;
+            case GOOMBA_WINGED:
+                return GOOMBA_WINGED;
+            case RED_KOOPA:
+                return RED_KOOPA;
+            case RED_KOOPA_WINGED:
+                return RED_KOOPA_WINGED;
+            case GREEN_KOOPA:
+                return GREEN_KOOPA;
+            case GREEN_KOOPA_WINGED:
+                return GREEN_KOOPA_WINGED;
+            case SPIKY:
+                return SPIKY;
+            case SPIKY_WINGED:
+                return SPIKY_WINGED;
+            default:
+                throw new IllegalArgumentException();
         }
     }
 
@@ -73,7 +105,7 @@ public class EnemySlim extends MarioSpriteSlim {
                 avoidCliffs == that.avoidCliffs &&
                 winged == that.winged &&
                 noFireballDeath == that.noFireballDeath &&
-                type == that.type &&
+                typeCode == that.typeCode &&
                 Float.compare(x, that.x) == 0 &&
                 Float.compare(y, that.y) == 0 &&
                 alive == that.alive;
@@ -89,7 +121,7 @@ public class EnemySlim extends MarioSpriteSlim {
 
     @Override
     public SpriteTypeSlim getType() {
-        return type;
+        return SpriteTypeSlim.getSpriteTypeSlim(typeCode);
     }
 
     public MarioSpriteSlim clone() {
@@ -97,7 +129,7 @@ public class EnemySlim extends MarioSpriteSlim {
         clone.x = this.x;
         clone.y = this.y;
         clone.alive = this.alive;
-        clone.type = this.type;
+        clone.typeCode = this.typeCode;
         clone.xa = this.xa;
         clone.ya = this.ya;
         clone.facing = this.facing;
@@ -119,16 +151,16 @@ public class EnemySlim extends MarioSpriteSlim {
         float yMarioD = updateContext.world.mario.y - y;
         if (xMarioD > -width * 2 - 4 && xMarioD < width * 2 + 4) {
             if (yMarioD > -height && yMarioD < updateContext.world.mario.height) {
-                if (type != SpriteTypeSlim.SPIKY && type != SpriteTypeSlim.SPIKY_WINGED && type != SpriteTypeSlim.ENEMY_FLOWER &&
-                        updateContext.world.mario.ya > 0 && yMarioD <= 0 && (!updateContext.world.mario.onGround || !updateContext.world.mario.wasOnGround)) {
+                if (typeCode != SPIKY && typeCode != SPIKY_WINGED && updateContext.world.mario.ya > 0 &&
+                        yMarioD <= 0 && (!updateContext.world.mario.onGround || !updateContext.world.mario.wasOnGround)) {
                     updateContext.world.mario.stomp(this, updateContext);
                     if (winged) {
                         winged = false;
                         ya = 0;
                     } else {
-                        if (type == SpriteTypeSlim.GREEN_KOOPA || type == SpriteTypeSlim.GREEN_KOOPA_WINGED) {
+                        if (typeCode == GREEN_KOOPA || typeCode == GREEN_KOOPA_WINGED) {
                             updateContext.world.addSprite(new ShellSlim(x, y), updateContext);
-                        } else if (type == SpriteTypeSlim.RED_KOOPA || type == SpriteTypeSlim.RED_KOOPA_WINGED) {
+                        } else if (typeCode == RED_KOOPA || typeCode == RED_KOOPA_WINGED) {
                             updateContext.world.addSprite(new ShellSlim(x, y), updateContext);
                         }
                         updateContext.world.removeSprite(this, updateContext);

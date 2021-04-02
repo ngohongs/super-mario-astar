@@ -1,7 +1,5 @@
 package forwardmodelslim.level;
 
-import engine.helper.SpriteType;
-
 public enum SpriteTypeSlim {
     NONE(0),
     MARIO(-31),
@@ -31,17 +29,9 @@ public enum SpriteTypeSlim {
         return value;
     }
 
-    public static SpriteTypeSlim getSpriteType(byte value) {
+    public static SpriteTypeSlim getSpriteTypeSlim(byte value) {
         for (SpriteTypeSlim spriteTypeSlim : SpriteTypeSlim.values()) {
             if (spriteTypeSlim.value == value)
-                return spriteTypeSlim;
-        }
-        throw new IllegalArgumentException();
-    }
-
-    public static SpriteTypeSlim convertFromSpriteType(SpriteType spriteType) {
-        for (SpriteTypeSlim spriteTypeSlim : SpriteTypeSlim.values()) {
-            if (spriteTypeSlim.value == spriteType.getValue())
                 return spriteTypeSlim;
         }
         throw new IllegalArgumentException();

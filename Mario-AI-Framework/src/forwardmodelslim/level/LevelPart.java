@@ -1,7 +1,5 @@
 package forwardmodelslim.level;
 
-import forwardmodelslim.level.SpriteTypeSlim;
-
 public enum LevelPart {
     // sprites - multiplied by -1 to avoid collisions with tiles
     // only sprites that are a part of the level layout
@@ -83,7 +81,7 @@ public enum LevelPart {
 
     static SpriteTypeSlim getLevelSprite(byte levelPartValue) {
         if (levelPartValue == PIPE_TOP_LEFT_WITH_FLOWER.getValue())
-            return SpriteTypeSlim.getSpriteType((byte) -ENEMY_FLOWER.value);
+            return SpriteTypeSlim.getSpriteTypeSlim((byte) -ENEMY_FLOWER.value);
         if (levelPartValue == PIPE_TOP_LEFT_WITHOUT_FLOWER.getValue())
             return SpriteTypeSlim.NONE;
 
@@ -91,7 +89,7 @@ public enum LevelPart {
             return SpriteTypeSlim.NONE;
         else {
             levelPartValue *= -1;
-            return SpriteTypeSlim.getSpriteType(levelPartValue);
+            return SpriteTypeSlim.getSpriteTypeSlim(levelPartValue);
         }
     }
 
