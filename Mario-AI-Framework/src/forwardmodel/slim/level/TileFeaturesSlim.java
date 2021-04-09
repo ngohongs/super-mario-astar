@@ -1,4 +1,4 @@
-package forwardmodelslim.level;
+package forwardmodel.slim.level;
 
 import java.util.ArrayList;
 

@@ -10,8 +10,8 @@ import javax.swing.JFrame;
 import agents.human.Agent;
 import engine.helper.GameStatus;
 import engine.helper.MarioActions;
-import forwardmodelslim.core.Converter;
-import forwardmodelslim.core.MarioForwardModelSlim;
+import forwardmodel.common.Converter;
+import forwardmodel.slim.core.MarioForwardModelSlim;
 
 public class MarioGame {
     /**
@@ -235,7 +235,7 @@ public class MarioGame {
         // add slim model to test it
         int levelCutoutTileWidth = 0;
         MarioForwardModel originalModel = new MarioForwardModel(this.world.clone());
-        MarioForwardModelSlim slimModel = Converter.convert(originalModel, levelCutoutTileWidth);
+        MarioForwardModelSlim slimModel = Converter.originalToSlim(originalModel, levelCutoutTileWidth);
 
         //initialize graphics
         VolatileImage renderTarget = null;
@@ -281,7 +281,7 @@ public class MarioGame {
 
                 // test slim model
                 originalModel = new MarioForwardModel(this.world.clone());
-                MarioForwardModelSlim controlSlimModel = Converter.convert(originalModel, levelCutoutTileWidth);
+                MarioForwardModelSlim controlSlimModel = Converter.originalToSlim(originalModel, levelCutoutTileWidth);
                 if (!slimModel.equals(controlSlimModel)) {
                     System.out.println("SLIM MODEL NOT EQUAL");
                     return null;

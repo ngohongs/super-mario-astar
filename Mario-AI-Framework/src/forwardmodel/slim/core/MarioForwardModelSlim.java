@@ -1,10 +1,10 @@
-package forwardmodelslim.core;
+package forwardmodel.slim.core;
 
 public class MarioForwardModelSlim {
 
     private MarioWorldSlim world;
 
-    MarioForwardModelSlim(MarioWorldSlim world) {
+    public MarioForwardModelSlim(MarioWorldSlim world) {
         this.world = world;
     }
 
@@ -22,5 +22,9 @@ public class MarioForwardModelSlim {
 
     public MarioForwardModelSlim clone() {
         return new MarioForwardModelSlim(this.world.clone());
+    }
+
+    public MarioWorldSlim getWorld() {
+        return this.world.clone();
     }
 }

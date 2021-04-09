@@ -1,38 +1,40 @@
-package forwardmodelslim.sprites;
+package forwardmodel.slim.sprites;
 
-import engine.sprites.Fireball;
-import forwardmodelslim.core.MarioSpriteSlim;
-import forwardmodelslim.core.MarioUpdateContext;
-import forwardmodelslim.level.SpriteTypeSlim;
+import engine.sprites.Mushroom;
+import forwardmodel.slim.core.MarioSpriteSlim;
+import forwardmodel.slim.core.MarioUpdateContextSlim;
+import forwardmodel.common.SpriteTypeSlim;
 
-public class FireballSlim extends MarioSpriteSlim {
+public class MushroomSlim extends MarioSpriteSlim {
     public static final float GROUND_INERTIA = 0.89f;
     public static final float AIR_INERTIA = 0.89f;
-    private static final SpriteTypeSlim type = SpriteTypeSlim.FIREBALL;
+    private static final SpriteTypeSlim type = SpriteTypeSlim.LIFE_MUSHROOM;
     private static final int width = 4;
-    static final int height = 8;
+    private static final int height = 12;
 
     private float xa, ya;
-    int facing;
+    private int facing;
     private boolean onGround;
+    private int life;
 
-    private FireballSlim() { }
+    private MushroomSlim() { }
 
-    public FireballSlim(Fireball originalFireball) {
-        this.x = originalFireball.x;
-        this.y = originalFireball.y;
-        this.alive = originalFireball.alive;
-        this.xa = originalFireball.xa;
-        this.ya = originalFireball.ya;
-        this.facing = originalFireball.facing;
-        this.onGround = originalFireball.isOnGround();
+    public MushroomSlim(Mushroom originalMushroom) {
+        this.x = originalMushroom.x;
+        this.y = originalMushroom.y;
+        this.alive = originalMushroom.alive;
+        this.xa = originalMushroom.xa;
+        this.ya = originalMushroom.ya;
+        this.facing = originalMushroom.facing;
+        this.onGround = originalMushroom.isOnGround();
+        this.life = originalMushroom.getLife();
     }
 
-    FireballSlim(float x, float y, int facing) {
+    public MushroomSlim(float x, float y) {
         this.x = x;
         this.y = y;
-        this.facing = facing;
-        this.ya = 4;
+        this.facing = 1;
+        this.life = 0;
         this.onGround = false;
     }
 
@@ -40,20 +42,21 @@ public class FireballSlim extends MarioSpriteSlim {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        FireballSlim that = (FireballSlim) o;
+        MushroomSlim that = (MushroomSlim) o;
         boolean equal = Float.compare(that.xa, xa) == 0 &&
                 Float.compare(that.ya, ya) == 0 &&
                 facing == that.facing &&
-                onGround == that.onGround  &&
+                onGround == that.onGround &&
+                life == that.life  &&
                 Float.compare(x, that.x) == 0 &&
                 Float.compare(y, that.y) == 0 &&
                 alive == that.alive;
         if (equal) {
-            System.out.println("    FIREBALL EQUAL");
+            System.out.println("    MUSHROOM EQUAL");
             return true;
         }
         else {
-            System.out.println("    FIREBALL NOT EQUAL");
+            System.out.println("    MUSHROOM NOT EQUAL");
             return false;
         }
     }
@@ -64,7 +67,7 @@ public class FireballSlim extends MarioSpriteSlim {
     }
 
     public MarioSpriteSlim clone() {
-        FireballSlim clone = new FireballSlim();
+        MushroomSlim clone = new MushroomSlim();
         clone.x = this.x;
         clone.y = this.y;
         clone.alive = this.alive;
@@ -72,11 +75,49 @@ public class FireballSlim extends MarioSpriteSlim {
         clone.ya = this.ya;
         clone.facing = this.facing;
         clone.onGround = this.onGround;
+        clone.life = this.life;
         return clone;
     }
 
+    @Override
+    public void collideCheck(MarioUpdateContextSlim updateContext) {
+        if (!this.alive) {
+            return;
+        }
+
+        float xMarioD = updateContext.world.mario.x - x;
+        float yMarioD = updateContext.world.mario.y - y;
+        if (xMarioD > -16 && xMarioD < 16) {
+            if (yMarioD > -height && yMarioD < updateContext.world.mario.height) {
+                updateContext.world.mario.getMushroom(updateContext);
+                updateContext.world.removeSprite(this, updateContext);
+            }
+        }
+    }
+
+    private boolean isBlocking(float _x, float _y, float ya, MarioUpdateContextSlim updateContext) {
+        int x = (int) (_x / 16);
+        int y = (int) (_y / 16);
+        if (x == (int) (this.x / 16) && y == (int) (this.y / 16))
+            return false;
+
+        return updateContext.world.level.isBlocking(x, y, ya);
+    }
+
+    @Override
+    public void bumpCheck(int xTile, int yTile, MarioUpdateContextSlim updateContext) {
+        if (!this.alive) {
+            return;
+        }
+
+        if (x + width > xTile * 16 && x - width < xTile * 16 + 16 && yTile == (int) ((y - 1) / 16)) {
+            facing = -updateContext.world.mario.facing;
+            ya = -10;
+        }
+    }
+
     // either xa or ya is always zero
-    private boolean move(float xa, float ya, MarioUpdateContext updateContext) {
+    private boolean move(float xa, float ya, MarioUpdateContextSlim updateContext) {
         if (xa != 0) {
             float stepX = Math.signum(xa) * 8;
             while (Math.abs(xa) > Math.abs(stepX)) {
@@ -97,7 +138,7 @@ public class FireballSlim extends MarioSpriteSlim {
     }
 
     // return true if move is successful, false if blocked
-    private boolean moveStepX(float xa, MarioUpdateContext updateContext) {
+    private boolean moveStepX(float xa, MarioUpdateContextSlim updateContext) {
         float ya = 0;
         boolean collide = false;
         if (xa > 0) {
@@ -133,7 +174,7 @@ public class FireballSlim extends MarioSpriteSlim {
     }
 
     // return true if move is successful, false if blocked
-    private boolean moveStepY(float ya, MarioUpdateContext updateContext) {
+    private boolean moveStepY(float ya, MarioUpdateContextSlim updateContext) {
         float xa = 0;
         boolean collide = false;
         if (ya > 0) {
@@ -171,42 +212,33 @@ public class FireballSlim extends MarioSpriteSlim {
         }
     }
 
-    private boolean isBlocking(float _x, float _y, float ya, MarioUpdateContext updateContext) {
-        int x = (int) (_x / 16);
-        int y = (int) (_y / 16);
-        if (x == (int) (this.x / 16) && y == (int) (this.y / 16))
-            return false;
-
-        return updateContext.world.level.isBlocking(x, y, ya);
-    }
-
-    public void update(MarioUpdateContext updateContext) {
+    @Override
+    public void update(MarioUpdateContextSlim updateContext) {
         if (!this.alive) {
             return;
         }
 
-        float sideWaysSpeed = 8f;
+        if (life < 9) {
+            y--;
+            life++;
+            return;
+        }
+        float sideWaysSpeed = 1.75f;
         if (xa > 2) {
             facing = 1;
         }
         if (xa < -2) {
             facing = -1;
         }
+
         xa = facing * sideWaysSpeed;
 
-        updateContext.fireballsToCheck.add(this);
-
-        if (!move(xa, 0, updateContext)) {
-            updateContext.world.removeSprite(this, updateContext);
-            return;
-        }
-
+        if (!move(xa, 0, updateContext))
+            facing = -facing;
         onGround = false;
         move(0, ya, updateContext);
-        if (onGround)
-            ya = -10;
 
-        ya *= 0.95f;
+        ya *= 0.85f;
         if (onGround) {
             xa *= GROUND_INERTIA;
         } else {
@@ -214,7 +246,7 @@ public class FireballSlim extends MarioSpriteSlim {
         }
 
         if (!onGround) {
-            ya += 1.5;
+            ya += 2;
         }
     }
 }

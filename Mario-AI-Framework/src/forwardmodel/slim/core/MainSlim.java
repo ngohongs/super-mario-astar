@@ -1,8 +1,9 @@
-package forwardmodelslim.core;
+package forwardmodel.slim.core;
 
 import engine.core.MarioForwardModel;
 import engine.core.MarioWorld;
 import engine.helper.MarioActions;
+import forwardmodel.common.Converter;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -36,7 +37,7 @@ public class MainSlim {
             MarioForwardModel originalModel = new MarioForwardModel(setupWorld.clone());
 
             // convert to slim OOP forward model
-            MarioForwardModelSlim slimModel = Converter.convert(originalModel, levelCutoutTileWidth);
+            MarioForwardModelSlim slimModel = Converter.originalToSlim(originalModel, levelCutoutTileWidth);
 
             // advance both models
             boolean[] actions = { false, true, false, false, false }; // left, right, down, speed, jump
@@ -46,7 +47,7 @@ public class MainSlim {
             }
 
             // make a control slim model
-            MarioForwardModelSlim controlSlimModel = Converter.convert(originalModel, levelCutoutTileWidth);
+            MarioForwardModelSlim controlSlimModel = Converter.originalToSlim(originalModel, levelCutoutTileWidth);
 
             // compare the two slim models
             if (slimModel.equals(controlSlimModel)) {

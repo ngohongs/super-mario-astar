@@ -1,9 +1,9 @@
-package forwardmodelslim.sprites;
+package forwardmodel.slim.sprites;
 
 import engine.sprites.FlowerEnemy;
-import forwardmodelslim.core.MarioSpriteSlim;
-import forwardmodelslim.core.MarioUpdateContext;
-import forwardmodelslim.level.SpriteTypeSlim;
+import forwardmodel.slim.core.MarioSpriteSlim;
+import forwardmodel.slim.core.MarioUpdateContextSlim;
+import forwardmodel.common.SpriteTypeSlim;
 
 public class FlowerEnemySlim extends MarioSpriteSlim {
     private static final SpriteTypeSlim type = SpriteTypeSlim.ENEMY_FLOWER;
@@ -26,7 +26,7 @@ public class FlowerEnemySlim extends MarioSpriteSlim {
     }
 
     // this constructor calls update on itself - needs context with world set
-    public FlowerEnemySlim(float x, float y, MarioUpdateContext updateContext) {
+    public FlowerEnemySlim(float x, float y, MarioUpdateContextSlim updateContext) {
         this.x = x;
         this.y = y;
         this.alive = true;
@@ -76,7 +76,7 @@ public class FlowerEnemySlim extends MarioSpriteSlim {
     }
 
     @Override
-    public void collideCheck(MarioUpdateContext updateContext) {
+    public void collideCheck(MarioUpdateContextSlim updateContext) {
         if (!this.alive) {
             return;
         }
@@ -91,7 +91,7 @@ public class FlowerEnemySlim extends MarioSpriteSlim {
     }
 
     @Override
-    public void update(MarioUpdateContext updateContext) {
+    public void update(MarioUpdateContextSlim updateContext) {
         if (!this.alive) {
             return;
         }
@@ -120,7 +120,7 @@ public class FlowerEnemySlim extends MarioSpriteSlim {
     }
 
     @Override
-    public boolean shellCollideCheck(ShellSlim shell, MarioUpdateContext updateContext) {
+    public boolean shellCollideCheck(ShellSlim shell, MarioUpdateContextSlim updateContext) {
         if (!this.alive) {
             return false;
         }
@@ -139,7 +139,7 @@ public class FlowerEnemySlim extends MarioSpriteSlim {
     }
 
     @Override
-    public boolean fireballCollideCheck(FireballSlim fireball, MarioUpdateContext updateContext) {
+    public boolean fireballCollideCheck(FireballSlim fireball, MarioUpdateContextSlim updateContext) {
         if (!this.alive) {
             return false;
         }
@@ -158,7 +158,7 @@ public class FlowerEnemySlim extends MarioSpriteSlim {
     }
 
     @Override
-    public void bumpCheck(int xTile, int yTile, MarioUpdateContext updateContext) {
+    public void bumpCheck(int xTile, int yTile, MarioUpdateContextSlim updateContext) {
         if (!this.alive) {
             return;
         }

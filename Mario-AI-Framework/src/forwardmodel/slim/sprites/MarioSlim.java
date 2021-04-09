@@ -1,11 +1,11 @@
-package forwardmodelslim.sprites;
+package forwardmodel.slim.sprites;
 
 import engine.helper.MarioActions;
 import engine.sprites.Mario;
-import forwardmodelslim.level.LevelPart;
-import forwardmodelslim.core.MarioSpriteSlim;
-import forwardmodelslim.core.MarioUpdateContext;
-import forwardmodelslim.level.SpriteTypeSlim;
+import forwardmodel.slim.level.LevelPart;
+import forwardmodel.slim.core.MarioSpriteSlim;
+import forwardmodel.slim.core.MarioUpdateContextSlim;
+import forwardmodel.common.SpriteTypeSlim;
 
 public class MarioSlim extends MarioSpriteSlim {
     private static final SpriteTypeSlim type = SpriteTypeSlim.MARIO;
@@ -14,16 +14,15 @@ public class MarioSlim extends MarioSpriteSlim {
     public static final float AIR_INERTIA = 0.89f;
     private static final int POWERUP_TIME = 3;
 
-    int height;
-    private int invulnerableTime;
-    boolean onGround, wasOnGround;
-    public boolean isLarge;
-    private boolean isDucking, mayJump, canShoot, isFire, oldLarge, oldFire;
-    private float xa;
-    float ya;
-    int facing;
-    private int jumpTime;
-    private float xJumpSpeed, yJumpSpeed, xJumpStart;
+    public int height;
+    public int invulnerableTime;
+    public boolean onGround, wasOnGround;
+    public boolean isDucking, mayJump, canShoot, isLarge, isFire, oldLarge, oldFire;
+    public float xa;
+    public float ya;
+    public int facing;
+    public int jumpTime;
+    public float xJumpSpeed, yJumpSpeed, xJumpStart;
 
     private MarioSlim() { }
 
@@ -121,7 +120,7 @@ public class MarioSlim extends MarioSpriteSlim {
     }
 
     @Override
-    public void update(MarioUpdateContext updateContext) {
+    public void update(MarioUpdateContextSlim updateContext) {
         if (!alive) return;
 
         if (invulnerableTime > 0) {
@@ -227,7 +226,7 @@ public class MarioSlim extends MarioSpriteSlim {
         }
     }
 
-    private boolean isBlocking(float _x, float _y, float ya, MarioUpdateContext updateContext) {
+    private boolean isBlocking(float _x, float _y, float ya, MarioUpdateContextSlim updateContext) {
         int xTile = (int) (_x / 16);
         int yTile = (int) (_y / 16);
         if (xTile == (int) (this.x / 16) && yTile == (int) (this.y / 16))
@@ -247,7 +246,7 @@ public class MarioSlim extends MarioSpriteSlim {
     }
 
     // either xa or ya is always zero
-    private void move(float xa, float ya, MarioUpdateContext updateContext) {
+    private void move(float xa, float ya, MarioUpdateContextSlim updateContext) {
         if (xa != 0) {
             float stepX = Math.signum(xa) * 8;
             while (Math.abs(xa) > Math.abs(stepX)) {
@@ -268,7 +267,7 @@ public class MarioSlim extends MarioSpriteSlim {
     }
 
     // return true if move is successful, false if blocked
-    private boolean moveStepX(float xa, MarioUpdateContext updateContext) {
+    private boolean moveStepX(float xa, MarioUpdateContextSlim updateContext) {
         float ya = 0;
         boolean collide = false;
         if (xa > 0) {
@@ -304,7 +303,7 @@ public class MarioSlim extends MarioSpriteSlim {
     }
 
     // return true if move is successful, false if blocked
-    private boolean moveStepY(float ya, MarioUpdateContext updateContext) {
+    private boolean moveStepY(float ya, MarioUpdateContextSlim updateContext) {
         float xa = 0;
         boolean collide = false;
         if (ya > 0) {
@@ -343,7 +342,7 @@ public class MarioSlim extends MarioSpriteSlim {
         }
     }
 
-    public void stomp(EnemySlim enemy, MarioUpdateContext updateContext) {
+    public void stomp(EnemySlim enemy, MarioUpdateContextSlim updateContext) {
         if (!this.alive) {
             return;
         }
@@ -358,7 +357,7 @@ public class MarioSlim extends MarioSpriteSlim {
         invulnerableTime = 1;
     }
 
-    public void stomp(ShellSlim shell, MarioUpdateContext updateContext) {
+    public void stomp(ShellSlim shell, MarioUpdateContextSlim updateContext) {
         if (!this.alive) {
             return;
         }
@@ -373,7 +372,7 @@ public class MarioSlim extends MarioSpriteSlim {
         invulnerableTime = 1;
     }
 
-    public void getHurt(MarioUpdateContext updateContext) {
+    public void getHurt(MarioUpdateContextSlim updateContext) {
         if (invulnerableTime > 0 || !this.alive)
             return;
 
@@ -394,7 +393,7 @@ public class MarioSlim extends MarioSpriteSlim {
         }
     }
 
-    void getFlower(MarioUpdateContext updateContext) {
+    void getFlower(MarioUpdateContextSlim updateContext) {
         if (!this.alive) {
             return;
         }
@@ -410,7 +409,7 @@ public class MarioSlim extends MarioSpriteSlim {
         }
     }
 
-    void getMushroom(MarioUpdateContext updateContext) {
+    void getMushroom(MarioUpdateContextSlim updateContext) {
         if (!this.alive) {
             return;
         }
@@ -433,7 +432,7 @@ public class MarioSlim extends MarioSpriteSlim {
         invulnerableTime = 1;
     }
 
-    public void stomp(BulletBillSlim bill, MarioUpdateContext updateContext) {
+    public void stomp(BulletBillSlim bill, MarioUpdateContextSlim updateContext) {
         if (!this.alive) {
             return;
         }
@@ -449,7 +448,7 @@ public class MarioSlim extends MarioSpriteSlim {
         invulnerableTime = 1;
     }
 
-    void collect1Up(MarioUpdateContext updateContext) {
+    void collect1Up(MarioUpdateContextSlim updateContext) {
         if (!this.alive) {
             return;
         }
@@ -457,7 +456,7 @@ public class MarioSlim extends MarioSpriteSlim {
         updateContext.world.lives++;
     }
 
-    public void collectCoin(MarioUpdateContext updateContext) {
+    public void collectCoin(MarioUpdateContextSlim updateContext) {
         if (!this.alive) {
             return;
         }

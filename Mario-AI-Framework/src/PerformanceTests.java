@@ -1,9 +1,10 @@
 import engine.core.MarioForwardModel;
 import engine.core.MarioWorld;
 import engine.helper.MarioActions;
-import forwardmodelslim.core.Converter;
-import forwardmodelslim.core.MarioForwardModelSlim;
-import forwardmodelslim.level.LevelPart;
+import forwardmodel.bin.core.MarioForwardModelBin;
+import forwardmodel.common.Converter;
+import forwardmodel.slim.core.MarioForwardModelSlim;
+import forwardmodel.slim.level.LevelPart;
 import sun.misc.Unsafe;
 
 import java.io.IOException;
@@ -11,6 +12,7 @@ import java.lang.reflect.Field;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Arrays;
+import java.util.LinkedList;
 
 /**
  * *******************************************************************************
@@ -77,6 +79,93 @@ public class PerformanceTests {
     public static void main(String[] args) {
         testArrayCopies();
         //testClones();
+        //testArraysCreation();;
+        //testOneArrayVsFour();
+    }
+
+    private static void testOneArrayVsFour() {
+        int[] ints400 = new int[400];
+        int[] ints100_1 = new int[100];
+        int[] ints100_2 = new int[100];
+        int[] ints100_3 = new int[100];
+        int[] ints100_4 = new int[100];
+        for (int i = 0; i < 400; i++) {
+            ints400[i] = 50;
+        }
+        for (int i = 0; i < 100; i++) {
+            ints100_1[i] = 40;
+            ints100_2[i] = 30;
+            ints100_3[i] = 20;
+            ints100_4[i] = 10;
+        }
+
+        for (int i = 0; i < 1000; i++) {
+            int[] ints400Copy = new int[400];
+            //System.arraycopy(ints400, 0, ints400Copy, 0, ints400.length);
+        }
+        long time = System.currentTimeMillis();
+        for (int i = 0; i < 1000000; i++) {
+            int[] ints400Copy = new int[400];
+            //System.arraycopy(ints400, 0, ints400Copy, 0, ints400.length);
+        }
+        long duration = System.currentTimeMillis() - time;
+        System.out.println("ONE ARRAY:");
+        System.out.println("TIME: " + duration + " ms");
+
+        for (int i = 0; i < 1000; i++) {
+            int[] ints100_1_Copy = new int[100];
+            int[] ints100_2_Copy = new int[100];
+            int[] ints100_3_Copy = new int[100];
+            int[] ints100_4_Copy = new int[100];
+            /*
+            System.arraycopy(ints100_1, 0, ints100_1_Copy, 0, ints100_1.length);
+            System.arraycopy(ints100_2, 0, ints100_2_Copy, 0, ints100_2.length);
+            System.arraycopy(ints100_3, 0, ints100_3_Copy, 0, ints100_3.length);
+            System.arraycopy(ints100_4, 0, ints100_4_Copy, 0, ints100_4.length);
+            */
+        }
+        time = System.currentTimeMillis();
+        for (int i = 0; i < 1000000; i++) {
+            int[] ints100_1_Copy = new int[100];
+            int[] ints100_2_Copy = new int[100];
+            int[] ints100_3_Copy = new int[100];
+            int[] ints100_4_Copy = new int[100];
+            /*
+            System.arraycopy(ints100_1, 0, ints100_1_Copy, 0, ints100_1.length);
+            System.arraycopy(ints100_2, 0, ints100_2_Copy, 0, ints100_2.length);
+            System.arraycopy(ints100_3, 0, ints100_3_Copy, 0, ints100_3.length);
+            System.arraycopy(ints100_4, 0, ints100_4_Copy, 0, ints100_4.length);
+            */
+        }
+        duration = System.currentTimeMillis() - time;
+        System.out.println("--------------");
+        System.out.println("FOUR ARRAYS:");
+        System.out.println("TIME: " + duration + " ms");
+    }
+
+    private static void testArraysCreation() {
+        long time = System.currentTimeMillis();
+        for (int i = 0; i < 1000000; i++) {
+            int[] ints = new int[400];
+        }
+        System.out.println("Million array 400 inits: " + (System.currentTimeMillis() - time));
+
+        time = System.currentTimeMillis();
+        for (int i = 0; i < 1000000; i++) {
+            int[] ints1 = new int[100];
+            int[] ints2 = new int[100];
+            int[] ints3 = new int[100];
+            int[] ints4 = new int[100];
+        }
+        System.out.println("Million 4x array 100 inits: " + (System.currentTimeMillis() - time));
+
+        int[] ints = new int[400];
+        int[] intsCopy = new int[400];
+        time = System.currentTimeMillis();
+        for (int i = 0; i < 1000000; i++) {
+            System.arraycopy(ints, 0, intsCopy, 0, ints.length);
+        }
+        System.out.println("Million array copies: " + (System.currentTimeMillis() - time));
     }
 
     private static void testClones() {
@@ -89,7 +178,8 @@ public class PerformanceTests {
         setupWorld.update(new boolean[MarioActions.numberOfActions()]);
 
         MarioForwardModel originalModel = new MarioForwardModel(setupWorld.clone());
-        MarioForwardModelSlim slimModel = Converter.convert(originalModel, 0);
+        MarioForwardModelSlim slimModel = Converter.originalToSlim(originalModel, 0);
+        MarioForwardModelBin binModel = Converter.slimToBin(slimModel);
 
         for (int i = 0; i < 1000; i++) {
             originalModel.clone();
@@ -119,6 +209,42 @@ public class PerformanceTests {
         System.out.print("Clones per second: ");
         System.out.print(String.format("%,.0f", 1000000 / (duration / 1000.0)));
         System.out.println(" clones");
+
+        for (int i = 0; i < 1000; i++) {
+            binModel.clone();
+        }
+        time = System.currentTimeMillis();
+        for (int i = 0; i < 1000000; i++) {
+            binModel.clone();
+        }
+        duration = System.currentTimeMillis() - time;
+        System.out.println("--------------");
+        System.out.println("BIN MODEL");
+        System.out.println("TIME: " + duration + " ms");
+        System.out.print("Clones per second: ");
+        System.out.print(String.format("%,.0f", 1000000 / (duration / 1000.0)));
+        System.out.println(" clones");
+
+        // pooling test
+        /*
+        time = System.currentTimeMillis();
+        for (int j = 0; j < 10; j++) {
+            LinkedList<MarioForwardModelBin> binModelsList = new LinkedList<>();
+            for (int i = 0; i < 100000; i++) {
+                binModelsList.add(binModel.clone());
+            }
+            for (MarioForwardModelBin binModelFromList : binModelsList) {
+                binModelFromList.returnArrays();
+            }
+        }
+        duration = System.currentTimeMillis() - time;
+        System.out.println("--------------");
+        System.out.println("BIN MODEL - ARRAY POOLING");
+        System.out.println("TIME: " + duration + " ms");
+        System.out.print("Clones per second: ");
+        System.out.print(String.format("%,.0f", 1000000 / (duration / 1000.0)));
+        System.out.println(" clones");
+        */
     }
 
     private static void testArrayCopies() {
@@ -128,18 +254,21 @@ public class PerformanceTests {
         byte[] bytes = new byte[400];
         boolean[] bools = new boolean[400];
         float[] floats = new float[400];
+        short[] shorts = new short[400];
         for (int i = 0; i < 400; i++) {
             levelParts[i] = LevelPart.PIPE_TOP_LEFT_WITHOUT_FLOWER;
             ints[i] = 50;
             bytes[i] = 50;
             bools[i] = true;
             floats[i] = 1.654168541f;
+            shorts[i] = 50;
         }
         LevelPart[] levelPartsCopy = new LevelPart[400];
         int[] intsCopy = new int[400];
         byte[] bytesCopy = new byte[400];
         boolean[] boolsCopy = new boolean[400];
         float[] floatsCopy = new float[400];
+        short[] shortsCopy = new short[400];
 
         // bools, arraycopy
         for (int i = 0; i < 10000; i++) {
@@ -164,6 +293,18 @@ public class PerformanceTests {
         end = System.currentTimeMillis();
         time = end - start;
         System.out.println("bytes - arraycopy: " + time);
+
+        // shorts, arraycopy
+        for (int i = 0; i < 10000; i++) {
+            System.arraycopy(shorts, 0, shortsCopy, 0, shorts.length);
+        }
+        start = System.currentTimeMillis();
+        for (int i = 0; i < 10000000; i++) {
+            System.arraycopy(shorts, 0, shortsCopy, 0, shorts.length);
+        }
+        end = System.currentTimeMillis();
+        time = end - start;
+        System.out.println("shorts - arraycopy: " + time);
 
         // ints, arraycopy
         for (int i = 0; i < 10000; i++) {
@@ -226,6 +367,18 @@ public class PerformanceTests {
         end = System.currentTimeMillis();
         time = end - start;
         System.out.println("bytes - copyMemory: " + time);
+
+        // shorts, copyMemory
+        for (int i = 0; i < 10000; i++) {
+            unsafe.copyMemory(shorts, 0, shortsCopy, 0, shorts.length);
+        }
+        start = System.currentTimeMillis();
+        for (int i = 0; i < 10000000; i++) {
+            unsafe.copyMemory(shorts, 0, shortsCopy, 0, shorts.length);
+        }
+        end = System.currentTimeMillis();
+        time = end - start;
+        System.out.println("shorts - copyMemory: " + time);
 
         // ints, copyMemory
         //TODO: why length + 4?
@@ -293,6 +446,18 @@ public class PerformanceTests {
         time = end - start;
         System.out.println("bytes - arrays.copyof: " + time);
 
+        // shorts, arrays.copyof
+        for (int i = 0; i < 10000; i++) {
+            shortsCopy = Arrays.copyOf(shorts, shorts.length);
+        }
+        start = System.currentTimeMillis();
+        for (int i = 0; i < 10000000; i++) {
+            shortsCopy = Arrays.copyOf(shorts, shorts.length);
+        }
+        end = System.currentTimeMillis();
+        time = end - start;
+        System.out.println("shorts - arrays.copyof: " + time);
+
         // ints, arrays.copyof
         for (int i = 0; i < 10000; i++) {
             intsCopy = Arrays.copyOf(ints, ints.length);
@@ -335,5 +500,6 @@ public class PerformanceTests {
         bytes[0] = bytesCopy[0];
         bools[0] = boolsCopy[0];
         floats[0] = floatsCopy[0];
+        shorts[0] = shortsCopy[0];
     }
 }

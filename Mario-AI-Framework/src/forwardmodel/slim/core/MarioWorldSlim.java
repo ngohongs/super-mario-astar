@@ -1,14 +1,14 @@
-package forwardmodelslim.core;
+package forwardmodel.slim.core;
 
 import engine.core.MarioSprite;
 import engine.core.MarioWorld;
 import engine.helper.GameStatus;
-import forwardmodelslim.level.SpriteTypeSlim;
+import forwardmodel.common.SpriteTypeSlim;
 import engine.sprites.*;
-import forwardmodelslim.level.LevelPart;
-import forwardmodelslim.level.MarioLevelSlim;
-import forwardmodelslim.level.TileFeaturesSlim;
-import forwardmodelslim.sprites.*;
+import forwardmodel.slim.level.LevelPart;
+import forwardmodel.slim.level.MarioLevelSlim;
+import forwardmodel.slim.level.TileFeaturesSlim;
+import forwardmodel.slim.sprites.*;
 
 import java.util.ArrayList;
 
@@ -18,21 +18,21 @@ public class MarioWorldSlim {
     private static final int LOSE = 2;
     private static final int TIME_OUT = 3;
 
-    private int gameStatusCode;
+    public int gameStatusCode;
     public int pauseTimer;
-    private int currentTimer;
+    public int currentTimer;
     public float cameraX;
     public float cameraY;
     public MarioSlim mario;
     public MarioLevelSlim level;
-    private int currentTick;
+    public int currentTick;
     public int coins, lives;
 
-    private ArrayList<MarioSpriteSlim> sprites;
+    public ArrayList<MarioSpriteSlim> sprites;
 
     private MarioWorldSlim() { }
 
-    MarioWorldSlim(MarioWorld originalWorld, int levelCutoutTileWidth) {
+    public MarioWorldSlim(MarioWorld originalWorld, int levelCutoutTileWidth) {
         this.gameStatusCode = convertGameStatus(originalWorld.gameStatus);
         this.pauseTimer = originalWorld.pauseTimer;
         this.currentTimer = originalWorld.currentTimer;
@@ -183,13 +183,13 @@ public class MarioWorldSlim {
         return enemies;
     }
 
-    public void addSprite(MarioSpriteSlim sprite, MarioUpdateContext updateContext) {
+    public void addSprite(MarioSpriteSlim sprite, MarioUpdateContextSlim updateContext) {
         updateContext.addedSprites.add(sprite);
         sprite.alive = true;
         sprite.update(updateContext);
     }
 
-    public void removeSprite(MarioSpriteSlim sprite, MarioUpdateContext updateContext) {
+    public void removeSprite(MarioSpriteSlim sprite, MarioUpdateContextSlim updateContext) {
         updateContext.removedSprites.add(sprite);
         sprite.alive = false;
     }
@@ -230,7 +230,7 @@ public class MarioWorldSlim {
             }
         }
 
-        MarioUpdateContext updateContext = MarioUpdateContext.get();
+        MarioUpdateContextSlim updateContext = MarioUpdateContextSlim.get();
         updateContext.world = this;
 
         // workaround the nonexistence of MarioGame here
@@ -339,19 +339,19 @@ public class MarioWorldSlim {
         updateContext.world = null;
         updateContext.actions = null;
         updateContext.fireballsOnScreen = 0;
-        MarioUpdateContext.back(updateContext);
+        MarioUpdateContextSlim.back(updateContext);
     }
 
     private MarioSpriteSlim spawnEnemy(SpriteTypeSlim type, int x, int y, int dir) {
         if (type == SpriteTypeSlim.ENEMY_FLOWER) {
             // flower enemy constructor needs to call update - which uses world
-            MarioUpdateContext updateContext = MarioUpdateContext.get();
+            MarioUpdateContextSlim updateContext = MarioUpdateContextSlim.get();
             updateContext.world = this;
 
             FlowerEnemySlim flowerEnemy = new FlowerEnemySlim(x * 16 + 17, y * 16 + 18, updateContext);
 
             updateContext.world = null;
-            MarioUpdateContext.back(updateContext);
+            MarioUpdateContextSlim.back(updateContext);
 
             return flowerEnemy;
         }
@@ -359,7 +359,7 @@ public class MarioWorldSlim {
             return new EnemySlim(x * 16 + 8, y * 16 + 15, dir, type);
     }
 
-    public void bump(int xTile, int yTile, boolean canBreakBricks, MarioUpdateContext updateContext) {
+    public void bump(int xTile, int yTile, boolean canBreakBricks, MarioUpdateContextSlim updateContext) {
         byte blockValue = this.level.getBlockValue(xTile, yTile);
         ArrayList<TileFeaturesSlim> features = TileFeaturesSlim.getTileFeatures(blockValue);
 
@@ -387,7 +387,7 @@ public class MarioWorldSlim {
         }
     }
 
-    private void bumpInto(int xTile, int yTile, MarioUpdateContext updateContext) {
+    private void bumpInto(int xTile, int yTile, MarioUpdateContextSlim updateContext) {
         byte blockValue = level.getBlockValue(xTile, yTile);
         if (blockValue == LevelPart.COIN.getValue()) {
             this.mario.collectCoin(updateContext);

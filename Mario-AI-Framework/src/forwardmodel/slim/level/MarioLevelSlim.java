@@ -1,26 +1,28 @@
-package forwardmodelslim.level;
+package forwardmodel.slim.level;
 
 import engine.core.MarioLevel;
 import engine.helper.SpriteType;
+import forwardmodel.common.SpriteTypeSlim;
+import forwardmodel.common.StaticLevel;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 
 public class MarioLevelSlim {
     public int width;
-    private int tileWidth;
+    public int tileWidth;
     public int height;
-    private int tileHeight;
+    public int tileHeight;
     public int exitTileX;
 
-    private StaticLevel staticLevel;
+    public StaticLevel staticLevel;
     private static int cutoutTileWidth;
 
-    private byte[] levelCutout;
-    private boolean[] aliveFlags;
-    private int currentCutoutCenter;
-    private int cutoutArrayBeginningIndex; // index of the current array beginning
-    private int cutoutLeftBorderX;
+    public byte[] levelCutout;
+    public boolean[] aliveFlags;
+    public int currentCutoutCenter;
+    public int cutoutArrayBeginningIndex; // index of the current array beginning
+    public int cutoutLeftBorderX;
 
     private MarioLevelSlim() { }
 

@@ -15,12 +15,12 @@ public class PlayLevel {
     }
 
     public static void main(String[] args) {
-        for (int i = 1; i < 16; i++) {
-            MarioGame game = new MarioGame();
-             game.runGame(new agents.robinBaumgarten.Agent(), getLevel("./levels/original/lvl-" + i + ".txt"), 200, 0, true);
-        }
+        //for (int i = 1; i < 2; i++) {
+        //    MarioGame game = new MarioGame();
+        //     game.runGame(new agents.robinBaumgarten.Agent(), getLevel("./levels/original/lvl-" + i + ".txt"), 200, 0, false);
+        //}
 
-        //MarioGame game = new MarioGame();
-        //game.playGame(getLevel("./levels/original/lvl-1.txt"), 200, 0);
+        MarioGame game = new MarioGame();
+        game.playGame(getLevel("./levels/original/lvl-1.txt"), 200, 0);
     }
 }

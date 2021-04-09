@@ -1,15 +1,15 @@
-package forwardmodelslim.sprites;
+package forwardmodel.slim.sprites;
 
 import engine.sprites.BulletBill;
-import forwardmodelslim.core.MarioSpriteSlim;
-import forwardmodelslim.core.MarioUpdateContext;
-import forwardmodelslim.level.SpriteTypeSlim;
+import forwardmodel.slim.core.MarioSpriteSlim;
+import forwardmodel.slim.core.MarioUpdateContextSlim;
+import forwardmodel.common.SpriteTypeSlim;
 
 public class BulletBillSlim extends MarioSpriteSlim {
     private static final SpriteTypeSlim type = SpriteTypeSlim.BULLET_BILL;
     static final int height = 12;
 
-    private int facing;
+    public int facing;
 
     private BulletBillSlim() { }
 
@@ -60,13 +60,13 @@ public class BulletBillSlim extends MarioSpriteSlim {
     }
 
     @Override
-    public void update(MarioUpdateContext updateContext) {
+    public void update(MarioUpdateContextSlim updateContext) {
         if (!alive) return;
         x += facing * 4f;
     }
 
     @Override
-    public void collideCheck(MarioUpdateContext updateContext) {
+    public void collideCheck(MarioUpdateContextSlim updateContext) {
         if (!alive) return;
 
         float xMarioD = updateContext.world.mario.x - x;
@@ -84,7 +84,7 @@ public class BulletBillSlim extends MarioSpriteSlim {
     }
 
     @Override
-    public boolean fireballCollideCheck(FireballSlim fireball, MarioUpdateContext updateContext) {
+    public boolean fireballCollideCheck(FireballSlim fireball, MarioUpdateContextSlim updateContext) {
         if (!alive) return false;
 
         float xD = fireball.x - x;
@@ -97,7 +97,7 @@ public class BulletBillSlim extends MarioSpriteSlim {
     }
 
     @Override
-    public boolean shellCollideCheck(ShellSlim shell, MarioUpdateContext updateContext) {
+    public boolean shellCollideCheck(ShellSlim shell, MarioUpdateContextSlim updateContext) {
         if (!alive) return false;
 
         float xD = shell.x - x;

@@ -1,9 +1,8 @@
-package forwardmodelslim.level;
+package forwardmodel.common;
 
 public enum SpriteTypeSlim {
     NONE(0),
-    MARIO(-31),
-    FIREBALL(16),
+    MARIO(1),
     GOOMBA(2),
     GOOMBA_WINGED(3),
     RED_KOOPA(4),
@@ -17,9 +16,10 @@ public enum SpriteTypeSlim {
     MUSHROOM(12),
     FIRE_FLOWER(13),
     SHELL(14),
-    LIFE_MUSHROOM(15);
+    LIFE_MUSHROOM(15),
+    FIREBALL(16);
 
-    private int value;
+    private final int value;
 
     SpriteTypeSlim(int value) {
         this.value = value;

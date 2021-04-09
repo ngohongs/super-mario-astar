@@ -1,11 +1,11 @@
-package forwardmodelslim.sprites;
+package forwardmodel.slim.sprites;
 
-import engine.sprites.Mushroom;
-import forwardmodelslim.core.MarioSpriteSlim;
-import forwardmodelslim.core.MarioUpdateContext;
-import forwardmodelslim.level.SpriteTypeSlim;
+import engine.sprites.LifeMushroom;
+import forwardmodel.slim.core.MarioSpriteSlim;
+import forwardmodel.slim.core.MarioUpdateContextSlim;
+import forwardmodel.common.SpriteTypeSlim;
 
-public class MushroomSlim extends MarioSpriteSlim {
+public class LifeMushroomSlim extends MarioSpriteSlim {
     public static final float GROUND_INERTIA = 0.89f;
     public static final float AIR_INERTIA = 0.89f;
     private static final SpriteTypeSlim type = SpriteTypeSlim.LIFE_MUSHROOM;
@@ -17,20 +17,20 @@ public class MushroomSlim extends MarioSpriteSlim {
     private boolean onGround;
     private int life;
 
-    private MushroomSlim() { }
+    private LifeMushroomSlim() { }
 
-    public MushroomSlim(Mushroom originalMushroom) {
-        this.x = originalMushroom.x;
-        this.y = originalMushroom.y;
-        this.alive = originalMushroom.alive;
-        this.xa = originalMushroom.xa;
-        this.ya = originalMushroom.ya;
-        this.facing = originalMushroom.facing;
-        this.onGround = originalMushroom.isOnGround();
-        this.life = originalMushroom.getLife();
+    public LifeMushroomSlim(LifeMushroom originalLifeMushroom) {
+        this.x = originalLifeMushroom.x;
+        this.y = originalLifeMushroom.y;
+        this.alive = originalLifeMushroom.alive;
+        this.xa = originalLifeMushroom.xa;
+        this.ya = originalLifeMushroom.ya;
+        this.facing = originalLifeMushroom.facing;
+        this.onGround = originalLifeMushroom.isOnGround();
+        this.life = originalLifeMushroom.getLife();
     }
 
-    public MushroomSlim(float x, float y) {
+    public LifeMushroomSlim(float x, float y) {
         this.x = x;
         this.y = y;
         this.facing = 1;
@@ -42,21 +42,21 @@ public class MushroomSlim extends MarioSpriteSlim {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        MushroomSlim that = (MushroomSlim) o;
+        LifeMushroomSlim that = (LifeMushroomSlim) o;
         boolean equal = Float.compare(that.xa, xa) == 0 &&
                 Float.compare(that.ya, ya) == 0 &&
                 facing == that.facing &&
                 onGround == that.onGround &&
-                life == that.life  &&
+                life == that.life &&
                 Float.compare(x, that.x) == 0 &&
                 Float.compare(y, that.y) == 0 &&
                 alive == that.alive;
         if (equal) {
-            System.out.println("    MUSHROOM EQUAL");
+            System.out.println("    LIFE MUSHROOM EQUAL");
             return true;
         }
         else {
-            System.out.println("    MUSHROOM NOT EQUAL");
+            System.out.println("    LIFE MUSHROOM NOT EQUAL");
             return false;
         }
     }
@@ -67,7 +67,7 @@ public class MushroomSlim extends MarioSpriteSlim {
     }
 
     public MarioSpriteSlim clone() {
-        MushroomSlim clone = new MushroomSlim();
+        LifeMushroomSlim clone = new LifeMushroomSlim();
         clone.x = this.x;
         clone.y = this.y;
         clone.alive = this.alive;
@@ -80,7 +80,7 @@ public class MushroomSlim extends MarioSpriteSlim {
     }
 
     @Override
-    public void collideCheck(MarioUpdateContext updateContext) {
+    public void collideCheck(MarioUpdateContextSlim updateContext) {
         if (!this.alive) {
             return;
         }
@@ -89,13 +89,13 @@ public class MushroomSlim extends MarioSpriteSlim {
         float yMarioD = updateContext.world.mario.y - y;
         if (xMarioD > -16 && xMarioD < 16) {
             if (yMarioD > -height && yMarioD < updateContext.world.mario.height) {
-                updateContext.world.mario.getMushroom(updateContext);
+                updateContext.world.mario.collect1Up(updateContext);
                 updateContext.world.removeSprite(this, updateContext);
             }
         }
     }
 
-    private boolean isBlocking(float _x, float _y, float ya, MarioUpdateContext updateContext) {
+    private boolean isBlocking(float _x, float _y, float ya, MarioUpdateContextSlim updateContext) {
         int x = (int) (_x / 16);
         int y = (int) (_y / 16);
         if (x == (int) (this.x / 16) && y == (int) (this.y / 16))
@@ -105,7 +105,7 @@ public class MushroomSlim extends MarioSpriteSlim {
     }
 
     @Override
-    public void bumpCheck(int xTile, int yTile, MarioUpdateContext updateContext) {
+    public void bumpCheck(int xTile, int yTile, MarioUpdateContextSlim updateContext) {
         if (!this.alive) {
             return;
         }
@@ -117,7 +117,7 @@ public class MushroomSlim extends MarioSpriteSlim {
     }
 
     // either xa or ya is always zero
-    private boolean move(float xa, float ya, MarioUpdateContext updateContext) {
+    private boolean move(float xa, float ya, MarioUpdateContextSlim updateContext) {
         if (xa != 0) {
             float stepX = Math.signum(xa) * 8;
             while (Math.abs(xa) > Math.abs(stepX)) {
@@ -138,7 +138,7 @@ public class MushroomSlim extends MarioSpriteSlim {
     }
 
     // return true if move is successful, false if blocked
-    private boolean moveStepX(float xa, MarioUpdateContext updateContext) {
+    private boolean moveStepX(float xa, MarioUpdateContextSlim updateContext) {
         float ya = 0;
         boolean collide = false;
         if (xa > 0) {
@@ -174,7 +174,7 @@ public class MushroomSlim extends MarioSpriteSlim {
     }
 
     // return true if move is successful, false if blocked
-    private boolean moveStepY(float ya, MarioUpdateContext updateContext) {
+    private boolean moveStepY(float ya, MarioUpdateContextSlim updateContext) {
         float xa = 0;
         boolean collide = false;
         if (ya > 0) {
@@ -213,7 +213,7 @@ public class MushroomSlim extends MarioSpriteSlim {
     }
 
     @Override
-    public void update(MarioUpdateContext updateContext) {
+    public void update(MarioUpdateContextSlim updateContext) {
         if (!this.alive) {
             return;
         }

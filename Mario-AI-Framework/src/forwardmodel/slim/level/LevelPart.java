@@ -1,4 +1,6 @@
-package forwardmodelslim.level;
+package forwardmodel.slim.level;
+
+import forwardmodel.common.SpriteTypeSlim;
 
 public enum LevelPart {
     // sprites - multiplied by -1 to avoid collisions with tiles
@@ -166,5 +168,18 @@ public enum LevelPart {
             default:
                 throw new IllegalArgumentException();
         }
+    }
+
+    static boolean isLevelSprite(LevelPart levelPart) {
+        return  levelPart == GOOMBA ||
+                levelPart == GOOMBA_WINGED ||
+                levelPart == RED_KOOPA ||
+                levelPart == RED_KOOPA_WINGED ||
+                levelPart == GREEN_KOOPA ||
+                levelPart == GREEN_KOOPA_WINGED ||
+                levelPart == SPIKY ||
+                levelPart == SPIKY_WINGED ||
+                levelPart == PIPE_TOP_LEFT_WITH_FLOWER;
+
     }
 }

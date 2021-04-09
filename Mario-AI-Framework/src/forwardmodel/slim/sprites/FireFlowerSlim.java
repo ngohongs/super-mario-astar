@@ -1,9 +1,9 @@
-package forwardmodelslim.sprites;
+package forwardmodel.slim.sprites;
 
 import engine.sprites.FireFlower;
-import forwardmodelslim.core.MarioSpriteSlim;
-import forwardmodelslim.core.MarioUpdateContext;
-import forwardmodelslim.level.SpriteTypeSlim;
+import forwardmodel.slim.core.MarioSpriteSlim;
+import forwardmodel.slim.core.MarioUpdateContextSlim;
+import forwardmodel.common.SpriteTypeSlim;
 
 public class FireFlowerSlim extends MarioSpriteSlim {
     private static final int height = 12;
@@ -60,7 +60,7 @@ public class FireFlowerSlim extends MarioSpriteSlim {
     }
 
     @Override
-    public void collideCheck(MarioUpdateContext updateContext) {
+    public void collideCheck(MarioUpdateContextSlim updateContext) {
         if (!this.alive) {
             return;
         }
@@ -76,7 +76,7 @@ public class FireFlowerSlim extends MarioSpriteSlim {
     }
 
     @Override
-    public void update(MarioUpdateContext updateContext) {
+    public void update(MarioUpdateContextSlim updateContext) {
         if (!this.alive) {
             return;
         }

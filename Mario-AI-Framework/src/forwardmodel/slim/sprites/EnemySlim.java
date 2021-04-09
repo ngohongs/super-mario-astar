@@ -1,9 +1,9 @@
-package forwardmodelslim.sprites;
+package forwardmodel.slim.sprites;
 
 import engine.sprites.Enemy;
-import forwardmodelslim.core.MarioSpriteSlim;
-import forwardmodelslim.core.MarioUpdateContext;
-import forwardmodelslim.level.SpriteTypeSlim;
+import forwardmodel.slim.core.MarioSpriteSlim;
+import forwardmodel.slim.core.MarioUpdateContextSlim;
+import forwardmodel.common.SpriteTypeSlim;
 
 public class EnemySlim extends MarioSpriteSlim {
     private static final int GOOMBA = 2;
@@ -19,17 +19,17 @@ public class EnemySlim extends MarioSpriteSlim {
     public static final float AIR_INERTIA = 0.89f;
     private static final int width = 4;
 
-    private int typeCode;
+    public int typeCode;
 
-    private float xa, ya;
-    private int facing;
+    public float xa, ya;
+    public int facing;
 
-    int height;
+    public int height;
 
-    private boolean onGround;
-    private boolean avoidCliffs;
-    private boolean winged;
-    private boolean noFireballDeath;
+    public boolean onGround;
+    public boolean avoidCliffs;
+    public boolean winged;
+    public boolean noFireballDeath;
 
     private EnemySlim() { }
 
@@ -142,7 +142,7 @@ public class EnemySlim extends MarioSpriteSlim {
     }
 
     @Override
-    public void collideCheck(MarioUpdateContext updateContext) {
+    public void collideCheck(MarioUpdateContextSlim updateContext) {
         if (!this.alive) {
             return;
         }
@@ -173,7 +173,7 @@ public class EnemySlim extends MarioSpriteSlim {
     }
 
     @Override
-    public void update(MarioUpdateContext updateContext) {
+    public void update(MarioUpdateContextSlim updateContext) {
         if (!this.alive) {
             return;
         }
@@ -213,7 +213,7 @@ public class EnemySlim extends MarioSpriteSlim {
     }
 
     // either xa or ya is always zero
-    private boolean move(float xa, float ya, MarioUpdateContext updateContext) {
+    private boolean move(float xa, float ya, MarioUpdateContextSlim updateContext) {
         if (xa != 0) {
             float stepX = Math.signum(xa) * 8;
             while (Math.abs(xa) > Math.abs(stepX)) {
@@ -234,7 +234,7 @@ public class EnemySlim extends MarioSpriteSlim {
     }
 
     // return true if move is successful, false if blocked
-    private boolean moveStepX(float xa, MarioUpdateContext updateContext) {
+    private boolean moveStepX(float xa, MarioUpdateContextSlim updateContext) {
         float ya = 0;
         boolean collide = false;
         if (xa > 0) {
@@ -276,7 +276,7 @@ public class EnemySlim extends MarioSpriteSlim {
     }
 
     // return true if move is successful, false if blocked
-    private boolean moveStepY(float ya, MarioUpdateContext updateContext) {
+    private boolean moveStepY(float ya, MarioUpdateContextSlim updateContext) {
         float xa = 0;
         boolean collide = false;
         if (ya > 0) {
@@ -314,7 +314,7 @@ public class EnemySlim extends MarioSpriteSlim {
         }
     }
 
-    private boolean isBlocking(float _x, float _y, float ya, MarioUpdateContext updateContext) {
+    private boolean isBlocking(float _x, float _y, float ya, MarioUpdateContextSlim updateContext) {
         int x = (int) (_x / 16);
         int y = (int) (_y / 16);
         if (x == (int) (this.x / 16) && y == (int) (this.y / 16))
@@ -324,7 +324,7 @@ public class EnemySlim extends MarioSpriteSlim {
     }
 
     @Override
-    public boolean shellCollideCheck(ShellSlim shell, MarioUpdateContext updateContext) {
+    public boolean shellCollideCheck(ShellSlim shell, MarioUpdateContextSlim updateContext) {
         if (!this.alive) {
             return false;
         }
@@ -344,7 +344,7 @@ public class EnemySlim extends MarioSpriteSlim {
     }
 
     @Override
-    public boolean fireballCollideCheck(FireballSlim fireball, MarioUpdateContext updateContext) {
+    public boolean fireballCollideCheck(FireballSlim fireball, MarioUpdateContextSlim updateContext) {
         if (!this.alive) {
             return false;
         }
@@ -367,7 +367,7 @@ public class EnemySlim extends MarioSpriteSlim {
     }
 
     @Override
-    public void bumpCheck(int xTile, int yTile, MarioUpdateContext updateContext) {
+    public void bumpCheck(int xTile, int yTile, MarioUpdateContextSlim updateContext) {
         if (!this.alive) {
             return;
         }
