@@ -10,6 +10,7 @@ public class MarioForwardModelBin {
 
     public void advance(boolean[] actions) {
         // TODO WorldBin.update(data)
+        MarioWorldBin.update(actions, data);
     }
 
     public MarioForwardModelBin clone() {

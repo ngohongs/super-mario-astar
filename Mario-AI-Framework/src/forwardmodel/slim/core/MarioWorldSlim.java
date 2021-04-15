@@ -3,11 +3,11 @@ package forwardmodel.slim.core;
 import engine.core.MarioSprite;
 import engine.core.MarioWorld;
 import engine.helper.GameStatus;
-import forwardmodel.common.SpriteTypeSlim;
+import forwardmodel.common.SpriteTypeCommon;
 import engine.sprites.*;
-import forwardmodel.slim.level.LevelPart;
+import forwardmodel.common.LevelPart;
 import forwardmodel.slim.level.MarioLevelSlim;
-import forwardmodel.slim.level.TileFeaturesSlim;
+import forwardmodel.common.TileFeaturesCommon;
 import forwardmodel.slim.sprites.*;
 
 import java.util.ArrayList;
@@ -163,7 +163,7 @@ public class MarioWorldSlim {
         for (MarioSpriteSlim sprite : this.sprites) {
             MarioSpriteSlim spriteClone = sprite.clone();
             clone.sprites.add(spriteClone);
-            if (spriteClone.getType() == SpriteTypeSlim.MARIO)
+            if (spriteClone.getType() == SpriteTypeCommon.MARIO)
                 clone.mario = (MarioSlim) spriteClone;
         }
 
@@ -256,13 +256,13 @@ public class MarioWorldSlim {
         updateContext.fireballsOnScreen = 0;
         for (MarioSpriteSlim sprite : sprites) {
             if (sprite.x < cameraX - 64 || sprite.x > cameraX + marioGameWidth + 64 || sprite.y > this.level.height + 32) {
-                if (sprite.getType() == SpriteTypeSlim.MARIO) {
+                if (sprite.getType() == SpriteTypeCommon.MARIO) {
                     this.lose();
                 }
                 this.removeSprite(sprite, updateContext);
                 continue;
             }
-            if (sprite.getType() == SpriteTypeSlim.FIREBALL) {
+            if (sprite.getType() == SpriteTypeCommon.FIREBALL) {
                 updateContext.fireballsOnScreen += 1;
             }
         }
@@ -275,8 +275,8 @@ public class MarioWorldSlim {
                 if (x * 16 + 8 < mario.x - 16)
                     dir = 1;
 
-                SpriteTypeSlim spriteType = level.getSpriteType(x, y);
-                if (spriteType != SpriteTypeSlim.NONE) {
+                SpriteTypeCommon spriteType = level.getSpriteType(x, y);
+                if (spriteType != SpriteTypeCommon.NONE) {
                     MarioSpriteSlim newSprite = this.spawnEnemy(spriteType, x, y, dir);
                     this.addSprite(newSprite, updateContext);
                     level.setBlock(x, y, 0); // remove sprite when it is spawned
@@ -342,8 +342,8 @@ public class MarioWorldSlim {
         MarioUpdateContextSlim.back(updateContext);
     }
 
-    private MarioSpriteSlim spawnEnemy(SpriteTypeSlim type, int x, int y, int dir) {
-        if (type == SpriteTypeSlim.ENEMY_FLOWER) {
+    private MarioSpriteSlim spawnEnemy(SpriteTypeCommon type, int x, int y, int dir) {
+        if (type == SpriteTypeCommon.ENEMY_FLOWER) {
             // flower enemy constructor needs to call update - which uses world
             MarioUpdateContextSlim updateContext = MarioUpdateContextSlim.get();
             updateContext.world = this;
@@ -361,26 +361,26 @@ public class MarioWorldSlim {
 
     public void bump(int xTile, int yTile, boolean canBreakBricks, MarioUpdateContextSlim updateContext) {
         byte blockValue = this.level.getBlockValue(xTile, yTile);
-        ArrayList<TileFeaturesSlim> features = TileFeaturesSlim.getTileFeatures(blockValue);
+        ArrayList<TileFeaturesCommon> features = TileFeaturesCommon.getTileFeatures(blockValue);
 
-        if (features.contains(TileFeaturesSlim.BUMPABLE)) {
+        if (features.contains(TileFeaturesCommon.BUMPABLE)) {
             bumpInto(xTile, yTile - 1, updateContext);
             level.setBlock(xTile, yTile, 14);
 
-            if (features.contains(TileFeaturesSlim.SPECIAL)) {
+            if (features.contains(TileFeaturesCommon.SPECIAL)) {
                 if (!this.mario.isLarge) {
                     addSprite(new MushroomSlim(xTile * 16 + 9, yTile * 16 + 8), updateContext);
                 } else {
                     addSprite(new FireFlowerSlim(xTile * 16 + 9, yTile * 16 + 8), updateContext);
                 }
-            } else if (features.contains(TileFeaturesSlim.LIFE)) {
+            } else if (features.contains(TileFeaturesCommon.LIFE)) {
                 addSprite(new LifeMushroomSlim(xTile * 16 + 9, yTile * 16 + 8), updateContext);
             } else {
                 mario.collectCoin(updateContext);
             }
         }
 
-        if (features.contains(TileFeaturesSlim.BREAKABLE)) {
+        if (features.contains(TileFeaturesCommon.BREAKABLE)) {
             bumpInto(xTile, yTile - 1, updateContext);
             if (canBreakBricks)
                 level.setBlock(xTile, yTile, 0);

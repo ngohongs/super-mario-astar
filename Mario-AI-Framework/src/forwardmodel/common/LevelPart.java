@@ -1,6 +1,4 @@
-package forwardmodel.slim.level;
-
-import forwardmodel.common.SpriteTypeSlim;
+package forwardmodel.common;
 
 public enum LevelPart {
     // sprites - multiplied by -1 to avoid collisions with tiles
@@ -59,7 +57,7 @@ public enum LevelPart {
         return value;
     }
 
-    static LevelPart getLevelPart(int value, boolean levelTile) {
+    public static LevelPart getLevelPart(int value, boolean levelTile) {
         if (value == 18 || value == -11) // assume pipe with flower
             return PIPE_TOP_LEFT_WITH_FLOWER;
         if (!levelTile)
@@ -71,7 +69,7 @@ public enum LevelPart {
         throw new IllegalArgumentException();
     }
 
-    static byte checkLevelBlock(byte levelPartValue) {
+    public static byte checkLevelBlock(byte levelPartValue) {
         if (levelPartValue == PIPE_TOP_LEFT_WITH_FLOWER.getValue() ||
             levelPartValue == PIPE_TOP_LEFT_WITHOUT_FLOWER.getValue())
             return PIPE_TOP_LEFT.getValue();
@@ -81,21 +79,21 @@ public enum LevelPart {
             return levelPartValue;
     }
 
-    static SpriteTypeSlim getLevelSprite(byte levelPartValue) {
+    public static SpriteTypeCommon getLevelSprite(byte levelPartValue) {
         if (levelPartValue == PIPE_TOP_LEFT_WITH_FLOWER.getValue())
-            return SpriteTypeSlim.getSpriteTypeSlim((byte) -ENEMY_FLOWER.value);
+            return SpriteTypeCommon.getSpriteTypeSlim((byte) -ENEMY_FLOWER.value);
         if (levelPartValue == PIPE_TOP_LEFT_WITHOUT_FLOWER.getValue())
-            return SpriteTypeSlim.NONE;
+            return SpriteTypeCommon.NONE;
 
         if (levelPartValue >= 0)
-            return SpriteTypeSlim.NONE;
+            return SpriteTypeCommon.NONE;
         else {
             levelPartValue *= -1;
-            return SpriteTypeSlim.getSpriteTypeSlim(levelPartValue);
+            return SpriteTypeCommon.getSpriteTypeSlim(levelPartValue);
         }
     }
 
-    static boolean isDynamic(LevelPart levelPart) {
+    public static boolean isDynamic(LevelPart levelPart) {
         switch (levelPart) {
             case GOOMBA:
             case GOOMBA_WINGED:
@@ -142,7 +140,7 @@ public enum LevelPart {
         }
     }
 
-    static LevelPart getUsedState(LevelPart levelPart) {
+    public static LevelPart getUsedState(LevelPart levelPart) {
         switch (levelPart) {
             case GOOMBA:
             case GOOMBA_WINGED:
@@ -180,6 +178,5 @@ public enum LevelPart {
                 levelPart == SPIKY ||
                 levelPart == SPIKY_WINGED ||
                 levelPart == PIPE_TOP_LEFT_WITH_FLOWER;
-
     }
 }

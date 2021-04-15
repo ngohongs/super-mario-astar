@@ -1,12 +1,12 @@
 package forwardmodel.slim.sprites;
 
 import engine.sprites.FlowerEnemy;
+import forwardmodel.common.SpriteTypeCommon;
 import forwardmodel.slim.core.MarioSpriteSlim;
 import forwardmodel.slim.core.MarioUpdateContextSlim;
-import forwardmodel.common.SpriteTypeSlim;
 
 public class FlowerEnemySlim extends MarioSpriteSlim {
-    private static final SpriteTypeSlim type = SpriteTypeSlim.ENEMY_FLOWER;
+    private static final SpriteTypeCommon type = SpriteTypeCommon.ENEMY_FLOWER;
     private static final int width = 2;
     private static final int height = 12;
 
@@ -60,7 +60,7 @@ public class FlowerEnemySlim extends MarioSpriteSlim {
     }
 
     @Override
-    public SpriteTypeSlim getType() {
+    public SpriteTypeCommon getType() {
         return type;
     }
 

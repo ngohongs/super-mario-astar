@@ -1,108 +1,111 @@
 package forwardmodel.bin.core;
 
+import forwardmodel.bin.level.MarioLevelBin;
+import forwardmodel.common.SpriteTypeCommon;
 import forwardmodel.common.StaticLevel;
 import forwardmodel.slim.core.MarioSpriteSlim;
 import forwardmodel.slim.core.MarioWorldSlim;
-import forwardmodel.slim.level.LevelPart;
-import forwardmodel.common.SpriteTypeSlim;
+import forwardmodel.common.LevelPart;
+import forwardmodel.slim.level.MarioLevelSlim;
 import forwardmodel.slim.sprites.*;
 
-import java.util.concurrent.ConcurrentLinkedQueue;
-
 public class MarioBinData {
-    private static final short SPRITE_STORAGE_INFO = 38;
+    private static final short SPRITE_STORAGE_INFO_SIZE = 27;
 
-    private static final int BULLET_BILL_BOOLS = 2; // bin model special "isValid" field
-    private static final int ENEMY_BOOLS = 5;
-    private static final int FIREBALL_BOOLS = 2;  // bin model special "isValid" field
-    private static final int FIRE_FLOWER_BOOLS = 2;
-    private static final int FLOWER_ENEMY_BOOLS = 1;
-    private static final int LIFE_MUSHROOM_BOOLS = 2;
-    private static final int MARIO_BOOLS = 10;
-    private static final int MUSHROOM_BOOLS = 2;
-    private static final int SHELL_BOOLS = 2;
+    // sprite bool counts
+    public static final int BULLET_BILL_BOOLS = 1;
+    public static final int ENEMY_BOOLS = 5;
+    public static final int FIREBALL_BOOLS = 2;  // bin model special "isValid" field
+    public static final int FIRE_FLOWER_BOOLS = 2;
+    public static final int FLOWER_ENEMY_BOOLS = 1;
+    public static final int LIFE_MUSHROOM_BOOLS = 2;
+    public static final int MARIO_BOOLS = 10;
+    public static final int MUSHROOM_BOOLS = 2;
+    public static final int SHELL_BOOLS = 2;
 
-    private static final int WORLD_INTS = 6;
-    private static final int LEVEL_INTS = 8;
-    private static final int BULLET_BILL_INTS = 1;
-    private static final int ENEMY_INTS = 3;
-    private static final int FIREBALL_INTS = 1;
-    private static final int FIRE_FLOWER_INTS = 1;
-    private static final int FLOWER_ENEMY_INTS = 1;
-    private static final int LIFE_MUSHROOM_INTS = 2;
-    private static final int MARIO_INTS = 4;
-    private static final int MUSHROOM_INTS = 2;
-    private static final int SHELL_INTS = 1;
+    // sprite, world, level int counts
+    public static final int WORLD_INTS = 6;
+    public static final int LEVEL_INTS = 8;
+    public static final int BULLET_BILL_INTS = 1;
+    public static final int ENEMY_INTS = 3;
+    public static final int FIREBALL_INTS = 1;
+    public static final int FIRE_FLOWER_INTS = 1;
+    public static final int FLOWER_ENEMY_INTS = 1;
+    public static final int LIFE_MUSHROOM_INTS = 2;
+    public static final int MARIO_INTS = 4;
+    public static final int MUSHROOM_INTS = 2;
+    public static final int SHELL_INTS = 1;
 
-    private static final int WORLD_FLOATS = 2;
+    // sprite, world, level float counts
+    public static final int WORLD_FLOATS = 2;
     public static final int BULLET_BILL_FLOATS = 2;
-    private static final int ENEMY_FLOATS = 4;
-    private static final int FIREBALL_FLOATS = 4;
-    private static final int FIRE_FLOWER_FLOATS = 2;
-    private static final int FLOWER_ENEMY_FLOATS = 4;
-    private static final int LIFE_MUSHROOM_FLOATS = 4;
-    private static final int MARIO_FLOATS = 7;
-    private static final int MUSHROOM_FLOATS = 4;
-    private static final int SHELL_FLOATS = 4;
+    public static final int ENEMY_FLOATS = 4;
+    public static final int FIREBALL_FLOATS = 4;
+    public static final int FIRE_FLOWER_FLOATS = 2;
+    public static final int FLOWER_ENEMY_FLOATS = 4;
+    public static final int LIFE_MUSHROOM_FLOATS = 4;
+    public static final int MARIO_FLOATS = 7;
+    public static final int MUSHROOM_FLOATS = 4;
+    public static final int SHELL_FLOATS = 4;
 
-    private static final int PAUSE_TIMER = 0;
-    private static final int CURRENT_TIMER = 1;
-    private static final int CURRENT_TICK = 2;
-    private static final int COINS = 3;
-    private static final int LIVES = 4;
-    private static final int GAME_STATUS_CODE = 5;
+    // world and level int layout
+    public static final int PAUSE_TIMER = 0;
+    public static final int CURRENT_TIMER = 1;
+    public static final int CURRENT_TICK = 2;
+    public static final int COINS = 3;
+    public static final int LIVES = 4;
+    public static final int GAME_STATUS_CODE = 5;
 
-    private static final int WIDTH = 6;
-    private static final int TILE_WIDTH = 7;
-    private static final int HEIGHT = 8;
-    private static final int TILE_HEIGHT = 9;
-    private static final int EXIT_TILE_X = 10;
-    private static final int CURRENT_CUTOUT_CENTER = 11;
-    private static final int CUTOUT_ARRAY_BEGINNING_INDEX = 12;
-    private static final int CUTOUT_LEFT_BORDER_X = 13;
+    public static final int WIDTH = 6;
+    public static final int TILE_WIDTH = 7;
+    public static final int HEIGHT = 8;
+    public static final int TILE_HEIGHT = 9;
+    public static final int EXIT_TILE_X = 10;
+    public static final int CURRENT_CUTOUT_CENTER = 11;
+    public static final int CUTOUT_ARRAY_BEGINNING_INDEX = 12;
+    public static final int CUTOUT_LEFT_BORDER_X = 13;
 
-    private static final int SPRITES_START = 0;
-    private static final int SPRITES_COUNT = 1;
+    // world float layout
+    public static final int CAMERA_X = 0;
+    public static final int CAMERA_Y = 1;
 
-    private static final int BULLET_BILL_MAX_COUNT = 2;
-    private static final int ENEMY_COUNT = 3;
-    private static final int FIREBALL_MAX_COUNT = 4;
-    private static final int FIRE_FLOWER_COUNT = 5;
-    private static final int FLOWER_ENEMY_COUNT = 6;
-    private static final int LIFE_MUSHROOM_COUNT = 7;
-    private static final int MARIO_COUNT = 8;
-    private static final int MUSHROOM_COUNT = 9;
-    private static final int SHELL_COUNT = 10;
+    private static final int MARIO_COUNT = 1;
+    private static final int FIREBALLS_MAX_COUNT = 2; // there can't be more than 2 fireballs at a time
 
-    public static final int BOOLS_BULLET_BILL_START = 11;
-    private static final int BOOLS_ENEMY_START = 12;
-    private static final int BOOLS_FIREBALL_START = 13;
-    private static final int BOOLS_FIRE_FLOWER_START = 14;
-    private static final int BOOLS_FLOWER_ENEMY_START = 15;
-    private static final int BOOLS_LIFE_MUSHROOM_START = 16;
-    private static final int BOOLS_MARIO_START = 17;
-    private static final int BOOLS_MUSHROOM_START = 18;
-    private static final int BOOLS_SHELL_START = 19;
+    public static final int SPRITES_FIRST_FREE_INDEX = 0;
 
-    private static final int INTS_BULLET_BILL_START = 20;
-    private static final int INTS_ENEMY_START = 21;
-    private static final int INTS_FIREBALL_START = 22;
-    private static final int INTS_FIRE_FLOWER_START = 23;
-    private static final int INTS_FLOWER_ENEMY_START = 24;
-    private static final int INTS_LIFE_MUSHROOM_START = 25;
-    private static final int INTS_MARIO_START = 26;
-    private static final int INTS_MUSHROOM_START = 27;
-    private static final int INTS_SHELL_START = 28;
+    // sprite storage info layout
+    public static final int BOOLS_MARIO_START = 0;
+    public static final int BOOLS_FIREBALL_START = 1;
+    public static final int BOOLS_ENEMY_START = 2;
+    public static final int BOOLS_FIRE_FLOWER_START = 3;
+    public static final int BOOLS_FLOWER_ENEMY_START = 4;
+    public static final int BOOLS_LIFE_MUSHROOM_START = 5;
+    public static final int BOOLS_MUSHROOM_START = 6;
+    public static final int BOOLS_SHELL_START = 7;
+    public static final int BOOLS_BULLET_BILL_START = 8;
 
-    public static final int FLOATS_BULLET_BILL_START = 29;
-    private static final int FLOATS_ENEMY_START = 30;
-    private static final int FLOATS_FIREBALL_START = 31;
-    private static final int FLOATS_FIRE_FLOWER_START = 32;
-    private static final int FLOATS_FLOWER_ENEMY_START = 33;
-    private static final int FLOATS_LIFE_MUSHROOM_START = 34;
-    private static final int FLOATS_MARIO_START = 35;
-    private static final int FLOATS_MUSHROOM_START = 36;
-    private static final int FLOATS_SHELL_START = 37;
+    public static final int INTS_MARIO_START = 9;
+    public static final int INTS_FIREBALL_START = 10;
+    public static final int INTS_ENEMY_START = 11;
+    public static final int INTS_FIRE_FLOWER_START = 12;
+    public static final int INTS_FLOWER_ENEMY_START = 13;
+    public static final int INTS_LIFE_MUSHROOM_START = 14;
+    public static final int INTS_MUSHROOM_START = 15;
+    public static final int INTS_SHELL_START = 16;
+    public static final int INTS_BULLET_BILL_START = 17;
+
+    public static final int FLOATS_MARIO_START = 18;
+    public static final int FLOATS_FIREBALL_START = 19;
+    public static final int FLOATS_ENEMY_START = 20;
+    public static final int FLOATS_FIRE_FLOWER_START = 21;
+    public static final int FLOATS_FLOWER_ENEMY_START = 22;
+    public static final int FLOATS_LIFE_MUSHROOM_START = 23;
+    public static final int FLOATS_MUSHROOM_START = 24;
+    public static final int FLOATS_SHELL_START = 25;
+    public static final int FLOATS_BULLET_BILL_START = 26;
+
+    // TODO: describe sprite order
 
     /**
      * BOOLS LAYOUT
@@ -129,7 +132,7 @@ public class MarioBinData {
      * 11 = currentCutoutCenter
      * 12 = cutoutArrayBeginningIndex
      * 13 = cutoutLeftBorderX
-     *  SPAWNED SPRITES, SPRITE INFO
+     *  SPRITE INFO
      *  - 14+
      *
      * FLOATS LAYOUT
@@ -138,80 +141,35 @@ public class MarioBinData {
      * 1 = cameraY
      *  SPRITE INFO
      * - 2+
-     *
-     * STORAGE INFO
-     *  SPRITES
-     * 0 = sprites start
-     * 1 = sprites count
-     *  SPRITE COUNTS
-     * 2 = bullet bill max count
-     * 3 = enemy count
-     * 4 = fireball max count
-     * 5 = fire flower count
-     * 6 = flower enemy count
-     * 7 = life mushroom count
-     * 8 = mario count
-     * 9 = mushroom count
-     * 10 = shell count
-     *  BOOLS
-     * 11 = bullet bill start
-     * 12 = enemy start
-     * 13 = fireball start
-     * 14 = fire flower start
-     * 15 = flower enemy start
-     * 16 = life mushroom start
-     * 17 = mario start
-     * 18 = mushroom start
-     * 19 = shell start
-     *  INTS
-     * 20 = bullet bill start
-     * 21 = enemy start
-     * 22 = fireball start
-     * 23 = fire flower start
-     * 24 = flower enemy start
-     * 25 = life mushroom start
-     * 26 = mario start
-     * 27 = mushroom start
-     * 28 = shell start
-     *  FLOATS
-     * 29 = bullet bill start
-     * 30 = enemy start
-     * 31 = fireball start
-     * 32 = fire flower start
-     * 33 = flower enemy start
-     * 34 = life mushroom start
-     * 35 = mario start
-     * 36 = mushroom start
-     * 37 = shell start
      */
 
-    public short[] spriteStorageInfo;
     public boolean[] bools;
     public byte[] bytes;
+    public short[] spriteStorageInfo;
     public int[] ints;
+    public int[] sprites;
     public float[] floats;
     public StaticLevel staticLevel;
 
     public MarioBinData(MarioWorldSlim slimWorld) {
         staticLevel = slimWorld.level.staticLevel;
+        MarioLevelBin.cutoutTileWidth = MarioLevelSlim.cutoutTileWidth;
 
         int bulletBillCounter = 0;
         int enemyCounter = 0;
-        int fireballCounter = 2; // there can't be more than 2 fireballs at a time
         int fireFlowerCounter = 0;
         int flowerEnemyCounter = 0;
         int lifeMushroomCounter = 0;
-        int marioCounter = 1;
         int mushroomCounter = 0;
         int shellCounter = 0;
 
         for (MarioSpriteSlim spriteSlim : slimWorld.sprites) {
             if (spriteSlim instanceof EnemySlim) {
                 enemyCounter++;
-                if (spriteSlim.getType() == SpriteTypeSlim.RED_KOOPA ||
-                    spriteSlim.getType() == SpriteTypeSlim.RED_KOOPA_WINGED ||
-                    spriteSlim.getType() == SpriteTypeSlim.GREEN_KOOPA ||
-                    spriteSlim.getType() == SpriteTypeSlim.GREEN_KOOPA_WINGED)
+                if (spriteSlim.getType() == SpriteTypeCommon.RED_KOOPA ||
+                    spriteSlim.getType() == SpriteTypeCommon.RED_KOOPA_WINGED ||
+                    spriteSlim.getType() == SpriteTypeCommon.GREEN_KOOPA ||
+                    spriteSlim.getType() == SpriteTypeCommon.GREEN_KOOPA_WINGED)
                     shellCounter++;
             }
             else if (spriteSlim instanceof FireFlowerSlim)
@@ -226,9 +184,9 @@ public class MarioBinData {
                 shellCounter++;
         }
 
-        for (int x = 0; x < slimWorld.level.staticLevel.data.length; x++) {
-            for (int y = 0; y < slimWorld.level.staticLevel.data[0].length; y++) {
-                StaticLevel.LevelTile levelTile = slimWorld.level.staticLevel.data[x][y];
+        for (int x = 0; x < slimWorld.level.staticLevel.tiles.length; x++) {
+            for (int y = 0; y < slimWorld.level.staticLevel.tiles[0].length; y++) {
+                StaticLevel.LevelTile levelTile = slimWorld.level.staticLevel.tiles[x][y];
                 LevelPart levelPart = levelTile.levelPart;
                 int id = levelTile.id;
 
@@ -256,95 +214,56 @@ public class MarioBinData {
             }
         }
 
-        int boolsSize = slimWorld.level.aliveFlags.length +
-                bulletBillCounter * BULLET_BILL_BOOLS +
-                enemyCounter * ENEMY_BOOLS +
-                fireballCounter * FIREBALL_BOOLS +
-                fireFlowerCounter * FIRE_FLOWER_BOOLS +
-                flowerEnemyCounter * FLOWER_ENEMY_BOOLS +
-                lifeMushroomCounter * LIFE_MUSHROOM_BOOLS +
-                marioCounter * MARIO_BOOLS +
-                mushroomCounter * MUSHROOM_BOOLS +
-                shellCounter * SHELL_BOOLS;
+        int initBoolsSize = slimWorld.level.aliveFlags.length;
 
-        int bytesSize = slimWorld.level.levelCutout.length;
+        int initBytesSize = slimWorld.level.levelCutout.length;
 
-        int spriteCount = bulletBillCounter + enemyCounter + fireballCounter +
+        int totalSpriteCount = bulletBillCounter + enemyCounter + FIREBALLS_MAX_COUNT +
                 fireFlowerCounter + flowerEnemyCounter + lifeMushroomCounter +
-                marioCounter + mushroomCounter + shellCounter;
+                MARIO_COUNT + mushroomCounter + shellCounter;
 
-        int intsSize = WORLD_INTS + LEVEL_INTS + spriteCount +
-                bulletBillCounter * BULLET_BILL_INTS +
-                enemyCounter * ENEMY_INTS +
-                fireballCounter * FIREBALL_INTS +
-                fireFlowerCounter * FIRE_FLOWER_INTS +
-                flowerEnemyCounter * FLOWER_ENEMY_INTS +
-                lifeMushroomCounter * LIFE_MUSHROOM_INTS +
-                marioCounter * MARIO_INTS +
-                mushroomCounter * MUSHROOM_INTS +
-                shellCounter * SHELL_INTS;
+        int initIntsSize = WORLD_INTS + LEVEL_INTS;
 
-        int floatsSize = WORLD_FLOATS +
-                bulletBillCounter * BULLET_BILL_FLOATS +
-                enemyCounter * ENEMY_FLOATS +
-                fireballCounter * FIREBALL_FLOATS +
-                fireFlowerCounter * FIRE_FLOWER_FLOATS +
-                flowerEnemyCounter * FLOWER_ENEMY_FLOATS +
-                lifeMushroomCounter * LIFE_MUSHROOM_FLOATS +
-                marioCounter * MARIO_FLOATS +
-                mushroomCounter * MUSHROOM_FLOATS +
-                shellCounter * SHELL_FLOATS;
+        int initFloatsSize = WORLD_FLOATS;
 
-        bools = new boolean[boolsSize];
-        bytes = new byte[bytesSize];
-        ints = new int[intsSize];
-        floats = new float[floatsSize];
-        spriteStorageInfo = new short[SPRITE_STORAGE_INFO];
+        bools = new boolean[initBoolsSize];
+        bytes = new byte[initBytesSize];
+        spriteStorageInfo = new short[SPRITE_STORAGE_INFO_SIZE];
+        ints = new int[initIntsSize];
+        sprites = new int[totalSpriteCount + 1]; // index 0 is first free index
+        floats = new float[initFloatsSize];
 
         /* SPRITE STORAGE INFO */
-        /* SPRITES */
-        spriteStorageInfo[SPRITES_START] = WORLD_INTS + LEVEL_INTS;
-        spriteStorageInfo[SPRITES_COUNT] = 0;
-        /* SPRITE COUNTS */
-        spriteStorageInfo[BULLET_BILL_MAX_COUNT] = (short) bulletBillCounter;
-        spriteStorageInfo[ENEMY_COUNT] = 0;
-        spriteStorageInfo[FIREBALL_MAX_COUNT] = (short) fireballCounter;
-        spriteStorageInfo[FIRE_FLOWER_COUNT] = 0;
-        spriteStorageInfo[FLOWER_ENEMY_COUNT] = 0;
-        spriteStorageInfo[LIFE_MUSHROOM_COUNT] = 0;
-        spriteStorageInfo[MARIO_COUNT] = 0;
-        spriteStorageInfo[MUSHROOM_COUNT] = 0;
-        spriteStorageInfo[SHELL_COUNT] = 0;
         /* BOOLS */
-        spriteStorageInfo[BOOLS_BULLET_BILL_START] = (short) slimWorld.level.aliveFlags.length;
-        spriteStorageInfo[BOOLS_ENEMY_START] = (short) (spriteStorageInfo[BOOLS_BULLET_BILL_START] + bulletBillCounter * BULLET_BILL_BOOLS);
-        spriteStorageInfo[BOOLS_FIREBALL_START] = (short) (spriteStorageInfo[BOOLS_ENEMY_START] + enemyCounter * ENEMY_BOOLS);
-        spriteStorageInfo[BOOLS_FIRE_FLOWER_START] = (short) (spriteStorageInfo[BOOLS_FIREBALL_START] + fireballCounter * FIREBALL_BOOLS);
+        spriteStorageInfo[BOOLS_MARIO_START] = (short) slimWorld.level.aliveFlags.length;
+        spriteStorageInfo[BOOLS_FIREBALL_START] = (short) (spriteStorageInfo[BOOLS_MARIO_START] + MARIO_COUNT * MARIO_BOOLS);
+        spriteStorageInfo[BOOLS_ENEMY_START] = (short) (spriteStorageInfo[BOOLS_FIREBALL_START] + FIREBALLS_MAX_COUNT * FIREBALL_BOOLS);
+        spriteStorageInfo[BOOLS_FIRE_FLOWER_START] = (short) (spriteStorageInfo[BOOLS_ENEMY_START] + enemyCounter * ENEMY_BOOLS);
         spriteStorageInfo[BOOLS_FLOWER_ENEMY_START] = (short) (spriteStorageInfo[BOOLS_FIRE_FLOWER_START] + fireFlowerCounter * FIRE_FLOWER_BOOLS);
         spriteStorageInfo[BOOLS_LIFE_MUSHROOM_START] = (short) (spriteStorageInfo[BOOLS_FLOWER_ENEMY_START] + flowerEnemyCounter * FLOWER_ENEMY_BOOLS);
-        spriteStorageInfo[BOOLS_MARIO_START] = (short) (spriteStorageInfo[BOOLS_LIFE_MUSHROOM_START] + lifeMushroomCounter * LIFE_MUSHROOM_BOOLS);
-        spriteStorageInfo[BOOLS_MUSHROOM_START] = (short) (spriteStorageInfo[BOOLS_MARIO_START] + marioCounter * MARIO_BOOLS);
+        spriteStorageInfo[BOOLS_MUSHROOM_START] = (short) (spriteStorageInfo[BOOLS_LIFE_MUSHROOM_START] + lifeMushroomCounter * LIFE_MUSHROOM_BOOLS);
         spriteStorageInfo[BOOLS_SHELL_START] = (short) (spriteStorageInfo[BOOLS_MUSHROOM_START] + mushroomCounter * MUSHROOM_BOOLS);
+        spriteStorageInfo[BOOLS_BULLET_BILL_START] = (short) (spriteStorageInfo[BOOLS_SHELL_START] + shellCounter * SHELL_BOOLS);
         /* INTS */
-        spriteStorageInfo[INTS_BULLET_BILL_START] = (short) (WORLD_INTS + LEVEL_INTS + spriteCount);
-        spriteStorageInfo[INTS_ENEMY_START] = (short) (spriteStorageInfo[INTS_BULLET_BILL_START] + bulletBillCounter * BULLET_BILL_INTS);
-        spriteStorageInfo[INTS_FIREBALL_START] = (short) (spriteStorageInfo[INTS_ENEMY_START] + enemyCounter * ENEMY_INTS);
-        spriteStorageInfo[INTS_FIRE_FLOWER_START] = (short) (spriteStorageInfo[INTS_FIREBALL_START] + fireballCounter * FIREBALL_INTS);
+        spriteStorageInfo[INTS_MARIO_START] = (short) (WORLD_INTS + LEVEL_INTS);
+        spriteStorageInfo[INTS_FIREBALL_START] = (short) (spriteStorageInfo[INTS_MARIO_START] + MARIO_COUNT * MARIO_INTS);
+        spriteStorageInfo[INTS_ENEMY_START] = (short) (spriteStorageInfo[INTS_FIREBALL_START] + FIREBALLS_MAX_COUNT * FIREBALL_INTS);
+        spriteStorageInfo[INTS_FIRE_FLOWER_START] = (short) (spriteStorageInfo[INTS_ENEMY_START] + enemyCounter * ENEMY_INTS);
         spriteStorageInfo[INTS_FLOWER_ENEMY_START] = (short) (spriteStorageInfo[INTS_FIRE_FLOWER_START] + fireFlowerCounter * FIRE_FLOWER_INTS);
         spriteStorageInfo[INTS_LIFE_MUSHROOM_START] = (short) (spriteStorageInfo[INTS_FLOWER_ENEMY_START] + flowerEnemyCounter * FLOWER_ENEMY_INTS);
-        spriteStorageInfo[INTS_MARIO_START] = (short) (spriteStorageInfo[INTS_LIFE_MUSHROOM_START] + lifeMushroomCounter * LIFE_MUSHROOM_INTS);
-        spriteStorageInfo[INTS_MUSHROOM_START] = (short) (spriteStorageInfo[INTS_MARIO_START] + marioCounter * MARIO_INTS);
+        spriteStorageInfo[INTS_MUSHROOM_START] = (short) (spriteStorageInfo[INTS_LIFE_MUSHROOM_START] + lifeMushroomCounter * LIFE_MUSHROOM_INTS);
         spriteStorageInfo[INTS_SHELL_START] = (short) (spriteStorageInfo[INTS_MUSHROOM_START] + mushroomCounter * MUSHROOM_INTS);
+        spriteStorageInfo[INTS_BULLET_BILL_START] = (short) (spriteStorageInfo[INTS_SHELL_START] + shellCounter * SHELL_INTS);
         /* FLOATS */
-        spriteStorageInfo[FLOATS_BULLET_BILL_START] = WORLD_FLOATS;
-        spriteStorageInfo[FLOATS_ENEMY_START] = (short) (spriteStorageInfo[FLOATS_BULLET_BILL_START] + bulletBillCounter * BULLET_BILL_INTS);
-        spriteStorageInfo[FLOATS_FIREBALL_START] = (short) (spriteStorageInfo[FLOATS_ENEMY_START] + enemyCounter * ENEMY_INTS);
-        spriteStorageInfo[FLOATS_FIRE_FLOWER_START] = (short) (spriteStorageInfo[FLOATS_FIREBALL_START] + fireballCounter * FIREBALL_INTS);
-        spriteStorageInfo[FLOATS_FLOWER_ENEMY_START] = (short) (spriteStorageInfo[FLOATS_FIRE_FLOWER_START] + fireFlowerCounter * FIRE_FLOWER_INTS);
-        spriteStorageInfo[FLOATS_LIFE_MUSHROOM_START] = (short) (spriteStorageInfo[FLOATS_FLOWER_ENEMY_START] + flowerEnemyCounter * FLOWER_ENEMY_INTS);
-        spriteStorageInfo[FLOATS_MARIO_START] = (short) (spriteStorageInfo[FLOATS_LIFE_MUSHROOM_START] + lifeMushroomCounter * LIFE_MUSHROOM_INTS);
-        spriteStorageInfo[FLOATS_MUSHROOM_START] = (short) (spriteStorageInfo[FLOATS_MARIO_START] + marioCounter * MARIO_INTS);
-        spriteStorageInfo[FLOATS_SHELL_START] = (short) (spriteStorageInfo[FLOATS_MUSHROOM_START] + mushroomCounter * MUSHROOM_INTS);
+        spriteStorageInfo[FLOATS_MARIO_START] = WORLD_FLOATS;
+        spriteStorageInfo[FLOATS_FIREBALL_START] = (short) (spriteStorageInfo[FLOATS_MARIO_START] + MARIO_COUNT * MARIO_FLOATS);
+        spriteStorageInfo[FLOATS_ENEMY_START] = (short) (spriteStorageInfo[FLOATS_FIREBALL_START] + FIREBALLS_MAX_COUNT * FIREBALL_FLOATS);
+        spriteStorageInfo[FLOATS_FIRE_FLOWER_START] = (short) (spriteStorageInfo[FLOATS_ENEMY_START] + enemyCounter * ENEMY_FLOATS);
+        spriteStorageInfo[FLOATS_FLOWER_ENEMY_START] = (short) (spriteStorageInfo[FLOATS_FIRE_FLOWER_START] + fireFlowerCounter * FIRE_FLOWER_FLOATS);
+        spriteStorageInfo[FLOATS_LIFE_MUSHROOM_START] = (short) (spriteStorageInfo[FLOATS_FLOWER_ENEMY_START] + flowerEnemyCounter * FLOWER_ENEMY_FLOATS);
+        spriteStorageInfo[FLOATS_MUSHROOM_START] = (short) (spriteStorageInfo[FLOATS_LIFE_MUSHROOM_START] + lifeMushroomCounter * LIFE_MUSHROOM_FLOATS);
+        spriteStorageInfo[FLOATS_SHELL_START] = (short) (spriteStorageInfo[FLOATS_MUSHROOM_START] + mushroomCounter * MUSHROOM_FLOATS);
+        spriteStorageInfo[FLOATS_BULLET_BILL_START] = (short) (spriteStorageInfo[FLOATS_SHELL_START] + shellCounter * SHELL_FLOATS);
 
         /* BOOLS */
         System.arraycopy(slimWorld.level.aliveFlags, 0, bools, 0, slimWorld.level.aliveFlags.length);
@@ -370,25 +289,29 @@ public class MarioBinData {
         ints[CUTOUT_ARRAY_BEGINNING_INDEX] = slimWorld.level.cutoutArrayBeginningIndex;
         ints[CUTOUT_LEFT_BORDER_X] = slimWorld.level.cutoutLeftBorderX;
 
+        /* SPRITES */
+        sprites[SPRITES_FIRST_FREE_INDEX] = 1;
+
         /* FLOATS */
         /* WORLD */
-        floats[0] = slimWorld.cameraX;
-        floats[1] = slimWorld.cameraY;
+        floats[CAMERA_X] = slimWorld.cameraX;
+        floats[CAMERA_Y] = slimWorld.cameraY;
 
+        /* SPRITES */
         for (MarioSpriteSlim spriteSlim : slimWorld.sprites) {
-            int spriteCode;
-            if (spriteSlim.getType() == SpriteTypeSlim.MARIO) {
-                spriteCode = addMario((MarioSlim) spriteSlim);
+            if (spriteSlim.getType() == SpriteTypeCommon.MARIO) {
+                //addMario((MarioSlim) spriteSlim);
             }
             else if (spriteSlim instanceof EnemySlim) {
                 EnemySlim enemySlim = (EnemySlim) spriteSlim;
-                spriteCode = addEnemy(enemySlim.x, enemySlim.y, enemySlim.alive, enemySlim.typeCode, enemySlim.xa,
+                /*addEnemy(enemySlim.x, enemySlim.y, enemySlim.alive, enemySlim.typeCode, enemySlim.xa,
                         enemySlim.ya, enemySlim.facing, enemySlim.height, enemySlim.onGround,
-                        enemySlim.avoidCliffs, enemySlim.winged, enemySlim.noFireballDeath);
+                        enemySlim.avoidCliffs, enemySlim.winged, enemySlim.noFireballDeath);*/
             }
-            else if (spriteSlim.getType() == SpriteTypeSlim.BULLET_BILL) {
+            else if (spriteSlim.getType() == SpriteTypeCommon.BULLET_BILL) {
                 BulletBillSlim bulletBillSlim = (BulletBillSlim) spriteSlim;
-                spriteCode = addBulletBill(bulletBillSlim.x, bulletBillSlim.y, bulletBillSlim.alive, bulletBillSlim.facing);
+                // TODO better naming?
+                addSpriteCode(addBulletBill(bulletBillSlim.x, bulletBillSlim.y, bulletBillSlim.alive, bulletBillSlim.facing));
             }
             else {
                 // TODO: rest of the sprites
@@ -403,13 +326,41 @@ public class MarioBinData {
         floatsCloning = new float[this.floats.length];*/
     }
 
+    public void addSpriteCode(int toAdd) {
+        sprites[sprites[SPRITES_FIRST_FREE_INDEX]] = toAdd;
+        sprites[SPRITES_FIRST_FREE_INDEX]++;
+    }
+
+    private void changeSpriteCode(int oldCode, int newCode) {
+        for (int i = 1; i < sprites[SPRITES_FIRST_FREE_INDEX]; i++) {
+            if (sprites[i] == oldCode) {
+                sprites[i] = newCode;
+                return;
+            }
+        }
+        throw new IllegalArgumentException();
+    }
+
+    private void removeSpriteCode(int toDelete) {
+        for (int i = 1; i < sprites[SPRITES_FIRST_FREE_INDEX]; i++) {
+            if (sprites[i] == toDelete) {
+                for (int j = i; j < sprites[SPRITES_FIRST_FREE_INDEX] - 2; j++) {
+                    sprites[j] = sprites[j + 1];
+                }
+                sprites[SPRITES_FIRST_FREE_INDEX]--;
+                return;
+            }
+        }
+        throw new IllegalArgumentException();
+    }
+
     // TODO: methods - addEnemy etc. return type+id as int
+    // TODO: asserts for validity
 
     /**
      Bullet Bill data storage order:
      BOOL:
-      0 = isValid
-      1 = alive
+      0 = alive
      INT:
       0 = facing
      FLOAT:
@@ -417,32 +368,90 @@ public class MarioBinData {
       1 = y
      */
 
-    private static final int BULLET_BILL_IS_VALID = 0;
-    private static final int BULLET_BILL_ALIVE = 1;
+    public static final int BULLET_BILL_ALIVE = 0;
 
-    private static final int BULLET_BILL_FACING = 0;
+    public static final int BULLET_BILL_FACING = 0;
 
     public static final int BULLET_BILL_X = 0;
-    private static final int BULLET_BILL_Y = 1;
+    public static final int BULLET_BILL_Y = 1;
 
-// TODO: assert for validity
+    //TODO add data immediately, alive and update in world.add, code to sprites at the end of world.update
     int addBulletBill(float x, float y, boolean alive, int facing) {
-        int id = 0;
-        while (bools[spriteStorageInfo[BOOLS_BULLET_BILL_START] + id * BULLET_BILL_BOOLS + BULLET_BILL_IS_VALID]) {
-            id++;
-        }
-        bools[spriteStorageInfo[BOOLS_BULLET_BILL_START] + id * BULLET_BILL_BOOLS + BULLET_BILL_IS_VALID] = true;
-        bools[spriteStorageInfo[BOOLS_BULLET_BILL_START] + id * BULLET_BILL_BOOLS + BULLET_BILL_ALIVE] = alive;
+        int id = (bools.length - spriteStorageInfo[BOOLS_BULLET_BILL_START]) / BULLET_BILL_BOOLS;
 
-        ints[spriteStorageInfo[INTS_BULLET_BILL_START] + id * BULLET_BILL_INTS + BULLET_BILL_FACING] = facing;
+        boolean[] newBools = new boolean[bools.length + BULLET_BILL_BOOLS];
+        System.arraycopy(bools, 0, newBools, 0, bools.length);
+        newBools[spriteStorageInfo[BOOLS_BULLET_BILL_START] + id * BULLET_BILL_BOOLS + BULLET_BILL_ALIVE] = alive;
+        bools = newBools;
 
-        floats[spriteStorageInfo[FLOATS_BULLET_BILL_START] + id * BULLET_BILL_FLOATS + BULLET_BILL_X] = x;
-        floats[spriteStorageInfo[FLOATS_BULLET_BILL_START] + id * BULLET_BILL_FLOATS + BULLET_BILL_Y] = y;
+        int[] newInts = new int[ints.length + BULLET_BILL_INTS];
+        System.arraycopy(ints, 0, newInts, 0, ints.length);
+        newInts[spriteStorageInfo[INTS_BULLET_BILL_START] + id * BULLET_BILL_INTS + BULLET_BILL_FACING] = facing;
+        ints = newInts;
+
+        float[] newFloats = new float[floats.length + BULLET_BILL_FLOATS];
+        System.arraycopy(floats, 0, newFloats, 0, floats.length);
+        newFloats[spriteStorageInfo[FLOATS_BULLET_BILL_START] + id * BULLET_BILL_FLOATS + BULLET_BILL_X] = x;
+        newFloats[spriteStorageInfo[FLOATS_BULLET_BILL_START] + id * BULLET_BILL_FLOATS + BULLET_BILL_Y] = y;
+        floats = newFloats;
 
         int spriteCode = id << 16;
-        spriteCode |= SpriteTypeSlim.BULLET_BILL.getValue();
+        spriteCode |= SpriteTypeCommon.BULLET_BILL.getValue();
 
         return spriteCode;
+        //addSpriteCode(spriteCode);
+    }
+
+    //TODO alive false immediately, remove from data and sprites at the end of world.update
+    public void removeBulletBill(int entityIndex) {
+        int bulletBillsCount = (bools.length - spriteStorageInfo[BOOLS_BULLET_BILL_START]) / BULLET_BILL_BOOLS;
+
+        /*
+        // move codes in sprites if needed
+        if (entityIndex + 1 != bulletBillsCount) {
+            for (int i = entityIndex + 1; i < bulletBillsCount; i++) {
+                int oldSpriteCode = (i - 1) << 16;
+                oldSpriteCode |= SpriteTypeCommon.BULLET_BILL.getValue();
+
+                int newSpriteCode = i << 16;
+                newSpriteCode |= SpriteTypeCommon.BULLET_BILL.getValue();
+
+                changeSpriteCode(oldSpriteCode, newSpriteCode);
+            }
+            int lastSpriteCode = (bulletBillsCount - 1) << 16;
+            lastSpriteCode |= SpriteTypeCommon.BULLET_BILL.getValue();
+            removeSpriteCode(lastSpriteCode);
+        }
+        */
+
+        // remove last bill id from sprites - data shifted
+        int lastSpriteCode = (bulletBillsCount - 1) << 16;
+        lastSpriteCode |= SpriteTypeCommon.BULLET_BILL.getValue();
+        removeSpriteCode(lastSpriteCode);
+
+        boolean[] newBools = new boolean[bools.length - BULLET_BILL_BOOLS];
+        System.arraycopy(bools, 0, newBools, 0, spriteStorageInfo[BOOLS_BULLET_BILL_START]
+                + entityIndex * BULLET_BILL_BOOLS);
+        System.arraycopy(bools, spriteStorageInfo[BOOLS_BULLET_BILL_START] + (entityIndex + 1) * BULLET_BILL_BOOLS,
+                newBools, spriteStorageInfo[BOOLS_BULLET_BILL_START] + entityIndex * BULLET_BILL_BOOLS,
+                bools.length - (spriteStorageInfo[BOOLS_BULLET_BILL_START] + (entityIndex + 1) * BULLET_BILL_BOOLS));
+        bools = newBools;
+
+        int[] newInts = new int[ints.length - BULLET_BILL_INTS];
+        System.arraycopy(ints, 0, newInts, 0, spriteStorageInfo[INTS_BULLET_BILL_START]
+                + entityIndex * BULLET_BILL_INTS);
+        System.arraycopy(ints, spriteStorageInfo[INTS_BULLET_BILL_START] + (entityIndex + 1) * BULLET_BILL_INTS,
+                newInts, spriteStorageInfo[INTS_BULLET_BILL_START] + entityIndex * BULLET_BILL_INTS,
+                ints.length - (spriteStorageInfo[INTS_BULLET_BILL_START] + (entityIndex + 1) * BULLET_BILL_INTS));
+        ints = newInts;
+
+        float[] newFloats = new float[floats.length - BULLET_BILL_FLOATS];
+        System.arraycopy(floats, 0, newFloats, 0, spriteStorageInfo[FLOATS_BULLET_BILL_START]
+                + entityIndex * BULLET_BILL_FLOATS);
+        System.arraycopy(floats, spriteStorageInfo[FLOATS_BULLET_BILL_START] + (entityIndex + 1) * BULLET_BILL_FLOATS,
+                newFloats, spriteStorageInfo[FLOATS_BULLET_BILL_START] + entityIndex * BULLET_BILL_FLOATS,
+                floats.length - (spriteStorageInfo[FLOATS_BULLET_BILL_START] + (entityIndex + 1) * BULLET_BILL_FLOATS));
+        floats = newFloats;
     }
 
     /**
@@ -464,24 +473,24 @@ public class MarioBinData {
      3 = ya
     */
 
-    private static final int ENEMY_ALIVE = 0;
-    private static final int ENEMY_ON_GROUND = 1;
-    private static final int ENEMY_AVOID_CLIFFS = 2;
-    private static final int ENEMY_WINGED = 3;
-    private static final int ENEMY_NO_FIREBALL_DEATH = 4;
+    public static final int ENEMY_ALIVE = 0;
+    public static final int ENEMY_ON_GROUND = 1;
+    public static final int ENEMY_AVOID_CLIFFS = 2;
+    public static final int ENEMY_WINGED = 3;
+    public static final int ENEMY_NO_FIREBALL_DEATH = 4;
 
-    private static final int ENEMY_TYPE_CODE = 0;
-    private static final int ENEMY_FACING = 1;
-    private static final int ENEMY_HEIGHT = 2;
+    public static final int ENEMY_TYPE_CODE = 0;
+    public static final int ENEMY_FACING = 1;
+    public static final int ENEMY_HEIGHT = 2;
 
-    private static final int ENEMY_X = 0;
-    private static final int ENEMY_Y = 1;
-    private static final int ENEMY_XA = 2;
-    private static final int ENEMY_YA = 3;
+    public static final int ENEMY_X = 0;
+    public static final int ENEMY_Y = 1;
+    public static final int ENEMY_XA = 2;
+    public static final int ENEMY_YA = 3;
 
     int addEnemy(float x, float y, boolean alive, int typeCode, float xa, float ya, int facing, int height,
                  boolean onGround, boolean avoidCliffs, boolean winged, boolean noFireballDeath) {
-        int id = ints[spriteStorageInfo[ENEMY_COUNT]];
+        /*int id = ints[spriteStorageInfo[ENEMY_COUNT]];
         spriteStorageInfo[ENEMY_COUNT]++;
         bools[spriteStorageInfo[BOOLS_ENEMY_START] + id * ENEMY_BOOLS + ENEMY_ALIVE] = alive;
         bools[spriteStorageInfo[BOOLS_ENEMY_START] + id * ENEMY_BOOLS + ENEMY_ON_GROUND] = onGround;
@@ -501,7 +510,50 @@ public class MarioBinData {
         int spriteCode = id << 16;
         spriteCode |= typeCode;
 
-        return spriteCode;
+        return spriteCode;*/
+        return 0; //TODO
+    }
+
+    void removeEnemy(int entityIndex) {
+        //TODO
+    }
+
+    public static final int FIREBALL_ALIVE = 0;
+
+    int addFireball(float x, float y, boolean alive, float xa, float ya, int facing, boolean onGround, boolean exists) {
+        //TODO
+        return 0;
+    }
+
+    void removeFireball(int entityIndex) {
+
+    }
+
+    int addFireFlower(float x, float y, boolean alive, int life) {
+        //TODO
+        return 0;
+    }
+
+    void removeFireFlower(int entityIndex) {
+
+    }
+
+    int addFlowerEnemy(float x, float y, boolean alive, int waitTime, float yStart, float ya) {
+        //TODO
+        return 0;
+    }
+
+    void removeFlowerEnemy(int entityIndex) {
+        //TODO
+    }
+
+    int addLifeMushroom(float x, float y, boolean alive, int facing, int life, boolean onGround, float xa, float ya) {
+        //TODO
+        return 0;
+    }
+
+    void removeLifeMushroom(int entityIndex) {
+        //TODO
     }
 
     /**
@@ -532,29 +584,29 @@ public class MarioBinData {
      6 = xJumpStart
      */
 
-    private static final int MARIO_ALIVE = 0;
-    private static final int MARIO_ON_GROUND = 1;
-    private static final int MARIO_WAS_ON_GROUND = 2;
-    private static final int MARIO_IS_LARGE = 3;
-    private static final int MARIO_IS_DUCKING = 4;
-    private static final int MARIO_MAY_JUMP = 5;
-    private static final int MARIO_CAN_SHOOT = 6;
-    private static final int MARIO_IS_FIRE = 7;
-    private static final int MARIO_OLD_LARGE = 8;
-    private static final int MARIO_OLD_FIRE = 9;
+    public static final int MARIO_ALIVE = 0;
+    public static final int MARIO_ON_GROUND = 1;
+    public static final int MARIO_WAS_ON_GROUND = 2;
+    public static final int MARIO_IS_LARGE = 3;
+    public static final int MARIO_IS_DUCKING = 4;
+    public static final int MARIO_MAY_JUMP = 5;
+    public static final int MARIO_CAN_SHOOT = 6;
+    public static final int MARIO_IS_FIRE = 7;
+    public static final int MARIO_OLD_LARGE = 8;
+    public static final int MARIO_OLD_FIRE = 9;
 
-    private static final int MARIO_HEIGHT = 0;
-    private static final int MARIO_INVULNERABLE_TIME = 1;
-    private static final int MARIO_FACING = 2;
-    private static final int MARIO_JUMP_TIME = 3;
+    public static final int MARIO_HEIGHT = 0;
+    public static final int MARIO_INVULNERABLE_TIME = 1;
+    public static final int MARIO_FACING = 2;
+    public static final int MARIO_JUMP_TIME = 3;
 
-    private static final int MARIO_X = 0;
-    private static final int MARIO_Y = 1;
-    private static final int MARIO_XA = 2;
-    private static final int MARIO_YA = 3;
-    private static final int MARIO_X_JUMP_SPEED = 4;
-    private static final int MARIO_Y_JUMP_SPEED = 5;
-    private static final int MARIO_X_JUMP_START = 6;
+    public static final int MARIO_X = 0;
+    public static final int MARIO_Y = 1;
+    public static final int MARIO_XA = 2;
+    public static final int MARIO_YA = 3;
+    public static final int MARIO_X_JUMP_SPEED = 4;
+    public static final int MARIO_Y_JUMP_SPEED = 5;
+    public static final int MARIO_X_JUMP_START = 6;
 
     int addMario(MarioSlim marioSlim) { // only created once
         spriteStorageInfo[MARIO_COUNT]++; // TODO: assert count == 0
@@ -582,10 +634,32 @@ public class MarioBinData {
         floats[spriteStorageInfo[FLOATS_MARIO_START] + MARIO_Y_JUMP_SPEED] = marioSlim.yJumpSpeed;
         floats[spriteStorageInfo[FLOATS_MARIO_START] + MARIO_X_JUMP_START] = marioSlim.xJumpStart;
 
-        return SpriteTypeSlim.MARIO.getValue();
+        return SpriteTypeCommon.MARIO.getValue();
     }
 
-    // TODO: world, level and these three sprites to have a proof that this approach works
+    void removeMario() {
+        //TODO might be ignored since the game ends here? (probably not)
+    }
+
+    int addMushroom(float x, float y, boolean alive, int facing, int life, boolean onGround, float xa, float ya) {
+        //TODO
+        return 0;
+    }
+
+    void removeMushroom(int entityIndex) {
+        //TODO
+    }
+
+    public static final int SHELL_ALIVE = 0;
+
+    int addShell(float x, float y, boolean alive, int facing, boolean onGround, float xa, float ya) {
+        //TODO
+        return 0;
+    }
+
+    void removeShell(int entityIndex) {
+        //TODO
+    }
 
     private MarioBinData() { }
 

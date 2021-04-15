@@ -1,8 +1,8 @@
-package forwardmodel.slim.level;
+package forwardmodel.common;
 
 import java.util.ArrayList;
 
-public enum TileFeaturesSlim {
+public enum TileFeaturesCommon {
     BLOCK_UPPER,
     BLOCK_ALL,
     BLOCK_LOWER,
@@ -14,7 +14,7 @@ public enum TileFeaturesSlim {
     ANIMATED,
     SPAWNER;
 
-    public static ArrayList<TileFeaturesSlim> getTileFeatures(byte levelPartValue) {
+    public static ArrayList<TileFeaturesCommon> getTileFeatures(byte levelPartValue) {
         switch (levelPartValue) {
             case 1: //GROUND_BLOCK
             case 2: //PYRAMID_BLOCK:
@@ -61,69 +61,69 @@ public enum TileFeaturesSlim {
         }
     }
 
-    private static ArrayList<TileFeaturesSlim> blockAll = new ArrayList<>() {{
+    private static final ArrayList<TileFeaturesCommon> blockAll = new ArrayList<>() {{
         add(BLOCK_ALL);
     }};
 
-    private static ArrayList<TileFeaturesSlim> blockLower = new ArrayList<>() {{
+    private static final ArrayList<TileFeaturesCommon> blockLower = new ArrayList<>() {{
         add(BLOCK_LOWER);
     }};
 
-    private static ArrayList<TileFeaturesSlim> blockUpper_life_bumpable = new ArrayList<>() {{
+    private static final ArrayList<TileFeaturesCommon> blockUpper_life_bumpable = new ArrayList<>() {{
         add(BLOCK_UPPER);
         add(LIFE);
         add(BUMPABLE);
     }};
 
-    private static ArrayList<TileFeaturesSlim> bumpable_blockUpper = new ArrayList<>() {{
+    private static final ArrayList<TileFeaturesCommon> bumpable_blockUpper = new ArrayList<>() {{
         add(BUMPABLE);
         add(BLOCK_UPPER);
     }};
 
-    private static ArrayList<TileFeaturesSlim> blockAll_spawner = new ArrayList<>() {{
+    private static final ArrayList<TileFeaturesCommon> blockAll_spawner = new ArrayList<>() {{
         add(BLOCK_ALL);
         add(SPAWNER);
     }};
 
-    private static ArrayList<TileFeaturesSlim> blockAll_special_bumpable_animated = new ArrayList<>() {{
+    private static final ArrayList<TileFeaturesCommon> blockAll_special_bumpable_animated = new ArrayList<>() {{
         add(BLOCK_ALL);
         add(SPECIAL);
         add(BUMPABLE);
         add(ANIMATED);
     }};
 
-    private static ArrayList<TileFeaturesSlim> blockAll_bumpable_animated = new ArrayList<>() {{
+    private static final ArrayList<TileFeaturesCommon> blockAll_bumpable_animated = new ArrayList<>() {{
         add(BLOCK_ALL);
         add(BUMPABLE);
         add(ANIMATED);
     }};
 
-    private static ArrayList<TileFeaturesSlim> blockAll_breakable = new ArrayList<>() {{
+    private static final ArrayList<TileFeaturesCommon> blockAll_breakable = new ArrayList<>() {{
         add(BLOCK_ALL);
         add(BREAKABLE);
     }};
 
-    private static ArrayList<TileFeaturesSlim> blockAll_bumpable = new ArrayList<>() {{
+    private static final ArrayList<TileFeaturesCommon> blockAll_bumpable = new ArrayList<>() {{
         add(BLOCK_ALL);
         add(BUMPABLE);
     }};
 
-    private static ArrayList<TileFeaturesSlim> pickable_animated = new ArrayList<>() {{
+    private static final ArrayList<TileFeaturesCommon> pickable_animated = new ArrayList<>() {{
         add(PICKABLE);
         add(ANIMATED);
     }};
 
-    private static ArrayList<TileFeaturesSlim> blockAll_special_bumpable = new ArrayList<>() {{
+    private static final ArrayList<TileFeaturesCommon> blockAll_special_bumpable = new ArrayList<>() {{
         add(BLOCK_ALL);
         add(SPECIAL);
         add(BUMPABLE);
     }};
 
-    private static ArrayList<TileFeaturesSlim> blockAll_life_bumpable = new ArrayList<>() {{
+    private static final ArrayList<TileFeaturesCommon> blockAll_life_bumpable = new ArrayList<>() {{
         add(BLOCK_ALL);
         add(LIFE);
         add(BUMPABLE);
     }};
 
-    private static ArrayList<TileFeaturesSlim> empty = new ArrayList<>();
+    private static final ArrayList<TileFeaturesCommon> empty = new ArrayList<>();
 }

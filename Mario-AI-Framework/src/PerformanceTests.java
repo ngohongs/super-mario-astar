@@ -4,7 +4,7 @@ import engine.helper.MarioActions;
 import forwardmodel.bin.core.MarioForwardModelBin;
 import forwardmodel.common.Converter;
 import forwardmodel.slim.core.MarioForwardModelSlim;
-import forwardmodel.slim.level.LevelPart;
+import forwardmodel.common.LevelPart;
 import sun.misc.Unsafe;
 
 import java.io.IOException;
@@ -12,7 +12,6 @@ import java.lang.reflect.Field;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Arrays;
-import java.util.LinkedList;
 
 /**
  * *******************************************************************************
@@ -77,10 +76,113 @@ public class PerformanceTests {
     }
 
     public static void main(String[] args) {
-        testArrayCopies();
+        //testArrayCopies();
         //testClones();
         //testArraysCreation();;
         //testOneArrayVsFour();
+        //testOneArrayVsTwo();
+        testCopySpeedDiff();
+    }
+
+    private static void testCopySpeedDiff() {
+        int size1 = 5;
+        int size2 = 20;
+
+        int[] ints1 = new int[size1];
+        int[] ints2 = new int[size2];
+        for (int i = 0; i < size1; i++) {
+            ints1[i] = 50;
+        }
+        for (int i = 0; i < size2; i++) {
+            ints2[i] = 50;
+        }
+
+        for (int i = 0; i < 1000; i++) {
+            int[] ints1Copy = new int[size1];
+            System.arraycopy(ints1, 0, ints1Copy, 0, ints1.length);
+        }
+        long time = System.currentTimeMillis();
+        for (int i = 0; i < 1000000; i++) {
+            int[] ints1Copy = new int[size1];
+            System.arraycopy(ints1, 0, ints1Copy, 0, ints1.length);
+        }
+        long duration = System.currentTimeMillis() - time;
+        System.out.println("ARRAY OF FIRST SIZE FIRST RUN:");
+        System.out.println("TIME: " + duration + " ms");
+
+        for (int i = 0; i < 1000; i++) {
+            int[] ints1Copy = new int[size1];
+            System.arraycopy(ints1, 0, ints1Copy, 0, ints1.length);
+        }
+        time = System.currentTimeMillis();
+        for (int i = 0; i < 1000000; i++) {
+            int[] ints1Copy = new int[size1];
+            System.arraycopy(ints1, 0, ints1Copy, 0, ints1.length);
+        }
+        duration = System.currentTimeMillis() - time;
+        System.out.println("-------------");
+        System.out.println("ARRAY OF FIRST SIZE SECOND RUN:");
+        System.out.println("TIME: " + duration + " ms");
+
+        for (int i = 0; i < 1000; i++) {
+            int[] ints2Copy = new int[size2];
+            System.arraycopy(ints2, 0, ints2Copy, 0, ints2.length);
+        }
+        time = System.currentTimeMillis();
+        for (int i = 0; i < 1000000; i++) {
+            int[] ints2Copy = new int[size2];
+            System.arraycopy(ints2, 0, ints2Copy, 0, ints2.length);
+        }
+        duration = System.currentTimeMillis() - time;
+        System.out.println("-------------");
+        System.out.println("ARRAY OF SECOND SIZE FIRST RUN:");
+        System.out.println("TIME: " + duration + " ms");
+    }
+
+    private static void testOneArrayVsTwo() {
+        int[] ints60 = new int[60];
+        int[] ints50 = new int[50];
+        int[] ints10 = new int[10];
+        for (int i = 0; i < 60; i++) {
+            ints60[i] = 50;
+        }
+        for (int i = 0; i < 50; i++) {
+            ints50[i] = 50;
+        }
+        for (int i = 0; i < 10; i++) {
+            ints10[i] = 50;
+        }
+
+        for (int i = 0; i < 1000; i++) {
+            int[] ints60Copy = new int[60];
+            System.arraycopy(ints60, 0, ints60Copy, 0, ints60.length);
+        }
+        long time = System.currentTimeMillis();
+        for (int i = 0; i < 1000000; i++) {
+            int[] ints60Copy = new int[60];
+            System.arraycopy(ints60, 0, ints60Copy, 0, ints60.length);
+        }
+        long duration = System.currentTimeMillis() - time;
+        System.out.println("ONE ARRAY:");
+        System.out.println("TIME: " + duration + " ms");
+
+        for (int i = 0; i < 1000; i++) {
+            int[] ints50Copy = new int[50];
+            int[] ints10Copy = new int[10];
+            System.arraycopy(ints50, 0, ints50Copy, 0, ints50.length);
+            System.arraycopy(ints10, 0, ints10Copy, 0, ints10.length);
+        }
+        time = System.currentTimeMillis();
+        for (int i = 0; i < 1000000; i++) {
+            int[] ints50Copy = new int[50];
+            int[] ints10Copy = new int[10];
+            System.arraycopy(ints50, 0, ints50Copy, 0, ints50.length);
+            System.arraycopy(ints10, 0, ints10Copy, 0, ints10.length);
+        }
+        duration = System.currentTimeMillis() - time;
+        System.out.println("-------------");
+        System.out.println("TWO ARRAYS:");
+        System.out.println("TIME: " + duration + " ms");
     }
 
     private static void testOneArrayVsFour() {

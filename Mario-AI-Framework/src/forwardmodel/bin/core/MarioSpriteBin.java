@@ -1,13 +1,12 @@
 package forwardmodel.bin.core;
-
-import forwardmodel.common.SpriteTypeSlim;
+// TODO: probably not needed, solved in IBinSpriteMethods
 
 /**
  * A method can't be abstract if it's static, and we need getX, setX, etc. methods
  * to be static, so we have no way of enforcing implementation. An exception is thrown
  * to inform that a method hasn't been overridden in a sprite.
  */
-
+/*
 public abstract class MarioSpriteBin {
 
     public static float getX(MarioBinData data, int entityIndex) {
@@ -34,7 +33,7 @@ public abstract class MarioSpriteBin {
         throw new UnsupportedOperationException("Not implemented!");
     }
 
-    public static SpriteTypeSlim getType(MarioBinData data, int entityIndex) {
+    public static SpriteTypeCommon getType(MarioBinData data, int entityIndex) {
         throw new UnsupportedOperationException("Not implemented!");
     }
 
@@ -56,3 +55,4 @@ public abstract class MarioSpriteBin {
         return false;
     }
 }
+*/

@@ -1,14 +1,14 @@
 package forwardmodel.slim.sprites;
 
 import engine.sprites.Shell;
+import forwardmodel.common.SpriteTypeCommon;
 import forwardmodel.slim.core.MarioSpriteSlim;
 import forwardmodel.slim.core.MarioUpdateContextSlim;
-import forwardmodel.common.SpriteTypeSlim;
 
 public class ShellSlim extends MarioSpriteSlim {
     public static final float GROUND_INERTIA = 0.89f;
     public static final float AIR_INERTIA = 0.89f;
-    private static final SpriteTypeSlim type = SpriteTypeSlim.SHELL;
+    private static final SpriteTypeCommon type = SpriteTypeCommon.SHELL;
     private static final int width = 4;
     static final int height = 12;
 
@@ -60,7 +60,7 @@ public class ShellSlim extends MarioSpriteSlim {
     }
 
     @Override
-    public SpriteTypeSlim getType() {
+    public SpriteTypeCommon getType() {
         return type;
     }
 

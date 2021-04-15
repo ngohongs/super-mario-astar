@@ -1,12 +1,12 @@
 package forwardmodel.slim.sprites;
 
 import engine.sprites.BulletBill;
+import forwardmodel.common.SpriteTypeCommon;
 import forwardmodel.slim.core.MarioSpriteSlim;
 import forwardmodel.slim.core.MarioUpdateContextSlim;
-import forwardmodel.common.SpriteTypeSlim;
 
 public class BulletBillSlim extends MarioSpriteSlim {
-    private static final SpriteTypeSlim type = SpriteTypeSlim.BULLET_BILL;
+    private static final SpriteTypeCommon type = SpriteTypeCommon.BULLET_BILL;
     static final int height = 12;
 
     public int facing;
@@ -55,7 +55,7 @@ public class BulletBillSlim extends MarioSpriteSlim {
     }
 
     @Override
-    public SpriteTypeSlim getType() {
+    public SpriteTypeCommon getType() {
         return type;
     }
 

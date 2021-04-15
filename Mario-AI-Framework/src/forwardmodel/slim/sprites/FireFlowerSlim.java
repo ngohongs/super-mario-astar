@@ -1,13 +1,13 @@
 package forwardmodel.slim.sprites;
 
 import engine.sprites.FireFlower;
+import forwardmodel.common.SpriteTypeCommon;
 import forwardmodel.slim.core.MarioSpriteSlim;
 import forwardmodel.slim.core.MarioUpdateContextSlim;
-import forwardmodel.common.SpriteTypeSlim;
 
 public class FireFlowerSlim extends MarioSpriteSlim {
     private static final int height = 12;
-    private static final SpriteTypeSlim type = SpriteTypeSlim.FIRE_FLOWER;
+    private static final SpriteTypeCommon type = SpriteTypeCommon.FIRE_FLOWER;
 
     private int life;
 
@@ -46,7 +46,7 @@ public class FireFlowerSlim extends MarioSpriteSlim {
     }
 
     @Override
-    public SpriteTypeSlim getType() {
+    public SpriteTypeCommon getType() {
         return type;
     }
 

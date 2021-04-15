@@ -1,6 +1,6 @@
 package forwardmodel.common;
 
-public enum SpriteTypeSlim {
+public enum SpriteTypeCommon {
     NONE(0),
     MARIO(1),
     GOOMBA(2),
@@ -21,7 +21,7 @@ public enum SpriteTypeSlim {
 
     private final int value;
 
-    SpriteTypeSlim(int value) {
+    SpriteTypeCommon(int value) {
         this.value = value;
     }
 
@@ -29,10 +29,10 @@ public enum SpriteTypeSlim {
         return value;
     }
 
-    public static SpriteTypeSlim getSpriteTypeSlim(int value) {
-        for (SpriteTypeSlim spriteTypeSlim : SpriteTypeSlim.values()) {
-            if (spriteTypeSlim.value == value)
-                return spriteTypeSlim;
+    public static SpriteTypeCommon getSpriteTypeSlim(int value) {
+        for (SpriteTypeCommon spriteTypeCommon : SpriteTypeCommon.values()) {
+            if (spriteTypeCommon.value == value)
+                return spriteTypeCommon;
         }
         throw new IllegalArgumentException();
     }

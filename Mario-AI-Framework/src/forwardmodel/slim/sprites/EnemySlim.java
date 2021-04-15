@@ -1,9 +1,9 @@
 package forwardmodel.slim.sprites;
 
 import engine.sprites.Enemy;
+import forwardmodel.common.SpriteTypeCommon;
 import forwardmodel.slim.core.MarioSpriteSlim;
 import forwardmodel.slim.core.MarioUpdateContextSlim;
-import forwardmodel.common.SpriteTypeSlim;
 
 public class EnemySlim extends MarioSpriteSlim {
     private static final int GOOMBA = 2;
@@ -50,10 +50,10 @@ public class EnemySlim extends MarioSpriteSlim {
         this.noFireballDeath = info.noFireballDeath;
     }
 
-    public EnemySlim(float x, float y, int dir, SpriteTypeSlim type) {
+    public EnemySlim(float x, float y, int dir, SpriteTypeCommon type) {
         this.x = x;
         this.y = y;
-        this.typeCode = convertSpriteTypeSlim(type);
+        this.typeCode = type.getValue();
         this.height = 24;
         if (this.typeCode != RED_KOOPA && this.typeCode != GREEN_KOOPA
                 && this.typeCode != RED_KOOPA_WINGED && this.typeCode != GREEN_KOOPA_WINGED) {
@@ -66,29 +66,6 @@ public class EnemySlim extends MarioSpriteSlim {
         this.facing = dir;
         if (this.facing == 0) {
             this.facing = 1;
-        }
-    }
-
-    private int convertSpriteTypeSlim(SpriteTypeSlim type) {
-        switch (type) {
-            case GOOMBA:
-                return GOOMBA;
-            case GOOMBA_WINGED:
-                return GOOMBA_WINGED;
-            case RED_KOOPA:
-                return RED_KOOPA;
-            case RED_KOOPA_WINGED:
-                return RED_KOOPA_WINGED;
-            case GREEN_KOOPA:
-                return GREEN_KOOPA;
-            case GREEN_KOOPA_WINGED:
-                return GREEN_KOOPA_WINGED;
-            case SPIKY:
-                return SPIKY;
-            case SPIKY_WINGED:
-                return SPIKY_WINGED;
-            default:
-                throw new IllegalArgumentException();
         }
     }
 
@@ -120,8 +97,8 @@ public class EnemySlim extends MarioSpriteSlim {
     }
 
     @Override
-    public SpriteTypeSlim getType() {
-        return SpriteTypeSlim.getSpriteTypeSlim(typeCode);
+    public SpriteTypeCommon getType() {
+        return SpriteTypeCommon.getSpriteTypeSlim(typeCode);
     }
 
     public MarioSpriteSlim clone() {

@@ -2,8 +2,10 @@ package forwardmodel.slim.level;
 
 import engine.core.MarioLevel;
 import engine.helper.SpriteType;
-import forwardmodel.common.SpriteTypeSlim;
+import forwardmodel.common.LevelPart;
+import forwardmodel.common.SpriteTypeCommon;
 import forwardmodel.common.StaticLevel;
+import forwardmodel.common.TileFeaturesCommon;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -16,7 +18,7 @@ public class MarioLevelSlim {
     public int exitTileX;
 
     public StaticLevel staticLevel;
-    private static int cutoutTileWidth;
+    public static int cutoutTileWidth;
 
     public byte[] levelCutout;
     public boolean[] aliveFlags;
@@ -38,7 +40,7 @@ public class MarioLevelSlim {
             MarioLevelSlim.cutoutTileWidth = tileWidth;
 
         staticLevel = new StaticLevel();
-        staticLevel.data = new StaticLevel.LevelTile[level.levelTiles.length][level.levelTiles[0].length];
+        staticLevel.tiles = new StaticLevel.LevelTile[level.levelTiles.length][level.levelTiles[0].length];
         int dynamicTileCounter = 0;
         for (int x = 0; x < level.levelTiles.length; x++) {
             for (int y = 0; y < level.levelTiles[x].length; y++) {
@@ -60,11 +62,11 @@ public class MarioLevelSlim {
                     levelPart = LevelPart.getLevelPart(level.spriteTemplates[x][y].getValue(), false);
 
                 if (LevelPart.isDynamic(levelPart)) {
-                    staticLevel.data[x][y] = new StaticLevel.LevelTile(dynamicTileCounter, levelPart);
+                    staticLevel.tiles[x][y] = new StaticLevel.LevelTile(dynamicTileCounter, levelPart);
                     dynamicTileCounter++;
                 }
                 else
-                    staticLevel.data[x][y] = new StaticLevel.LevelTile(-1, levelPart);
+                    staticLevel.tiles[x][y] = new StaticLevel.LevelTile(-1, levelPart);
             }
         }
 
@@ -101,7 +103,7 @@ public class MarioLevelSlim {
                     levelCutout[column * tileHeight + y] = LevelPart.EMPTY.getValue();
                 else
                     // no need for alive check, still initializing
-                    levelCutout[column * tileHeight + y] = staticLevel.data[x][y].levelPart.getValue();
+                    levelCutout[column * tileHeight + y] = staticLevel.tiles[x][y].levelPart.getValue();
             }
             column++;
         }
@@ -181,10 +183,10 @@ public class MarioLevelSlim {
                     return;
                 int y = 0;
                 for (int i = cutoutArrayBeginningIndex; i < cutoutArrayBeginningIndex + tileHeight; i++) {
-                    if (staticLevel.data[newColumnIndex][y].id == -1 || aliveFlags[staticLevel.data[newColumnIndex][y].id])
-                        levelCutout[i] = staticLevel.data[newColumnIndex][y].levelPart.getValue();
+                    if (staticLevel.tiles[newColumnIndex][y].id == -1 || aliveFlags[staticLevel.tiles[newColumnIndex][y].id])
+                        levelCutout[i] = staticLevel.tiles[newColumnIndex][y].levelPart.getValue();
                     else
-                        levelCutout[i] = LevelPart.getUsedState(staticLevel.data[newColumnIndex][y].levelPart).getValue();
+                        levelCutout[i] = LevelPart.getUsedState(staticLevel.tiles[newColumnIndex][y].levelPart).getValue();
                     y++;
                 }
                 currentCutoutCenter++;
@@ -200,11 +202,11 @@ public class MarioLevelSlim {
                 int newColumnIndex = marioTileX - cutoutTileWidth / 2;
                 int y = 0;
                 for (int i = cutoutLastColumnIndex; i < cutoutLastColumnIndex + tileHeight; i++) {
-                    if (staticLevel.data[newColumnIndex][y].id == -1
-                            || aliveFlags[staticLevel.data[newColumnIndex][y].id])
-                        levelCutout[i] = staticLevel.data[newColumnIndex][y].levelPart.getValue();
+                    if (staticLevel.tiles[newColumnIndex][y].id == -1
+                            || aliveFlags[staticLevel.tiles[newColumnIndex][y].id])
+                        levelCutout[i] = staticLevel.tiles[newColumnIndex][y].levelPart.getValue();
                     else
-                        levelCutout[i] = LevelPart.getUsedState(staticLevel.data[newColumnIndex][y].levelPart).getValue();
+                        levelCutout[i] = LevelPart.getUsedState(staticLevel.tiles[newColumnIndex][y].levelPart).getValue();
                     y++;
                 }
                 currentCutoutCenter--;
@@ -218,10 +220,10 @@ public class MarioLevelSlim {
 
     public boolean isBlocking(int xTile, int yTile, float ya) {
         byte blockValue = this.getBlockValue(xTile, yTile);
-        ArrayList<TileFeaturesSlim> features = TileFeaturesSlim.getTileFeatures(blockValue);
-        boolean blocking = features.contains(TileFeaturesSlim.BLOCK_ALL);
-        blocking |= (ya < 0) && features.contains(TileFeaturesSlim.BLOCK_UPPER);
-        blocking |= (ya > 0) && features.contains(TileFeaturesSlim.BLOCK_LOWER);
+        ArrayList<TileFeaturesCommon> features = TileFeaturesCommon.getTileFeatures(blockValue);
+        boolean blocking = features.contains(TileFeaturesCommon.BLOCK_ALL);
+        blocking |= (ya < 0) && features.contains(TileFeaturesCommon.BLOCK_UPPER);
+        blocking |= (ya > 0) && features.contains(TileFeaturesCommon.BLOCK_LOWER);
 
         return blocking;
     }
@@ -249,17 +251,17 @@ public class MarioLevelSlim {
 
         if (levelCutout[calculateCutoutIndex(xTile, yTile)] == LevelPart.PIPE_TOP_LEFT_WITH_FLOWER.getValue()) {
             levelCutout[calculateCutoutIndex(xTile, yTile)] = LevelPart.PIPE_TOP_LEFT_WITHOUT_FLOWER.getValue();
-            aliveFlags[staticLevel.data[xTile][yTile].id] = false;
+            aliveFlags[staticLevel.tiles[xTile][yTile].id] = false;
         }
         else {
             levelCutout[calculateCutoutIndex(xTile, yTile)] = (byte) index;
-            aliveFlags[staticLevel.data[xTile][yTile].id] = false;
+            aliveFlags[staticLevel.tiles[xTile][yTile].id] = false;
         }
     }
 
-    public SpriteTypeSlim getSpriteType(int xTile, int yTile) {
-        if (xTile < 0 || yTile < 0 || xTile >= this.tileWidth || yTile >= this.tileHeight) {
-            return SpriteTypeSlim.NONE;
+    public SpriteTypeCommon getSpriteType(int xTile, int yTile) {
+        if (xTile < 0 || yTile < 0 || xTile > this.tileWidth - 1 || yTile > this.tileHeight - 1) {
+            return SpriteTypeCommon.NONE;
         }
         return LevelPart.getLevelSprite(levelCutout[calculateCutoutIndex(xTile, yTile)]);
     }

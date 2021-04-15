@@ -2,13 +2,13 @@ package forwardmodel.slim.sprites;
 
 import engine.helper.MarioActions;
 import engine.sprites.Mario;
-import forwardmodel.slim.level.LevelPart;
+import forwardmodel.common.LevelPart;
 import forwardmodel.slim.core.MarioSpriteSlim;
 import forwardmodel.slim.core.MarioUpdateContextSlim;
-import forwardmodel.common.SpriteTypeSlim;
+import forwardmodel.common.SpriteTypeCommon;
 
 public class MarioSlim extends MarioSpriteSlim {
-    private static final SpriteTypeSlim type = SpriteTypeSlim.MARIO;
+    private static final SpriteTypeCommon type = SpriteTypeCommon.MARIO;
     private static final int width = 4;
     public static final float GROUND_INERTIA = 0.89f;
     public static final float AIR_INERTIA = 0.89f;
@@ -89,7 +89,7 @@ public class MarioSlim extends MarioSpriteSlim {
     }
 
     @Override
-    public SpriteTypeSlim getType() {
+    public SpriteTypeCommon getType() {
         return type;
     }
 
