@@ -1,3 +1,5 @@
+package levelGenerators;
+
 import engine.core.MarioGame;
 import engine.core.MarioLevelGenerator;
 import engine.core.MarioLevelModel;

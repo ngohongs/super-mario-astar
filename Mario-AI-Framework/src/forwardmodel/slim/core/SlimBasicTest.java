@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-public class MainSlim {
+public class SlimBasicTest {
     private static String getLevel(String filepath) {
         String content = "";
         try {
@@ -20,6 +20,7 @@ public class MainSlim {
     }
 
     public static void main(String[] args) {
+        // basic test on all original levels
         for (int i = 1; i < 16; i++) {
             // set up original OOP world
             String level = getLevel("./levels/original/lvl-" + i + ".txt");
@@ -30,7 +31,7 @@ public class MainSlim {
             setupWorld.mario.isFire = false;
             setupWorld.update(new boolean[MarioActions.numberOfActions()]);
 
-            // set level cutout width
+            // set level cutout width (0 means it will be set automatically)
             int levelCutoutTileWidth = 0;
 
             // create original OOP forward model
@@ -39,7 +40,7 @@ public class MainSlim {
             // convert to slim OOP forward model
             MarioForwardModelSlim slimModel = Converter.originalToSlim(originalModel, levelCutoutTileWidth);
 
-            // advance both models
+            // advance both models - just move right
             boolean[] actions = { false, true, false, false, false }; // left, right, down, speed, jump
             for (int j = 0; j < 1000; j++) {
                 originalModel.advance(actions);

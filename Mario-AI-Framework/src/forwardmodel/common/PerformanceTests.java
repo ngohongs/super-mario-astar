@@ -1,10 +1,10 @@
+package forwardmodel.common;
+
 import engine.core.MarioForwardModel;
 import engine.core.MarioWorld;
 import engine.helper.MarioActions;
 import forwardmodel.bin.core.MarioForwardModelBin;
-import forwardmodel.common.Converter;
 import forwardmodel.slim.core.MarioForwardModelSlim;
-import forwardmodel.common.LevelPart;
 import sun.misc.Unsafe;
 
 import java.io.IOException;

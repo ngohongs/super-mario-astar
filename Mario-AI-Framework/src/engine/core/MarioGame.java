@@ -284,13 +284,13 @@ public class MarioGame {
                 MarioForwardModelSlim controlSlimModel = Converter.originalToSlim(originalModel, levelCutoutTileWidth);
                 if (!slimModel.equals(controlSlimModel)) {
                     System.out.println("SLIM MODEL NOT EQUAL");
-                    return null;
+                    throw new RuntimeException("SLIM MODEL NOT EQUAL");
                 }
 
                 // test slim model clone
                 if (!slimClone.equals(controlSlimModel)) {
                     System.out.println("SLIM MODEL CLONE NOT EQUAL");
-                    return null;
+                    throw new RuntimeException("SLIM MODEL CLONE NOT EQUAL");
                 }
 
                 gameEvents.addAll(this.world.lastFrameEvents);

@@ -10,7 +10,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-public class MainBin {
+public class BinBasicTest {
     private static String getLevel(String filepath) {
         String content = "";
         try {
