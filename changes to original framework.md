@@ -1,11 +1,8 @@
 - MarioForwardModel
-
-  - getWorld method
+	- getWorld method
 
 - MarioLevel
-	
-	- getLevelTiles, getSpriteTemplates methods
-	
+	- getLevelTiles, getSpriteTemplates methods	
 	- removed enemy respawning
 	- removed lastSpawnTime, get/setLastSpawnTick
 	- new setSpriteType method
@@ -13,41 +10,31 @@
 		- because it now changes
 	
 - MarioWorld
-
-  - spawning reworked, getSprites
+	- spawning reworked, getSprites
 
 - BulletBill
-
-  - missing alive in clone
+	- missing alive in clone
 
 - Enemy
-
-  - getPrivateEnemyCopyInfo, PrivateEnemyCopyInfo, alive in clone
+	- getPrivateEnemyCopyInfo, PrivateEnemyCopyInfo, alive in clone
 
 - FireFlower
-
-  - getLife, alive in clone
+	- getLife, alive in clone
 
 - Fireball
-
-  - isOnGround, alive in clone
+	- isOnGround, alive in clone
 
 - FlowerEnemy
-
-  - getyStart, getWaitTime, clone - alive, facing, x, y
+	- getyStart, getWaitTime, clone - alive, facing, x, y
 
 - LifeMushroom
-
-  - isOnGround, getLife, alive in clone
+	- isOnGround, getLife, alive in clone
 
 - Mario
-
-  - getPrivateMarioCopyInfo, PrivateMarioCopyInfo, clone - alive, oldLarge, oldFire, x, y
+	- getPrivateMarioCopyInfo, PrivateMarioCopyInfo, clone - alive, oldLarge, oldFire, x, y
 
 - Mushroom
-
-  - isOnGround, getLife, alive in clone
+	- isOnGround, getLife, alive in clone
 
 - Shell
-
-  - isOnGround, alive in clone
+	- isOnGround, alive in clone
