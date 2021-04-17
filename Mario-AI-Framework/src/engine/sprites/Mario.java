@@ -516,7 +516,7 @@ public class Mario extends MarioSprite {
         public float xJumpStart;
     }
 
-    public PrivateMarioCopyInfo getPrivateCopyInfo() {
+    public PrivateMarioCopyInfo getPrivateMarioCopyInfo() {
         PrivateMarioCopyInfo info = new PrivateMarioCopyInfo();
         info.invulnerableTime = this.invulnerableTime;
         info.oldLarge = this.oldLarge;

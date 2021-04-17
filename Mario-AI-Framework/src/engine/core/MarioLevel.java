@@ -18,8 +18,8 @@ public class MarioLevel {
     public int totalCoins = 0;
     public int marioTileX, marioTileY, exitTileX, exitTileY;
 
-    public int[][] levelTiles;
-    public SpriteType[][] spriteTemplates;
+    private int[][] levelTiles;
+    private SpriteType[][] spriteTemplates;
     //private int[][] lastSpawnTime;
     private MarioTilemap graphics;
     private MarioImage flag;
@@ -390,5 +390,29 @@ public class MarioLevel {
         if (cameraX + MarioGame.width >= this.exitTileX * 16) {
             this.flag.render(og, this.exitTileX * 16 - 8 - cameraX, Math.max(1, this.exitTileY - 11) * 16 + 16 - cameraY);
         }
+    }
+
+    public int[][] getLevelTiles() {
+        int [][] levelTilesCopy = new int[this.levelTiles.length][this.levelTiles[0].length];
+
+        for (int x = 0; x < this.levelTiles.length; x++) {
+            for (int y = 0; y < this.levelTiles[x].length; y++) {
+                levelTilesCopy[x][y] = this.levelTiles[x][y];
+            }
+        }
+
+        return levelTilesCopy;
+    }
+
+    public SpriteType[][] getSpriteTemplates() {
+        SpriteType[][] spriteTemplatesCopy = new SpriteType[this.levelTiles.length][this.levelTiles[0].length];
+
+        for (int x = 0; x < this.levelTiles.length; x++) {
+            for (int y = 0; y < this.levelTiles[x].length; y++) {
+                spriteTemplatesCopy[x][y] = this.spriteTemplates[x][y];
+            }
+        }
+
+        return spriteTemplatesCopy;
     }
 }

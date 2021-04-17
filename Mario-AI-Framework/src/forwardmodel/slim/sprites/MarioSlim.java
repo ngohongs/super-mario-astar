@@ -27,7 +27,7 @@ public class MarioSlim extends MarioSpriteSlim {
     private MarioSlim() { }
 
     public MarioSlim(Mario originalMario) {
-        Mario.PrivateMarioCopyInfo info = originalMario.getPrivateCopyInfo();
+        Mario.PrivateMarioCopyInfo info = originalMario.getPrivateMarioCopyInfo();
         this.invulnerableTime = info.invulnerableTime;
         this.oldLarge = info.oldLarge;
         this.oldFire = info.oldFire;

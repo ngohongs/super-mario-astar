@@ -44,7 +44,7 @@ public class MarioWorldSlim {
 
         sprites = new ArrayList<>();
 
-        for (MarioSprite originalSprite : originalWorld.sprites) {
+        for (MarioSprite originalSprite : originalWorld.getSprites()) {
             if (originalSprite instanceof BulletBill)
                 this.sprites.add(new BulletBillSlim((BulletBill) originalSprite));
             else if (originalSprite instanceof FlowerEnemy)

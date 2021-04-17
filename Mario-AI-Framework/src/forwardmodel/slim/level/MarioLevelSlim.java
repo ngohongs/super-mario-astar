@@ -39,27 +39,30 @@ public class MarioLevelSlim {
         if (MarioLevelSlim.cutoutTileWidth > tileWidth)
             MarioLevelSlim.cutoutTileWidth = tileWidth;
 
+        int[][] originalLevelTiles = level.getLevelTiles();
+        SpriteType[][] originalSpriteTemplates = level.getSpriteTemplates();
+
         staticLevel = new StaticLevel();
-        staticLevel.tiles = new StaticLevel.LevelTile[level.levelTiles.length][level.levelTiles[0].length];
+        staticLevel.tiles = new StaticLevel.LevelTile[originalLevelTiles.length][originalLevelTiles[0].length];
         int dynamicTileCounter = 0;
-        for (int x = 0; x < level.levelTiles.length; x++) {
-            for (int y = 0; y < level.levelTiles[x].length; y++) {
+        for (int x = 0; x < originalLevelTiles.length; x++) {
+            for (int y = 0; y < originalLevelTiles[x].length; y++) {
                 LevelPart levelPart;
-                if (level.levelTiles[x][y] != 0) {
-                    if (level.levelTiles[x][y] == 39 || level.levelTiles[x][y] == 40)
+                if (originalLevelTiles[x][y] != 0) {
+                    if (originalLevelTiles[x][y] == 39 || originalLevelTiles[x][y] == 40)
                         levelPart = LevelPart.EMPTY; // flag is ignored
                     // pipe top left - might have flower
-                    else if (level.levelTiles[x][y] == 18) {
-                        if (level.spriteTemplates[x][y] == SpriteType.ENEMY_FLOWER)
+                    else if (originalLevelTiles[x][y] == 18) {
+                        if (originalSpriteTemplates[x][y] == SpriteType.ENEMY_FLOWER)
                             levelPart = LevelPart.PIPE_TOP_LEFT_WITH_FLOWER;
                         else
                             levelPart = LevelPart.PIPE_TOP_LEFT_WITHOUT_FLOWER;
                     }
                     else
-                        levelPart = LevelPart.getLevelPart(level.levelTiles[x][y], true);
+                        levelPart = LevelPart.getLevelPart(originalLevelTiles[x][y], true);
                 }
                 else
-                    levelPart = LevelPart.getLevelPart(level.spriteTemplates[x][y].getValue(), false);
+                    levelPart = LevelPart.getLevelPart(originalSpriteTemplates[x][y].getValue(), false);
 
                 if (LevelPart.isDynamic(levelPart)) {
                     staticLevel.tiles[x][y] = new StaticLevel.LevelTile(dynamicTileCounter, levelPart);

@@ -205,16 +205,23 @@ public class MarioForwardModel {
      */
     public final int obsGridHeight = MarioGame.tileHeight;
 
-    public MarioWorld world;
+    private MarioWorld world;
+
+    /**
+     * Used by slim forward model for converting.
+     */
+    public MarioWorld getWorld() {
+        return this.world.clone();
+    }
 
     // stats
-    /*private int fallKill;
+    private int fallKill;
     private int stompKill;
     private int fireKill;
     private int shellKill;
     private int mushrooms;
     private int flowers;
-    private int breakBlock;*/
+    private int breakBlock;
 
     /**
      * Create a forward model object
@@ -233,13 +240,13 @@ public class MarioForwardModel {
      */
     public MarioForwardModel clone() {
         MarioForwardModel model = new MarioForwardModel(this.world.clone());
-        /*model.fallKill = this.fallKill;
+        model.fallKill = this.fallKill;
         model.stompKill = this.stompKill;
         model.fireKill = this.fireKill;
         model.shellKill = this.shellKill;
         model.mushrooms = this.mushrooms;
         model.flowers = this.flowers;
-        model.breakBlock = this.breakBlock;*/
+        model.breakBlock = this.breakBlock;
         return model;
     }
 
@@ -250,7 +257,7 @@ public class MarioForwardModel {
      */
     public void advance(boolean[] actions) {
         this.world.update(actions);
-        /*for (MarioEvent e : this.world.lastFrameEvents) {
+        for (MarioEvent e : this.world.lastFrameEvents) {
             if (e.getEventType() == EventType.FIRE_KILL.getValue()) {
                 this.fireKill += 1;
             }
@@ -275,7 +282,7 @@ public class MarioForwardModel {
                     && e.getMarioState() > 0) {
                 this.breakBlock += 1;
             }
-        }*/
+        }
     }
 
     /**
@@ -397,16 +404,16 @@ public class MarioForwardModel {
      *
      * @return number of enemies killed in the game
      */
-    /*public int getKillsTotal() {
+    public int getKillsTotal() {
         return this.fallKill + this.fireKill + this.shellKill + this.stompKill;
-    }*/
+    }
 
     /**
      * get the number of enemies killed by fireballs
      *
      * @return number of enemies killed by fireballs
      */
-    /*public int getKillsByFire() {
+    public int getKillsByFire() {
         return this.fireKill;
     }
 
@@ -415,27 +422,27 @@ public class MarioForwardModel {
      *
      * @return number of enemies killed by stomping
      */
-    /*public int getKillsByStomp() {
+    public int getKillsByStomp() {
         return this.stompKill;
-    }*/
+    }
 
     /**
      * get the number of enemies killed by a koopa shell
      *
      * @return number of enemies killed by a koopa shell
      */
-    /*public int getKillsByShell() {
+    public int getKillsByShell() {
         return this.shellKill;
-    }*/
+    }
 
     /**
      * get the number of enemies that fell from the game screen
      *
      * @return the number of enemies that fell from the game screen
      */
-    /*public int getKillsByFall() {
+    public int getKillsByFall() {
         return this.fallKill;
-    }*/
+    }
 
     /**
      * get the number 100 coins collected by mario
@@ -451,18 +458,18 @@ public class MarioForwardModel {
      *
      * @return the number of collected mushrooms by mario
      */
-    /*public int getNumCollectedMushrooms() {
+    public int getNumCollectedMushrooms() {
         return this.mushrooms;
-    }*/
+    }
 
     /**
      * get the number of fire flowers collected by mario
      *
      * @return the number of collected fire flowers by mario
      */
-    /*public int getNumCollectedFireflower() {
+    public int getNumCollectedFireflower() {
         return this.flowers;
-    }*/
+    }
 
     /**
      * get the number of coins collected by mario
@@ -478,9 +485,9 @@ public class MarioForwardModel {
      *
      * @return the number of destroyed bricks by large or fire mario
      */
-    /*public int getNumDestroyedBricks() {
+    public int getNumDestroyedBricks() {
         return this.breakBlock;
-    }*/
+    }
 
     /**
      * Get the tile location of mario with respect to the screen

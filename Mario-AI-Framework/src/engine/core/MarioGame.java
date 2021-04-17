@@ -10,8 +10,6 @@ import javax.swing.JFrame;
 import agents.human.Agent;
 import engine.helper.GameStatus;
 import engine.helper.MarioActions;
-import forwardmodel.common.Converter;
-import forwardmodel.slim.core.MarioForwardModelSlim;
 
 public class MarioGame {
     /**
@@ -69,7 +67,7 @@ public class MarioGame {
     /**
      * Create a mario game with a different forward model where the player on certain event
      *
-     * @param killEvents events that will kill the player
+     * @param killPlayer events that will kill the player
      */
     public MarioGame(MarioEvent[] killEvents) {
         this.killEvents = killEvents;
@@ -232,11 +230,6 @@ public class MarioGame {
         this.world.update(new boolean[MarioActions.numberOfActions()]);
         long currentTime = System.currentTimeMillis();
 
-        // add slim model to test it
-        int levelCutoutTileWidth = 0;
-        MarioForwardModel originalModel = new MarioForwardModel(this.world.clone());
-        MarioForwardModelSlim slimModel = Converter.originalToSlim(originalModel, levelCutoutTileWidth);
-
         //initialize graphics
         VolatileImage renderTarget = null;
         Graphics backBuffer = null;
@@ -258,11 +251,6 @@ public class MarioGame {
                 //get actions
                 agentTimer = new MarioTimer(MarioGame.maxTime);
                 boolean[] actions = this.agent.getActions(new MarioForwardModel(this.world.clone()), agentTimer);
-                // create a copy to prevent actions from changing during updates
-                boolean[] actionsCopy = new boolean[5];
-                for (int i = 0; i < 5; i++) {
-                    actionsCopy[i] = actions[i];
-                }
                 if (MarioGame.verbose) {
                     if (agentTimer.getRemainingTime() < 0 && Math.abs(agentTimer.getRemainingTime()) > MarioGame.graceTime) {
                         System.out.println("The Agent is slowing down the game by: "
@@ -270,29 +258,7 @@ public class MarioGame {
                     }
                 }
                 // update world
-                this.world.update(actionsCopy);
-
-                // clone slim model and advance it
-                MarioForwardModelSlim slimClone = slimModel.clone();
-                slimClone.advance(actionsCopy);
-
-                // advance slim model
-                slimModel.advance(actionsCopy);
-
-                // test slim model
-                originalModel = new MarioForwardModel(this.world.clone());
-                MarioForwardModelSlim controlSlimModel = Converter.originalToSlim(originalModel, levelCutoutTileWidth);
-                if (!slimModel.equals(controlSlimModel)) {
-                    System.out.println("SLIM MODEL NOT EQUAL");
-                    throw new RuntimeException("SLIM MODEL NOT EQUAL");
-                }
-
-                // test slim model clone
-                if (!slimClone.equals(controlSlimModel)) {
-                    System.out.println("SLIM MODEL CLONE NOT EQUAL");
-                    throw new RuntimeException("SLIM MODEL CLONE NOT EQUAL");
-                }
-
+                this.world.update(actions);
                 gameEvents.addAll(this.world.lastFrameEvents);
                 agentEvents.add(new MarioAgentEvent(actions, this.world.mario.x,
                         this.world.mario.y, (this.world.mario.isLarge ? 1 : 0) + (this.world.mario.isFire ? 1 : 0),

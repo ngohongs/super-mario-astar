@@ -28,7 +28,7 @@ public class MarioWorld {
     public ArrayList<MarioEvent> lastFrameEvents;
 
     private MarioEvent[] killEvents;
-    public ArrayList<MarioSprite> sprites;
+    private ArrayList<MarioSprite> sprites;
     private ArrayList<Shell> shellsToCheck;
     private ArrayList<Fireball> fireballsToCheck;
     private ArrayList<MarioSprite> addedSprites;
@@ -95,6 +95,16 @@ public class MarioWorld {
         this.sprites.add(this.mario);
     }
 
+    public ArrayList<MarioSprite> getEnemies() {
+        ArrayList<MarioSprite> enemies = new ArrayList<>();
+        for (MarioSprite sprite : sprites) {
+            if (this.isEnemy(sprite)) {
+                enemies.add(sprite);
+            }
+        }
+        return enemies;
+    }
+
     public MarioWorld clone() {
         MarioWorld world = new MarioWorld(this.killEvents);
         world.visuals = false;
@@ -121,16 +131,6 @@ public class MarioWorld {
         world.coins = this.coins;
         world.lives = this.lives;
         return world;
-    }
-
-    public ArrayList<MarioSprite> getEnemies() {
-        ArrayList<MarioSprite> enemies = new ArrayList<>();
-        for (MarioSprite sprite : sprites) {
-            if (this.isEnemy(sprite)) {
-                enemies.add(sprite);
-            }
-        }
-        return enemies;
     }
 
     public void addEvent(EventType eventType, int eventParam) {
@@ -354,6 +354,7 @@ public class MarioWorld {
                 if (x * 16 + 8 < mario.x - 16)
                     dir = 1;
 
+                // spawn new sprite and remove it from sprite templates
                 SpriteType spriteType = level.getSpriteType(x, y);
                 if (spriteType != SpriteType.NONE) {
                     String spriteCode = level.getSpriteCode(x, y);
@@ -363,6 +364,7 @@ public class MarioWorld {
                     this.level.setSpriteType(x, y, SpriteType.NONE);
                 }
 
+                // old enemy spawning system which led to respawning
                 /*
                 SpriteType type = level.getSpriteType(x, y);
                 if (type != SpriteType.NONE) {
@@ -536,5 +538,17 @@ public class MarioWorld {
             }
             this.effects.get(i).render(og, cameraX, cameraY);
         }
+    }
+
+    public ArrayList<MarioSprite> getSprites() {
+        ArrayList<MarioSprite> spritesClone = new ArrayList<>();
+
+        for (MarioSprite sprite : this.sprites) {
+            MarioSprite spriteClone = sprite.clone();
+            spriteClone.world = this;
+            spritesClone.add(spriteClone);
+        }
+
+        return spritesClone;
     }
 }

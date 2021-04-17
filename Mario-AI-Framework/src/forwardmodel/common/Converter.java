@@ -8,7 +8,7 @@ import forwardmodel.slim.core.MarioWorldSlim;
 
 public class Converter {
     public static MarioForwardModelSlim originalToSlim(MarioForwardModel originalModel, int levelCutoutTileWidth) {
-        MarioWorldSlim marioWorldSlim = new MarioWorldSlim(originalModel.world, levelCutoutTileWidth);
+        MarioWorldSlim marioWorldSlim = new MarioWorldSlim(originalModel.getWorld(), levelCutoutTileWidth);
         return new MarioForwardModelSlim(marioWorldSlim);
     }
 

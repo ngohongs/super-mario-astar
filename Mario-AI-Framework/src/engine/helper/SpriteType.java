@@ -51,12 +51,4 @@ public enum SpriteType {
         }
         return new Enemy(visuals, xTile * 16 + 8, yTile * 16 + 15, dir, this);
     }
-
-    public static SpriteType getSpriteType(byte value) {
-        for (SpriteType spriteType : SpriteType.values()) {
-            if (spriteType.value == value)
-                return spriteType;
-        }
-        throw new IllegalArgumentException();
-    }
 }
