@@ -138,7 +138,7 @@ public class MarioLevelBin {
     }
 
     public boolean isBlocking(int xTile, int yTile, float ya, MarioBinData data) {
-        byte blockValue = this.getBlockValue(xTile, yTile, data);
+        byte blockValue = getBlockValue(xTile, yTile, data);
         ArrayList<TileFeaturesCommon> features = TileFeaturesCommon.getTileFeatures(blockValue);
         boolean blocking = features.contains(TileFeaturesCommon.BLOCK_ALL);
         blocking |= (ya < 0) && features.contains(TileFeaturesCommon.BLOCK_UPPER);

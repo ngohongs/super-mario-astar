@@ -30,7 +30,7 @@ public class BinBasicTest {
         setupWorld.mario.isFire = false;
         setupWorld.update(new boolean[MarioActions.numberOfActions()]);
 
-        // set level cutout width
+        // set level cutout width (0 means it will be set automatically)
         int levelCutoutTileWidth = 0;
 
         // create original OOP forward model

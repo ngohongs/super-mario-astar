@@ -4,8 +4,8 @@ public class StaticLevel {
     public LevelTile[][] tiles;
 
     public static class LevelTile {
-        public int id;
-        public LevelPart levelPart;
+        public final int id;
+        public final LevelPart levelPart;
 
         public LevelTile(int id, LevelPart levelPart) {
             this.id = id;

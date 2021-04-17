@@ -1,7 +1,7 @@
 package forwardmodel.bin.core;
 // TODO: probably not needed, solved in IBinSpriteMethods
 
-/**
+/*
  * A method can't be abstract if it's static, and we need getX, setX, etc. methods
  * to be static, so we have no way of enforcing implementation. An exception is thrown
  * to inform that a method hasn't been overridden in a sprite.

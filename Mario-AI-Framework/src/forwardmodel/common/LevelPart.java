@@ -47,7 +47,7 @@ public enum LevelPart {
     PIPE_SINGLE_TOP((byte) 52),
     PIPE_SINGLE_BODY((byte) 53);
 
-    private byte value;
+    private final byte value;
 
     LevelPart(byte value) {
         this.value = value;
@@ -166,17 +166,5 @@ public enum LevelPart {
             default:
                 throw new IllegalArgumentException();
         }
-    }
-
-    static boolean isLevelSprite(LevelPart levelPart) {
-        return  levelPart == GOOMBA ||
-                levelPart == GOOMBA_WINGED ||
-                levelPart == RED_KOOPA ||
-                levelPart == RED_KOOPA_WINGED ||
-                levelPart == GREEN_KOOPA ||
-                levelPart == GREEN_KOOPA_WINGED ||
-                levelPart == SPIKY ||
-                levelPart == SPIKY_WINGED ||
-                levelPart == PIPE_TOP_LEFT_WITH_FLOWER;
     }
 }

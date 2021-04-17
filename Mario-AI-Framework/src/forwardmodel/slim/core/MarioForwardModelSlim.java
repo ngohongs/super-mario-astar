@@ -2,7 +2,7 @@ package forwardmodel.slim.core;
 
 public class MarioForwardModelSlim {
 
-    private MarioWorldSlim world;
+    private final MarioWorldSlim world;
 
     public MarioForwardModelSlim(MarioWorldSlim world) {
         this.world = world;

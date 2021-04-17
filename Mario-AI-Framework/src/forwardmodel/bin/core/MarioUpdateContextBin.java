@@ -9,16 +9,16 @@ public class MarioUpdateContextBin {
     public int fireballsOnScreen;
 
     // fireball entity indexes
-    public ArrayList<Integer> fireballsToCheck = new ArrayList<>();
+    public final ArrayList<Integer> fireballsToCheck = new ArrayList<>();
 
     // shell entity indexes
-    public ArrayList<Integer> shellsToCheck = new ArrayList<>();
+    public final ArrayList<Integer> shellsToCheck = new ArrayList<>();
 
     // sprites codes = type + id
-    ArrayList<Integer> addedSprites = new ArrayList<>();
-    ArrayList<Integer> removedSprites = new ArrayList<>();
+    final ArrayList<Integer> addedSprites = new ArrayList<>();
+    final ArrayList<Integer> removedSprites = new ArrayList<>();
 
-    private static ConcurrentLinkedQueue<MarioUpdateContextBin> pool = new ConcurrentLinkedQueue<>();
+    private static final ConcurrentLinkedQueue<MarioUpdateContextBin> pool = new ConcurrentLinkedQueue<>();
 
     public static MarioUpdateContextBin get() {
         MarioUpdateContextBin ctx = pool.poll();

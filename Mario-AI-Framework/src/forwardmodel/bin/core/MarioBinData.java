@@ -526,7 +526,7 @@ public class MarioBinData {
     }
 
     void removeFireball(int entityIndex) {
-
+        //TODO
     }
 
     int addFireFlower(float x, float y, boolean alive, int life) {
@@ -535,7 +535,7 @@ public class MarioBinData {
     }
 
     void removeFireFlower(int entityIndex) {
-
+        //TODO
     }
 
     int addFlowerEnemy(float x, float y, boolean alive, int waitTime, float yStart, float ya) {
@@ -609,7 +609,7 @@ public class MarioBinData {
     public static final int MARIO_X_JUMP_START = 6;
 
     int addMario(MarioSlim marioSlim) { // only created once
-        spriteStorageInfo[MARIO_COUNT]++; // TODO: assert count == 0
+        /*spriteStorageInfo[MARIO_COUNT]++; // TODO: assert count == 0
         bools[spriteStorageInfo[BOOLS_MARIO_START] + MARIO_ALIVE] = marioSlim.alive;
         bools[spriteStorageInfo[BOOLS_MARIO_START] + MARIO_ON_GROUND] = marioSlim.onGround;
         bools[spriteStorageInfo[BOOLS_MARIO_START] + MARIO_WAS_ON_GROUND] = marioSlim.wasOnGround;
@@ -634,7 +634,8 @@ public class MarioBinData {
         floats[spriteStorageInfo[FLOATS_MARIO_START] + MARIO_Y_JUMP_SPEED] = marioSlim.yJumpSpeed;
         floats[spriteStorageInfo[FLOATS_MARIO_START] + MARIO_X_JUMP_START] = marioSlim.xJumpStart;
 
-        return SpriteTypeCommon.MARIO.getValue();
+        return SpriteTypeCommon.MARIO.getValue();*/
+        return 0; //TODO
     }
 
     void removeMario() {

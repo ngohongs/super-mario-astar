@@ -361,7 +361,7 @@ public class MarioSlim extends MarioSpriteSlim {
         if (!this.alive) {
             return;
         }
-        float targetY = shell.y - shell.height / 2;
+        float targetY = shell.y - ShellSlim.height / 2;
         move(0, targetY - y, updateContext);
 
         xJumpSpeed = 0;
@@ -437,7 +437,7 @@ public class MarioSlim extends MarioSpriteSlim {
             return;
         }
 
-        float targetY = bill.y - bill.height / 2;
+        float targetY = bill.y - BulletBillSlim.height / 2;
         move(0, targetY - y, updateContext);
 
         xJumpSpeed = 0;

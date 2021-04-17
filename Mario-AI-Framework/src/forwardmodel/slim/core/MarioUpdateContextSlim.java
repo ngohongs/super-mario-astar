@@ -12,12 +12,12 @@ public class MarioUpdateContextSlim {
     public boolean[] actions;
     public int fireballsOnScreen;
 
-    public ArrayList<FireballSlim> fireballsToCheck = new ArrayList<>();
-    public ArrayList<ShellSlim> shellsToCheck = new ArrayList<>();
-    ArrayList<MarioSpriteSlim> addedSprites = new ArrayList<>();
-    ArrayList<MarioSpriteSlim> removedSprites = new ArrayList<>();
+    public final ArrayList<FireballSlim> fireballsToCheck = new ArrayList<>();
+    public final ArrayList<ShellSlim> shellsToCheck = new ArrayList<>();
+    final ArrayList<MarioSpriteSlim> addedSprites = new ArrayList<>();
+    final ArrayList<MarioSpriteSlim> removedSprites = new ArrayList<>();
 
-    private static ConcurrentLinkedQueue<MarioUpdateContextSlim> pool = new ConcurrentLinkedQueue<>();
+    private static final ConcurrentLinkedQueue<MarioUpdateContextSlim> pool = new ConcurrentLinkedQueue<>();
 
     public static MarioUpdateContextSlim get() {
         MarioUpdateContextSlim ctx = pool.poll();

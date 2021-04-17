@@ -2,14 +2,13 @@ package forwardmodel.bin.core;
 
 public class MarioForwardModelBin {
 
-    private MarioBinData data;
+    private final MarioBinData data;
 
     public MarioForwardModelBin(MarioBinData data) {
         this.data = data;
     }
 
     public void advance(boolean[] actions) {
-        // TODO WorldBin.update(data)
         MarioWorldBin.update(actions, data);
     }
 
