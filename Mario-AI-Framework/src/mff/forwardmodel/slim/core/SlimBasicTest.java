@@ -51,7 +51,7 @@ public class SlimBasicTest {
             MarioForwardModelSlim controlSlimModel = Converter.originalToSlim(originalModel, levelCutoutTileWidth);
 
             // compare the two slim models
-            if (slimModel.equals(controlSlimModel)) {
+            if (slimModel.deepEquals(controlSlimModel)) {
                 System.out.println("-------------");
                 System.out.println("EQUAL");
                 System.out.println("-------------");

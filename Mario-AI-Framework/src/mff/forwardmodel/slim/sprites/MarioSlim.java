@@ -52,8 +52,7 @@ public class MarioSlim extends MarioSpriteSlim {
         this.jumpTime = originalMario.jumpTime;
     }
 
-    @Override
-    public boolean equals(Object o) {
+    public boolean deepEquals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         MarioSlim that = (MarioSlim) o;

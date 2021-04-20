@@ -26,8 +26,7 @@ public class FireFlowerSlim extends MarioSpriteSlim {
         this.life = 0;
     }
 
-    @Override
-    public boolean equals(Object o) {
+    public boolean deepEquals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         FireFlowerSlim that = (FireFlowerSlim) o;

@@ -36,8 +36,7 @@ public class FireballSlim extends MarioSpriteSlim {
         this.onGround = false;
     }
 
-    @Override
-    public boolean equals(Object o) {
+    public boolean deepEquals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         FireballSlim that = (FireballSlim) o;

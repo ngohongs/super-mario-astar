@@ -17,4 +17,5 @@ public abstract class MarioSpriteSlim {
     public boolean fireballCollideCheck(FireballSlim fireball, MarioUpdateContextSlim updateContext) { return false; }
 
     public abstract MarioSpriteSlim clone();
+    public abstract boolean deepEquals(Object o);
 }

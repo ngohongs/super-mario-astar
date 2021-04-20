@@ -26,8 +26,7 @@ public class BulletBillSlim extends MarioSpriteSlim {
         this.facing = facing;
     }
 
-    @Override
-    public boolean equals(Object o) {
+    public boolean deepEquals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         BulletBillSlim that = (BulletBillSlim) o;

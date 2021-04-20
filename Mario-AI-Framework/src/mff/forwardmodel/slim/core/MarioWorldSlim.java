@@ -13,10 +13,10 @@ import mff.forwardmodel.slim.sprites.*;
 import java.util.ArrayList;
 
 public class MarioWorldSlim {
-    private static final int RUNNING = 0;
-    private static final int WIN = 1;
-    private static final int LOSE = 2;
-    private static final int TIME_OUT = 3;
+    public static final int RUNNING = 0;
+    public static final int WIN = 1;
+    public static final int LOSE = 2;
+    public static final int TIME_OUT = 3;
 
     public int gameStatusCode;
     public int pauseTimer;
@@ -97,12 +97,11 @@ public class MarioWorldSlim {
         }
     }
 
-    @Override
-    public boolean equals(Object o) {
+    public boolean deepEquals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         MarioWorldSlim that = (MarioWorldSlim) o;
-        boolean worldProperties = pauseTimer == that.pauseTimer &&
+        boolean worldPropertiesEqual = pauseTimer == that.pauseTimer &&
                 currentTimer == that.currentTimer &&
                 Float.compare(that.cameraX, cameraX) == 0 &&
                 Float.compare(that.cameraY, cameraY) == 0 &&
@@ -110,7 +109,7 @@ public class MarioWorldSlim {
                 coins == that.coins &&
                 lives == that.lives &&
                 gameStatusCode == that.gameStatusCode;
-        if (worldProperties)
+        if (worldPropertiesEqual)
             System.out.println("WORLD PROPERTIES EQUAL");
         else
             System.out.println("WORLD PROPERTIES NOT EQUAL");
@@ -121,7 +120,7 @@ public class MarioWorldSlim {
         if (that.gameStatusCode != RUNNING)
             that.level.update((int) that.mario.x / 16);
 
-        return worldProperties & level.equals(that.level) &
+        return worldPropertiesEqual & level.deepEquals(that.level) &
                 areSpritesEqual(this.sprites, that.sprites);
     }
 
@@ -130,7 +129,7 @@ public class MarioWorldSlim {
             boolean found = false;
             System.out.println("  Comparing sprite " + sprite1);
             for (MarioSpriteSlim sprite2 : sprites2) {
-                if (sprite1.equals(sprite2)) {
+                if (sprite1.deepEquals(sprite2)) {
                     found = true;
                     break;
                 }
