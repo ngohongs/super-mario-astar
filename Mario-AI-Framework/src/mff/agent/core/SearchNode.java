@@ -1,9 +1,9 @@
-package mff.agent;
+package mff.agent.core;
 
 import java.util.ArrayList;
 
-import engine.core.MarioForwardModel;
-import engine.helper.GameStatus;
+import mff.forwardmodel.slim.core.MarioForwardModelSlim;
+import mff.forwardmodel.slim.core.MarioWorldSlim;
 
 public class SearchNode {
     public int timeElapsed = 0;
@@ -11,7 +11,7 @@ public class SearchNode {
     public float remainingTime = 0;
 
     public SearchNode parentPos = null;
-    public MarioForwardModel sceneSnapshot = null;
+    public MarioForwardModelSlim sceneSnapshot = null;
     public int distanceFromOrigin = 0;
     public boolean hasBeenHurt = false;
     public boolean isInVisitedList = false;
@@ -51,7 +51,7 @@ public class SearchNode {
             timeElapsed = 0;
     }
 
-    public void initializeRoot(MarioForwardModel model) {
+    public void initializeRoot(MarioForwardModelSlim model) {
         if (this.parentPos == null) {
             this.sceneSnapshot = model.clone();
             this.remainingTimeEstimated = calcRemainingTime(model.getMarioFloatPos()[0], 0);
@@ -90,7 +90,7 @@ public class SearchNode {
         if (this.sceneSnapshot == null) {
             return false;
         }
-        return this.sceneSnapshot.getGameStatus() != GameStatus.RUNNING;
+        return this.sceneSnapshot.getGameStatusCode() != MarioWorldSlim.RUNNING;
     }
 
     private float maxForwardMovement(float initialSpeed, int ticks) {

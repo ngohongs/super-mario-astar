@@ -1,21 +1,21 @@
-package mff.agent;
+package mff.agent.core;
 
 import java.util.ArrayList;
 
-import engine.core.MarioForwardModel;
-import engine.helper.GameStatus;
 import engine.helper.MarioActions;
+import mff.forwardmodel.slim.core.MarioForwardModelSlim;
+import mff.forwardmodel.slim.core.MarioWorldSlim;
 
 public class Helper {
     public static final int visitedListPenalty = 1500;
     public static final float maxMarioSpeed = 10.9090909f;
 
-    public static int getMarioDamage(MarioForwardModel model, MarioForwardModel prevModel) {
+    public static int getMarioDamage(MarioForwardModelSlim model, MarioForwardModelSlim prevModel) {
         int damage = 0;
         if (prevModel.getMarioMode() > model.getMarioMode()) {
             damage += 1;
         }
-        if (model.getGameStatus() == GameStatus.LOSE) {
+        if (model.getGameStatusCode() == MarioWorldSlim.LOSE) {
             if (model.getMarioFloatPos()[1] > model.getLevelFloatDimensions()[1] - 20) {
                 damage += 5;
             } else {

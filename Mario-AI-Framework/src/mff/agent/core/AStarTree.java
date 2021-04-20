@@ -1,10 +1,10 @@
-package mff.agent;
+package mff.agent.core;
 
 import java.util.ArrayList;
 
-import engine.core.MarioForwardModel;
 import engine.core.MarioTimer;
-import engine.helper.GameStatus;
+import mff.forwardmodel.slim.core.MarioForwardModelSlim;
+import mff.forwardmodel.slim.core.MarioWorldSlim;
 
 public class AStarTree {
     public SearchNode bestPosition;
@@ -17,7 +17,7 @@ public class AStarTree {
     private ArrayList<boolean[]> currentActionPlan;
     int ticksBeforeReplanning = 0;
 
-    private MarioForwardModel search(MarioTimer timer) {
+    private MarioForwardModelSlim search(MarioTimer timer) {
         SearchNode current = bestPosition;
         boolean currentGood = false;
         int maxRight = 176;
@@ -64,7 +64,7 @@ public class AStarTree {
         return current.sceneSnapshot;
     }
 
-    private void startSearch(MarioForwardModel model, int repetitions) {
+    private void startSearch(MarioForwardModelSlim model, int repetitions) {
         SearchNode startPos = new SearchNode(null, repetitions, null);
         startPos.initializeRoot(model);
 
@@ -114,11 +114,11 @@ public class AStarTree {
         return bestPos;
     }
 
-    public boolean[] optimise(MarioForwardModel model, MarioTimer timer) {
+    public boolean[] optimise(MarioForwardModelSlim model, MarioTimer timer) {
         int planAhead = 2;
         int stepsPerSearch = 2;
 
-        MarioForwardModel originalModel = model.clone();
+        MarioForwardModelSlim originalModel = model.clone();
         ticksBeforeReplanning--;
         requireReplanning = false;
         if (ticksBeforeReplanning <= 0 || currentActionPlan.size() == 0 || requireReplanning) {
@@ -134,7 +134,7 @@ public class AStarTree {
             startSearch(model, stepsPerSearch);
             ticksBeforeReplanning = planAhead;
         }
-        if (model.getGameStatus() == GameStatus.LOSE) {
+        if (model.getGameStatusCode() == MarioWorldSlim.LOSE) {
             startSearch(originalModel, stepsPerSearch);
         }
         search(timer);
