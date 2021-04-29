@@ -1,23 +1,26 @@
 package mff.agent.core;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 
 import mff.forwardmodel.slim.core.MarioForwardModelSlim;
 import mff.forwardmodel.slim.core.MarioWorldSlim;
 
 public class SearchNode {
-    public int timeElapsed = 0;
+    public int timeElapsed;
     public float remainingTimeEstimated = 0;
     public float remainingTime = 0;
 
-    public SearchNode parentPos = null;
+    public SearchNode parentPos;
     public MarioForwardModelSlim sceneSnapshot = null;
     public int distanceFromOrigin = 0;
     public boolean hasBeenHurt = false;
     public boolean isInVisitedList = false;
 
     boolean[] action;
-    int repetitions = 1;
+    int repetitions;
+
+    public float cost;
 
     public float calcRemainingTime(float marioX, float marioXA) {
         return (100000 - (maxForwardMovement(marioXA, 1000) + marioX)) / Helper.maxMarioSpeed - 1000;
@@ -33,7 +36,7 @@ public class SearchNode {
     public float estimateRemainingTimeChild(boolean[] action, int repetitions) {
         float[] childbehaviorDistanceAndSpeed = Helper.estimateMaximumForwardMovement(
                 this.sceneSnapshot.getMarioFloatVelocity()[0], action, repetitions);
-        return calcRemainingTime(this.sceneSnapshot.getMarioFloatPos()[0] + childbehaviorDistanceAndSpeed[0],
+        return calcRemainingTime(this.sceneSnapshot.getMarioX() + childbehaviorDistanceAndSpeed[0],
                 childbehaviorDistanceAndSpeed[1]);
     }
 
@@ -49,12 +52,13 @@ public class SearchNode {
             timeElapsed = parent.timeElapsed + repetitions;
         else
             timeElapsed = 0;
+        calculateCost();
     }
 
     public void initializeRoot(MarioForwardModelSlim model) {
         if (this.parentPos == null) {
             this.sceneSnapshot = model.clone();
-            this.remainingTimeEstimated = calcRemainingTime(model.getMarioFloatPos()[0], 0);
+            this.remainingTimeEstimated = calcRemainingTime(model.getMarioX(), 0);
         }
     }
 
@@ -65,7 +69,7 @@ public class SearchNode {
         }
         int marioDamage = Helper.getMarioDamage(this.sceneSnapshot, this.parentPos.sceneSnapshot);
         remainingTime =
-                calcRemainingTime(this.sceneSnapshot.getMarioFloatPos()[0], this.sceneSnapshot.getMarioFloatVelocity()[0]) +
+                calcRemainingTime(this.sceneSnapshot.getMarioX(), this.sceneSnapshot.getMarioFloatVelocity()[0]) +
                         marioDamage * (1000000 - 100 * distanceFromOrigin);
         if (isInVisitedList)
             remainingTime += Helper.visitedListPenalty;
@@ -75,11 +79,11 @@ public class SearchNode {
     }
 
     public ArrayList<SearchNode> generateChildren() {
-        ArrayList<SearchNode> list = new ArrayList<SearchNode>();
-        ArrayList<boolean[]> possibleActions = Helper.createPossibleActions(this);
+        ArrayList<SearchNode> list = new ArrayList<>();
         if (this.isLeafNode()) {
-            possibleActions.clear();
+            return list;
         }
+        ArrayList<boolean[]> possibleActions = Helper.getPossibleActions(this);
         for (boolean[] action : possibleActions) {
             list.add(new SearchNode(action, repetitions, this));
         }
@@ -93,11 +97,18 @@ public class SearchNode {
         return this.sceneSnapshot.getGameStatusCode() != MarioWorldSlim.RUNNING;
     }
 
-    private float maxForwardMovement(float initialSpeed, int ticks) {
-        float y = ticks;
-        float s0 = initialSpeed;
-        return (float) (99.17355373 * Math.pow(0.89, y + 1) - 9.090909091 * s0 * Math.pow(0.89, y + 1) + 10.90909091 * y
-                - 88.26446282 + 9.090909091 * s0);
+    private float maxForwardMovement(float initialSpeed, float ticks) {
+        return (float) (99.17355373 * Math.pow(0.89, ticks + 1) - 9.090909091 * initialSpeed * Math.pow(0.89, ticks + 1) + 10.90909091 * ticks
+                - 88.26446282 + 9.090909091 * initialSpeed);
     }
 
+    public void calculateCost() {
+        this.cost = getRemainingTime() + timeElapsed * 0.9f;
+    }
+}
+
+class CompareByCost implements Comparator<SearchNode> {
+    public int compare(SearchNode o1, SearchNode o2) {
+        return Float.compare(o1.cost, o2.cost);
+    }
 }

@@ -1,8 +1,8 @@
 package mff.agent.core;
 
-import java.util.ArrayList;
+import java.util.*;
 
-import engine.core.MarioTimer;
+import mff.agent.helper.MarioTimerSlim;
 import mff.forwardmodel.slim.core.MarioForwardModelSlim;
 import mff.forwardmodel.slim.core.MarioWorldSlim;
 
@@ -10,80 +10,82 @@ public class AStarTree {
     public SearchNode bestPosition;
     public SearchNode furthestPosition;
     float currentSearchStartingMarioXPos;
-    ArrayList<SearchNode> posPool;
-    ArrayList<int[]> visitedStates = new ArrayList<int[]>();
-    private boolean requireReplanning = false;
+    PriorityQueue<SearchNode> posPool;
+    LinkedHashSet<Integer> visitedStates = new LinkedHashSet<>();
 
     private ArrayList<boolean[]> currentActionPlan;
     int ticksBeforeReplanning = 0;
 
-    private MarioForwardModelSlim search(MarioTimer timer) {
+    private static final boolean[] fastRightMovement = new boolean[] { false, true, false, false, true };
+
+    private void search(MarioTimerSlim timer) {
         SearchNode current = bestPosition;
         boolean currentGood = false;
         int maxRight = 176;
         while (posPool.size() != 0
-                && ((bestPosition.sceneSnapshot.getMarioFloatPos()[0] - currentSearchStartingMarioXPos < maxRight) || !currentGood)
+                && ((bestPosition.sceneSnapshot.getMarioX() - currentSearchStartingMarioXPos < maxRight) || !currentGood)
                 && timer.getRemainingTime() > 0) {
             current = pickBestPos(posPool);
             if (current == null) {
-                return null;
+                return;
             }
             currentGood = false;
             float realRemainingTime = current.simulatePos();
 
             if (realRemainingTime < 0) {
                 continue;
-            } else if (!current.isInVisitedList && isInVisited((int) current.sceneSnapshot.getMarioFloatPos()[0],
-                    (int) current.sceneSnapshot.getMarioFloatPos()[1], current.timeElapsed)) {
+            } else if (!current.isInVisitedList && isInVisited((int) current.sceneSnapshot.getMarioX(),
+                    (int) current.sceneSnapshot.getMarioY(), current.timeElapsed)) {
                 realRemainingTime += Helper.visitedListPenalty;
                 current.isInVisitedList = true;
                 current.remainingTime = realRemainingTime;
                 current.remainingTimeEstimated = realRemainingTime;
+                current.calculateCost();
                 posPool.add(current);
             } else if (realRemainingTime - current.remainingTimeEstimated > 0.1) {
                 // current item is not as good as anticipated. put it back in pool and look for best again
                 current.remainingTimeEstimated = realRemainingTime;
+                current.calculateCost();
                 posPool.add(current);
             } else {
                 currentGood = true;
-                visited((int) current.sceneSnapshot.getMarioFloatPos()[0], (int) current.sceneSnapshot.getMarioFloatPos()[1], current.timeElapsed);
+                visited((int) current.sceneSnapshot.getMarioX(), (int) current.sceneSnapshot.getMarioY(), current.timeElapsed);
                 posPool.addAll(current.generateChildren());
             }
             if (currentGood) {
                 if (bestPosition.getRemainingTime() > current.getRemainingTime())
                     bestPosition = current;
-                if (current.sceneSnapshot.getMarioFloatPos()[0] > furthestPosition.sceneSnapshot.getMarioFloatPos()[0])
+                if (current.sceneSnapshot.getMarioX() > furthestPosition.sceneSnapshot.getMarioX())
                     furthestPosition = current;
             }
         }
-        if (current.sceneSnapshot.getMarioFloatPos()[0] - currentSearchStartingMarioXPos < maxRight
-                && furthestPosition.sceneSnapshot.getMarioFloatPos()[0] > bestPosition.sceneSnapshot.getMarioFloatPos()[0] + 20)
+        if (current.sceneSnapshot.getMarioX() - currentSearchStartingMarioXPos < maxRight
+                && furthestPosition.sceneSnapshot.getMarioX() > bestPosition.sceneSnapshot.getMarioX() + 20)
             // Couldnt plan till end of screen, take furthest
             bestPosition = furthestPosition;
-
-        return current.sceneSnapshot;
     }
 
     private void startSearch(MarioForwardModelSlim model, int repetitions) {
         SearchNode startPos = new SearchNode(null, repetitions, null);
         startPos.initializeRoot(model);
 
-        posPool = new ArrayList<SearchNode>();
+        posPool = new PriorityQueue<>(new CompareByCost());
         visitedStates.clear();
+
         posPool.addAll(startPos.generateChildren());
-        currentSearchStartingMarioXPos = model.getMarioFloatPos()[0];
+        currentSearchStartingMarioXPos = model.getMarioX();
 
         bestPosition = startPos;
         furthestPosition = startPos;
     }
 
     private ArrayList<boolean[]> extractPlan() {
-        ArrayList<boolean[]> actions = new ArrayList<boolean[]>();
+        ArrayList<boolean[]> actions = new ArrayList<>();
 
         // just move forward if no best position exists
         if (bestPosition == null) {
             for (int i = 0; i < 10; i++) {
-                actions.add(Helper.createAction(false, true, false, false, true));
+                actions.add(fastRightMovement);
             }
             return actions;
         }
@@ -92,36 +94,24 @@ public class AStarTree {
         while (current.parentPos != null) {
             for (int i = 0; i < current.repetitions; i++)
                 actions.add(0, current.action);
-            if (current.hasBeenHurt) {
-                requireReplanning = true;
-            }
             current = current.parentPos;
         }
         return actions;
     }
 
-    private SearchNode pickBestPos(ArrayList<SearchNode> posPool) {
-        SearchNode bestPos = null;
-        float bestPosCost = 10000000;
-        for (SearchNode current : posPool) {
-            float currentCost = current.getRemainingTime() + current.timeElapsed * 0.90f; // slightly bias towards furthest positions
-            if (currentCost < bestPosCost) {
-                bestPos = current;
-                bestPosCost = currentCost;
-            }
-        }
-        posPool.remove(bestPos);
+    private SearchNode pickBestPos(PriorityQueue<SearchNode> posPool) {
+        SearchNode bestPos = posPool.peek();
+        if (bestPos != null)
+            posPool.remove(bestPos);
         return bestPos;
     }
 
-    public boolean[] optimise(MarioForwardModelSlim model, MarioTimer timer) {
-        int planAhead = 2;
+    public boolean[] optimise(MarioForwardModelSlim model, MarioTimerSlim timer) {
+        int planAhead = 3;
         int stepsPerSearch = 2;
-
         MarioForwardModelSlim originalModel = model.clone();
         ticksBeforeReplanning--;
-        requireReplanning = false;
-        if (ticksBeforeReplanning <= 0 || currentActionPlan.size() == 0 || requireReplanning) {
+        if (ticksBeforeReplanning <= 0 || currentActionPlan.size() == 0) {
             currentActionPlan = extractPlan();
             if (currentActionPlan.size() < planAhead) {
                 planAhead = currentActionPlan.size();
@@ -132,7 +122,7 @@ public class AStarTree {
                 model.advance(currentActionPlan.get(i));
             }
             startSearch(model, stepsPerSearch);
-            ticksBeforeReplanning = planAhead;
+            ticksBeforeReplanning = 3;
         }
         if (model.getGameStatusCode() == MarioWorldSlim.LOSE) {
             startSearch(originalModel, stepsPerSearch);
@@ -146,20 +136,10 @@ public class AStarTree {
     }
 
     private void visited(int x, int y, int t) {
-        visitedStates.add(new int[]{x, y, t});
+        visitedStates.add((x << 18) | (y << 8) | t);
     }
 
     private boolean isInVisited(int x, int y, int t) {
-        int timeDiff = 5;
-        int xDiff = 2;
-        int yDiff = 2;
-        for (int[] v : visitedStates) {
-            if (Math.abs(v[0] - x) < xDiff && Math.abs(v[1] - y) < yDiff && Math.abs(v[2] - t) < timeDiff
-                    && t >= v[2]) {
-                return true;
-            }
-        }
-        return false;
+        return visitedStates.contains((x << 18) | (y << 8) | t);
     }
-
 }
