@@ -1,4 +1,4 @@
-package mff.agent.core;
+package mff.agents.robinBaumgartenSlimImproved;
 
 import java.util.ArrayList;
 

@@ -1,8 +1,8 @@
-package mff.agent.core;
+package mff.agents.robinBaumgartenSlimImproved;
 
 import java.util.*;
 
-import mff.agent.helper.MarioTimerSlim;
+import mff.agents.common.MarioTimerSlim;
 import mff.forwardmodel.slim.core.MarioForwardModelSlim;
 import mff.forwardmodel.slim.core.MarioWorldSlim;
 
@@ -69,7 +69,7 @@ public class AStarTree {
         SearchNode startPos = new SearchNode(null, repetitions, null);
         startPos.initializeRoot(model);
 
-        posPool = new PriorityQueue<>(new CompareByCost());
+        posPool = new PriorityQueue<>((o1, o2) -> Float.compare(o1.cost, o2.cost));
         visitedStates.clear();
 
         posPool.addAll(startPos.generateChildren());

@@ -1,11 +1,11 @@
-package mff.agent.core;
+package mff.agents.robinBaumgartenSlim;
 
 import engine.helper.MarioActions;
-import mff.agent.helper.IMarioAgentSlim;
-import mff.agent.helper.MarioTimerSlim;
+import mff.agents.common.IMarioAgentMFF;
+import mff.agents.common.MarioTimerSlim;
 import mff.forwardmodel.slim.core.MarioForwardModelSlim;
 
-public class Agent implements IMarioAgentSlim {
+public class Agent implements IMarioAgentMFF {
     private boolean[] action;
     private AStarTree tree;
 
@@ -23,6 +23,6 @@ public class Agent implements IMarioAgentSlim {
 
     @Override
     public String getAgentName() {
-        return "Robin Baumgarten agent with slim forward model and performance improvements";
+        return "Robin Baumgarten agent with slim forward model from MFF";
     }
 }

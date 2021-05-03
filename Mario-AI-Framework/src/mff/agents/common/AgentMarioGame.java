@@ -1,4 +1,4 @@
-package mff.agent.helper;
+package mff.agents.common;
 
 import engine.core.MarioForwardModel;
 import engine.core.MarioRender;
@@ -22,7 +22,7 @@ public class AgentMarioGame {
 
     //visualization
     private MarioRender render = null;
-    private IMarioAgentSlim agent = null;
+    private IMarioAgentMFF agent = null;
 
     private int getDelay(int fps) {
         if (fps <= 0) {
@@ -31,15 +31,15 @@ public class AgentMarioGame {
         return 1000 / fps;
     }
 
-    private void setAgent(IMarioAgentSlim agent) {
+    private void setAgent(IMarioAgentMFF agent) {
         this.agent = agent;
     }
 
-    public void runGame(IMarioAgentSlim agent, String level, int timer, int marioState, boolean visuals) {
+    public void runGame(IMarioAgentMFF agent, String level, int timer, int marioState, boolean visuals) {
         runGame(agent, level, timer, marioState, visuals, visuals ? 30 : 0, 2);
     }
 
-    public void runGame(IMarioAgentSlim agent, String level, int timer, int marioState, boolean visuals, int fps, float scale) {
+    public void runGame(IMarioAgentMFF agent, String level, int timer, int marioState, boolean visuals, int fps, float scale) {
         JFrame window = null;
         if (visuals) {
             window = new JFrame("Mario AI Framework");

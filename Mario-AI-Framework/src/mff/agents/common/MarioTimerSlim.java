@@ -1,4 +1,4 @@
-package mff.agent.helper;
+package mff.agents.common;
 
 public class MarioTimerSlim {
     private final long timerStart;
