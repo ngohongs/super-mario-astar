@@ -21,7 +21,7 @@ public class AStarTree {
     int searchSteps;
 
     static boolean winFound = false;
-    static final float maxMarioSpeedX = 10.9f;
+    static final float maxMarioSpeedX = 10.91f;
     static float exitTileX;
 
     PriorityQueue<SearchNode> opened = new PriorityQueue<>(new CompareByCost());

@@ -16,22 +16,23 @@ public class AgentMain {
     }
 
     public static void main(String[] args) {
-        IMarioAgentMFF agent = new mff.agents.astar.Agent();
-        //testLevel(agent);
-        //testAllOriginalLevels(agent);
-        testAllAgents();
+        //testLevel();
+        testAllOriginalLevels();
+        //testAllAgents();
     }
 
-    private static void testLevel(IMarioAgentMFF agent) {
+    private static void testLevel() {
         AgentMarioGame game = new AgentMarioGame();
-        game.runGame(agent, getLevel("./levels/original/lvl-1.txt"), 200, 0, true);
+        game.runGame(new mff.agents.astarPlanning.Agent(), getLevel("./levels/original/lvl-1.txt"),
+                200, 0, true);
     }
 
-    private static void testAllOriginalLevels(IMarioAgentMFF agent) {
+    private static void testAllOriginalLevels() {
         for (int i = 1; i < 16; i++) {
             AgentMarioGame game = new AgentMarioGame();
             System.out.print("Level " + i + ": ");
-            game.runGame(agent, getLevel("./levels/original/lvl-" + i + ".txt"), 200, 0, true);
+            game.runGame(new mff.agents.astarPlanning.Agent(), getLevel("./levels/original/lvl-" + i + ".txt"),
+                    200, 0, true);
         }
     }
 
@@ -40,6 +41,7 @@ public class AgentMain {
             add(new mff.agents.astar.Agent());
             add(new mff.agents.astarFast.Agent());
             add(new mff.agents.astarJump.Agent());
+            add(new mff.agents.astarPlanning.Agent());
             add(new mff.agents.robinBaumgartenSlim.Agent());
             add(new mff.agents.robinBaumgartenSlimImproved.Agent());
         }};

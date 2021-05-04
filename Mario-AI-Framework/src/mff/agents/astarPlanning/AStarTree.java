@@ -1,4 +1,4 @@
-package mff.agents.astar;
+package mff.agents.astarPlanning;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -12,78 +12,70 @@ import mff.agents.common.*;
 import mff.forwardmodel.slim.core.MarioForwardModelSlim;
 
 public class AStarTree {
-    public SearchNode furthestNode;
-    public float furthestNodeDistance;
+    public SearchNode bestNode;
+    public float bestNodeCost;
 
     float marioXStart;
-    float marioYStart;
-    float levelCurrentTime;
     int searchSteps;
+    boolean finished = false;
 
-    static boolean winFound = false;
-    static final float maxMarioSpeedX = 10.91f;
+    int iterations = 0;
+
     static float exitTileX;
+    static final float maxMarioSpeedX = 10.91f;
 
     PriorityQueue<SearchNode> opened = new PriorityQueue<>(new CompareByCost());
     /**
      * INT STATE -> STATE COST
      */
     HashMap<Integer, Float> visitedStates = new HashMap<>();
-    
-    public AStarTree(MarioForwardModelSlim startState, int searchSteps) {
-    	levelCurrentTime = startState.getWorld().currentTimer;
-    	this.searchSteps = searchSteps;
 
-    	marioXStart = startState.getMarioX();
-    	marioYStart = startState.getMarioY();
-    	
-    	furthestNode = getStartNode(startState);
-    	furthestNode.cost = calculateCost(startState, furthestNode.nodeDepth);
-    	furthestNodeDistance = furthestNode.state.getMarioX();
-    	
-    	opened.add(furthestNode);
+    public AStarTree(MarioForwardModelSlim startState, int searchSteps) {
+        this.searchSteps = searchSteps;
+
+        marioXStart = startState.getMarioX();
+
+        bestNode = getStartNode(startState);
+        bestNode.cost = calculateCost(startState, bestNode.nodeDepth);
+
+        opened.add(bestNode);
     }
-    
+
     private int getIntState(MarioForwardModelSlim model) {
-    	return getIntState((int) model.getMarioX(), (int) model.getMarioY());
+        return getIntState((int) model.getMarioX(), (int) model.getMarioY());
     }
-    
+
     private int getIntState(int x, int y) {
-    	return (x << 16) | y;
+        return (x << 16) | y;
     }
-    
+
     private SearchNode getStartNode(MarioForwardModelSlim state) {
-    	// TODO: pooling
-    	return new SearchNode(state);
+        return new SearchNode(state);
     }
-    
+
     private SearchNode getNewNode(MarioForwardModelSlim state, SearchNode parent, float cost, MarioAction action) {
-    	// TODO: pooling
-    	return new SearchNode(state, parent, cost, action);
+        return new SearchNode(state, parent, cost, action);
     }
-    
+
     private float calculateCost(MarioForwardModelSlim nextState, int nodeDepth) {
         float timeToFinish = (exitTileX - nextState.getMarioX()) / maxMarioSpeedX;
-        //timeToFinish *= 2; // TODO: do we want weighted heuristic?
         return nodeDepth + timeToFinish;
-	}
-    
-    public ArrayList<boolean[]> search(MarioTimerSlim timer) {
-    	int iterations = 0;
+    }
 
+    public void search(MarioTimerSlim timer) {
         while (opened.size() > 0 && timer.getRemainingTime() > 0) {
-        	iterations++;
+            iterations++;
             SearchNode current = opened.remove();
 
-            if (current.state.getMarioX() > furthestNodeDistance) {
-                furthestNode = current;
-                furthestNodeDistance = current.state.getMarioX();
+            if (current.cost < bestNodeCost) {
+                bestNode = current;
+                bestNodeCost = current.cost;
             }
 
             if (current.state.getGameStatusCode() == 1) {
-                furthestNode = current;
+                bestNode = current;
                 System.out.print("WIN FOUND ");
-                winFound = true;
+                finished = true;
                 break;
             }
 
@@ -110,20 +102,22 @@ public class AStarTree {
             }
         }
 
-        ArrayList<boolean[]> actionsList = new ArrayList<>();
+//        System.out.println("ITERATIONS: " + iterations + " | Best X: " + bestNode.state.getMarioX());
+//        System.out.println(opened.size());
+    }
 
-        SearchNode curr = furthestNode;
+    public ArrayList<boolean[]> getActionPlan() {
+        ArrayList<boolean[]> actionPlan = new ArrayList<>();
+
+        SearchNode curr = bestNode;
 
         while (curr.parent != null) {
             for (int i = 0; i < searchSteps; i++) {
-                actionsList.add(curr.marioAction.value);
+                actionPlan.add(curr.marioAction.value);
             }
             curr = curr.parent;
         }
 
-//        System.out.println("ITERATIONS: " + iterations + " | Best X: " + furthestNode.state.getMarioX()
-//            + " | Number of actions: " + actionsList.size());
-
-        return actionsList;
+        return actionPlan;
     }
 }
