@@ -23,7 +23,7 @@ public class AgentMain {
 
     private static void testLevel() {
         AgentMarioGame game = new AgentMarioGame();
-        game.runGame(new mff.agents.astarPlanning.Agent(), getLevel("./levels/original/lvl-1.txt"),
+        game.runGame(new mff.agents.astarPlanningDynamic.Agent(), getLevel("./levels/original/lvl-1.txt"),
                 200, 0, true);
     }
 
@@ -31,7 +31,7 @@ public class AgentMain {
         for (int i = 1; i < 16; i++) {
             AgentMarioGame game = new AgentMarioGame();
             System.out.print("Level " + i + ": ");
-            game.runGame(new mff.agents.astarPlanning.Agent(), getLevel("./levels/original/lvl-" + i + ".txt"),
+            game.runGame(new mff.agents.astarPlanningDynamic.Agent(), getLevel("./levels/original/lvl-" + i + ".txt"),
                     200, 0, true);
         }
     }
@@ -42,6 +42,7 @@ public class AgentMain {
             add(new mff.agents.astarFast.Agent());
             add(new mff.agents.astarJump.Agent());
             add(new mff.agents.astarPlanning.Agent());
+            add(new mff.agents.astarPlanningDynamic.Agent());
             add(new mff.agents.robinBaumgartenSlim.Agent());
             add(new mff.agents.robinBaumgartenSlimImproved.Agent());
         }};

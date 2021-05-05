@@ -59,6 +59,7 @@ public class AStarTree {
 
     private float calculateCost(MarioForwardModelSlim nextState, int nodeDepth) {
         float timeToFinish = (exitTileX - nextState.getMarioX()) / maxMarioSpeedX;
+        timeToFinish *= 1.1f;
         return nodeDepth + timeToFinish;
     }
 
@@ -101,7 +102,6 @@ public class AStarTree {
                 opened.add(getNewNode(newState, current, newStateCost, action));
             }
         }
-
 //        System.out.println("ITERATIONS: " + iterations + " | Best X: " + bestNode.state.getMarioX());
 //        System.out.println(opened.size());
     }
