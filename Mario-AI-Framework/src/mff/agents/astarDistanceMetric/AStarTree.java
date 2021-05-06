@@ -1,15 +1,12 @@
-package mff.agents.astar;
+package mff.agents.astarDistanceMetric;
+
+import mff.agents.astarHelper.*;
+import mff.agents.common.MarioTimerSlim;
+import mff.forwardmodel.slim.core.MarioForwardModelSlim;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.PriorityQueue;
-
-import mff.agents.astarHelper.CompareByCost;
-import mff.agents.astarHelper.Helper;
-import mff.agents.astarHelper.MarioAction;
-import mff.agents.astarHelper.SearchNode;
-import mff.agents.common.*;
-import mff.forwardmodel.slim.core.MarioForwardModelSlim;
 
 public class AStarTree {
     public SearchNode furthestNode;
@@ -17,58 +14,60 @@ public class AStarTree {
 
     float marioXStart;
     int searchSteps;
+    int totalTicks;
 
     static boolean winFound = false;
-    static final float maxMarioSpeedX = 10.91f;
     static float exitTileX;
 
-    PriorityQueue<SearchNode> opened = new PriorityQueue<>(new CompareByCost());
+    PriorityQueue<SearchNode> opened = new PriorityQueue<>(new CompareByCostReversed());
     /**
      * INT STATE -> STATE COST
      */
     HashMap<Integer, Float> visitedStates = new HashMap<>();
-    
+
     public AStarTree(MarioForwardModelSlim startState, int searchSteps) {
-    	this.searchSteps = searchSteps;
+        this.searchSteps = searchSteps;
 
-    	marioXStart = startState.getMarioX();
+        int totalSeconds = startState.getWorld().currentTimer / 1000;
+        totalTicks = totalSeconds * 30;
 
-    	furthestNode = getStartNode(startState);
-    	furthestNode.cost = calculateCost(startState, furthestNode.nodeDepth);
-    	furthestNodeDistance = furthestNode.state.getMarioX();
-    	
-    	opened.add(furthestNode);
+        marioXStart = startState.getMarioX();
+
+        furthestNode = getStartNode(startState);
+        furthestNode.cost = calculateCost(startState, furthestNode.nodeDepth);
+        furthestNodeDistance = furthestNode.state.getMarioX();
+
+        opened.add(furthestNode);
     }
-    
+
     private int getIntState(MarioForwardModelSlim model) {
-    	return getIntState((int) model.getMarioX(), (int) model.getMarioY());
+        return getIntState((int) model.getMarioX(), (int) model.getMarioY());
     }
-    
+
     private int getIntState(int x, int y) {
-    	return (x << 16) | y;
+        return (x << 16) | y;
     }
-    
+
     private SearchNode getStartNode(MarioForwardModelSlim state) {
-    	// TODO: pooling
-    	return new SearchNode(state);
+        // TODO: pooling
+        return new SearchNode(state);
     }
-    
+
     private SearchNode getNewNode(MarioForwardModelSlim state, SearchNode parent, float cost, MarioAction action) {
-    	// TODO: pooling
-    	return new SearchNode(state, parent, cost, action);
+        // TODO: pooling
+        return new SearchNode(state, parent, cost, action);
     }
-    
+
     private float calculateCost(MarioForwardModelSlim nextState, int nodeDepth) {
-        float timeToFinish = (exitTileX - nextState.getMarioX()) / maxMarioSpeedX;
-        timeToFinish *= 1.1;
-        return nodeDepth + timeToFinish;
-	}
-    
+        int marioState = nextState.getWorld().mario.alive ? 0 : Integer.MIN_VALUE;
+        return (nextState.getMarioX() - marioXStart) * 1.1f + (totalTicks - nodeDepth) + marioState;
+    }
+
     public ArrayList<boolean[]> search(MarioTimerSlim timer) {
-    	int iterations = 0;
+        int iterations = 0;
 
         while (opened.size() > 0 && timer.getRemainingTime() > 0) {
-        	iterations++;
+            iterations++;
             SearchNode current = opened.remove();
 
             if (current.state.getMarioX() > furthestNodeDistance) {
@@ -98,7 +97,7 @@ public class AStarTree {
 
                 int newStateCode = getIntState(newState);
                 float newStateOldScore = visitedStates.getOrDefault(newStateCode, -1.0f);
-                if (newStateOldScore >= 0 && newStateCost >= newStateOldScore)
+                if (newStateOldScore >= 0 && newStateCost <= newStateOldScore)
                     continue;
 
                 visitedStates.put(newStateCode, newStateCost);

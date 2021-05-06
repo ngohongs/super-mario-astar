@@ -23,7 +23,7 @@ public class AgentMain {
 
     private static void testLevel() {
         AgentMarioGame game = new AgentMarioGame();
-        game.runGame(new mff.agents.astarPlanningDynamic.Agent(), getLevel("./levels/original/lvl-1.txt"),
+        game.runGame(new mff.agents.astarDistanceMetric.Agent(), getLevel("./levels/original/lvl-1.txt"),
                 200, 0, true);
     }
 
@@ -31,7 +31,7 @@ public class AgentMain {
         for (int i = 1; i < 16; i++) {
             AgentMarioGame game = new AgentMarioGame();
             System.out.print("Level " + i + ": ");
-            game.runGame(new mff.agents.astarPlanningDynamic.Agent(), getLevel("./levels/original/lvl-" + i + ".txt"),
+            game.runGame(new mff.agents.astarDistanceMetric.Agent(), getLevel("./levels/original/lvl-" + i + ".txt"),
                     200, 0, true);
         }
     }
@@ -39,6 +39,7 @@ public class AgentMain {
     private static void testAllAgents() {
         ArrayList<IMarioAgentMFF> agents = new ArrayList<>() {{
             add(new mff.agents.astar.Agent());
+            add(new mff.agents.astarDistanceMetric.Agent());
             add(new mff.agents.astarFast.Agent());
             add(new mff.agents.astarJump.Agent());
             add(new mff.agents.astarPlanning.Agent());

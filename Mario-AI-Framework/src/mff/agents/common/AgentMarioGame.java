@@ -13,7 +13,7 @@ import java.awt.*;
 import java.awt.image.VolatileImage;
 
 public class AgentMarioGame {
-    public static final long maxTime = 40;
+    public static final long maxTime = 33;
     public static final long graceTime = 10;
     public static final int width = 256;
     public static final int height = 256;

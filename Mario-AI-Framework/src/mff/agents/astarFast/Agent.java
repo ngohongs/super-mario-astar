@@ -28,7 +28,7 @@ public class Agent implements IMarioAgentMFF {
                 return actionsList.remove(actionsList.size() - 1);
         }
 
-        AStarTree tree = new AStarTree(model, 1);
+        AStarTree tree = new AStarTree(model, 2);
         ArrayList<boolean[]> newActionsList = tree.search(timer);
 
         if (AStarTree.winFound) {
@@ -42,12 +42,12 @@ public class Agent implements IMarioAgentMFF {
             actionsList = newActionsList;
         }
 
-        if (actionsList.size() == 0) {
-            System.out.println("NO ACTIONS LEFT!!!");
-            // TODO: needs solving
-            finished = true;
-            return MarioAction.NO_ACTION.value;
+        if (actionsList.size() == 0) { // didn't find a way further yet, take new actions to prevent stopping
+            actionsList = newActionsList;
         }
+
+        if (actionsList.size() == 0) // agent failed
+            return MarioAction.NO_ACTION.value;
 
         return actionsList.remove(actionsList.size() - 1);
     }

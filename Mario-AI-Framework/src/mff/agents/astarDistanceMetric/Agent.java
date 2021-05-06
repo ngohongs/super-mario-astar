@@ -1,14 +1,13 @@
-package mff.agents.astar;
+package mff.agents.astarDistanceMetric;
 
-import mff.agents.common.IMarioAgentMFF;
 import mff.agents.astarHelper.MarioAction;
+import mff.agents.common.IMarioAgentMFF;
 import mff.agents.common.MarioTimerSlim;
 import mff.forwardmodel.slim.core.MarioForwardModelSlim;
 
 import java.util.ArrayList;
 
 public class Agent implements IMarioAgentMFF {
-
     private ArrayList<boolean[]> actionsList = new ArrayList<>();
     private float furthestDistance = -1;
     private boolean finished = false;
@@ -28,7 +27,7 @@ public class Agent implements IMarioAgentMFF {
                 return actionsList.remove(actionsList.size() - 1);
         }
 
-        AStarTree tree = new AStarTree(model, 3);
+        AStarTree tree = new AStarTree(model, 2);
         ArrayList<boolean[]> newActionsList = tree.search(timer);
 
         if (AStarTree.winFound) {
@@ -54,6 +53,6 @@ public class Agent implements IMarioAgentMFF {
 
     @Override
     public String getAgentName() {
-        return "MFF AStar Agent";
+        return "MFF Distance Metric AStar Agent";
     }
 }
