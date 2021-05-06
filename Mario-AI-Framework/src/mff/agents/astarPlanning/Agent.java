@@ -58,7 +58,6 @@ public class Agent implements IMarioAgentMFF {
         assert tree != null;
         tree.search(timer);
         if (tree.finished) {
-            System.out.println();
             System.out.println("Ticks needed: " + ticksPassed);
             actionsList = tree.getActionPlan();
         }

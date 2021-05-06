@@ -113,7 +113,7 @@ public class AStarTree {
             }
 
             if (nextState.getGameStatusCode() == 1) {
-                System.out.print("WIN FOUND ");
+                //System.out.print("WIN FOUND ");
                 winFound = true;
                 break;
             }

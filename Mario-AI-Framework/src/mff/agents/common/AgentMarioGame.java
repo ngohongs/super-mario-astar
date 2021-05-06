@@ -119,6 +119,6 @@ public class AgentMarioGame {
                 }
             }
         }
-        System.out.println(world.gameStatus);
+        //System.out.println(world.gameStatus);
     }
 }

@@ -90,7 +90,7 @@ public class AStarTree {
 
             if (current.state.getGameStatusCode() == 1) {
                 winNode = current;
-                System.out.print("WIN FOUND ");
+                //System.out.print("WIN FOUND ");
                 winFound = true;
                 return;
             }
@@ -134,7 +134,7 @@ public class AStarTree {
 
             if (current.state.getGameStatusCode() == 1) {
                 winNode = current;
-                System.out.print("WIN FOUND ");
+                //System.out.print("WIN FOUND ");
                 //System.out.println("Win depth: " + winNode.nodeDepth);
                 winFound = true;
                 return;
@@ -185,8 +185,8 @@ public class AStarTree {
             curr = curr.parent;
         }
 
-        if (actionPlan.size() == 0) {
-            System.out.println("NO SAFE PATH FOUND");
+        if (actionPlan.size() == 0) { // no safe path found
+            //System.out.println("NO SAFE PATH FOUND");
             actionPlan.add(MarioAction.NO_ACTION.value);
         }
 

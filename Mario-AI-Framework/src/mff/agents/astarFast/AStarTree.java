@@ -112,7 +112,7 @@ public class AStarTree {
 
             if (nextState.getGameStatusCode() == 1) {
                 furthestNode = current;
-                System.out.print("WIN FOUND ");
+                //System.out.print("WIN FOUND ");
                 winFound = true;
                 break;
             }

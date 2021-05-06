@@ -75,7 +75,7 @@ public class AStarTree {
 
             if (current.state.getGameStatusCode() == 1) {
                 bestNode = current;
-                System.out.print("WIN FOUND ");
+                //System.out.print("WIN FOUND ");
                 finished = true;
                 break;
             }
