@@ -11,7 +11,6 @@ public class Agent implements  IMarioAgentMFF {
     private ArrayList<boolean[]> actionsList = new ArrayList<>();
     private AStarTree tree;
     private boolean findTempPlan = true;
-    private int ticksRemaining;
     private boolean startNewFinishSearch;
     private boolean finalPlanExtracted;
     private boolean winFoundDuringTempSearch;
@@ -38,6 +37,10 @@ public class Agent implements  IMarioAgentMFF {
             }
         }
 
+        if (actionsList.size() == 0) {
+            findTempPlan = true;
+        }
+
         if (findTempPlan) {
             findTempPlan = false;
             AStarTree tree = new AStarTree();
@@ -51,14 +54,8 @@ public class Agent implements  IMarioAgentMFF {
             else {
                 actionsList = tree.getTempSafePlan();
             }
-            ticksRemaining = actionsList.size() - 1;
             startNewFinishSearch = true;
             assert actionsList.size() != 0;
-            return actionsList.remove(actionsList.size() - 1);
-        }
-
-        if (ticksRemaining == 1) {
-            findTempPlan = true;
             return actionsList.remove(actionsList.size() - 1);
         }
 
@@ -66,7 +63,7 @@ public class Agent implements  IMarioAgentMFF {
             //System.out.println("New finish search init");
             startNewFinishSearch = false;
             tree = new AStarTree();
-            for (int i = 0; i < ticksRemaining; i++) {
+            for (int i = 0; i < actionsList.size(); i++) {
                 model.advance(actionsList.get(actionsList.size() - (1 + i)));
             }
             tree.initPlanToFinish(model, 2);
@@ -76,7 +73,6 @@ public class Agent implements  IMarioAgentMFF {
         //System.out.println("Searching for finish");
         tree.planToFinish(timer);
 
-        ticksRemaining--;
         return actionsList.remove(actionsList.size() - 1);
     }
 
