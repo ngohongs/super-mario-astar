@@ -21,10 +21,10 @@ public class AStarTree {
     int searchSteps;
     boolean winFound = false;
 
-    int iterations = 0;
-
     static float exitTileX;
     static final float maxMarioSpeedX = 10.91f;
+
+    public int nodesEvaluated = 0;
 
     PriorityQueue<SearchNode> opened = new PriorityQueue<>(new CompareByCost());
     /**
@@ -85,8 +85,8 @@ public class AStarTree {
 
     public void planAhead(MarioTimerSlim timer) {
         while (opened.size() > 0 && timer.getRemainingTime() > 0) {
-            iterations++;
             SearchNode current = opened.remove();
+            nodesEvaluated++;
 
             if (current.state.getGameStatusCode() == 1) {
                 winNode = current;
@@ -129,8 +129,8 @@ public class AStarTree {
 
     public void planToFinish(MarioTimerSlim timer) {
         while (opened.size() > 0 && timer.getRemainingTime() > 0) {
-            iterations++;
             SearchNode current = opened.remove();
+            nodesEvaluated++;
 
             if (current.state.getGameStatusCode() == 1) {
                 winNode = current;

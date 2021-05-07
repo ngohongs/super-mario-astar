@@ -98,8 +98,11 @@ public class LevelGenerator implements MarioLevelGenerator {
     BlockType themeTwo = THEME_SPIKY;
     BlockType mixTheme = null;
 
-    public LevelGenerator() {
+    private long seed;
+
+    public LevelGenerator(long seed) {
         this("levels/krys/");
+        this.seed = seed;
     }
 
     public LevelGenerator(String sampleFolder) {
@@ -123,7 +126,11 @@ public class LevelGenerator implements MarioLevelGenerator {
             throw new IllegalArgumentException("Invalid model size. Height must be 16 and width must be dividable by 15");
         }
 
-        rnd = new Random();
+        rnd = new Random(seed); // set seed so that benchmarks can be repeated
+        for (int i = 0; i < 1000; i++) { // try to prevent artifacts
+            rnd.nextInt();
+        }
+
         model.clearMap();
 
         List<Integer> usedIds = new LinkedList<>();

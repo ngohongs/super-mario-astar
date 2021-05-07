@@ -19,6 +19,8 @@ public class AStarTree {
     static boolean winFound = false;
     static float exitTileX;
 
+    public int nodesEvaluated = 0;
+
     PriorityQueue<SearchNode> opened = new PriorityQueue<>(new CompareByCostReversed());
     /**
      * INT STATE -> STATE COST
@@ -64,11 +66,9 @@ public class AStarTree {
     }
 
     public ArrayList<boolean[]> search(MarioTimerSlim timer) {
-        int iterations = 0;
-
         while (opened.size() > 0 && timer.getRemainingTime() > 0) {
-            iterations++;
             SearchNode current = opened.remove();
+            nodesEvaluated++;
 
             if (current.state.getMarioX() > furthestNodeDistance) {
                 furthestNode = current;

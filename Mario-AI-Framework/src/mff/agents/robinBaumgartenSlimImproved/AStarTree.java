@@ -16,6 +16,8 @@ public class AStarTree {
     private ArrayList<boolean[]> currentActionPlan;
     int ticksBeforeReplanning = 0;
 
+    public int nodesEvaluated = 0;
+
     private static final boolean[] fastRightMovement = new boolean[] { false, true, false, false, true };
 
     private void search(MarioTimerSlim timer) {
@@ -26,6 +28,7 @@ public class AStarTree {
                 && ((bestPosition.sceneSnapshot.getMarioX() - currentSearchStartingMarioXPos < maxRight) || !currentGood)
                 && timer.getRemainingTime() > 0) {
             current = pickBestPos(posPool);
+            nodesEvaluated++;
             if (current == null) {
                 return;
             }

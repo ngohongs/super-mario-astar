@@ -1,19 +1,22 @@
 package mff.agents.astarPlanningDynamic;
 
 import mff.agents.astarHelper.MarioAction;
+import mff.agents.benchmark.IAgentBenchmark;
 import mff.agents.common.IMarioAgentMFF;
 import mff.agents.common.MarioTimerSlim;
 import mff.forwardmodel.slim.core.MarioForwardModelSlim;
 
 import java.util.ArrayList;
 
-public class Agent implements  IMarioAgentMFF {
+public class Agent implements  IMarioAgentMFF, IAgentBenchmark {
     private ArrayList<boolean[]> actionsList = new ArrayList<>();
     private AStarTree tree;
     private boolean findTempPlan = true;
     private boolean startNewFinishSearch;
     private boolean finalPlanExtracted;
     private boolean winFoundDuringTempSearch;
+    private int totalSearchCalls = 0;
+    private int totalNodesEvaluated = 0;
 
     @Override
     public void initialize(MarioForwardModelSlim model) {
@@ -46,6 +49,8 @@ public class Agent implements  IMarioAgentMFF {
             AStarTree tree = new AStarTree();
             tree.initPlanAhead(model, 3);
             tree.planAhead(timer);
+            totalSearchCalls++;
+            totalNodesEvaluated += tree.nodesEvaluated;
             //System.out.println("Temp plan init and search");
             if (tree.winFound) {
                 actionsList = tree.getPlanToFinish();
@@ -72,8 +77,21 @@ public class Agent implements  IMarioAgentMFF {
         assert tree != null;
         //System.out.println("Searching for finish");
         tree.planToFinish(timer);
+        totalSearchCalls++;
+        totalNodesEvaluated += tree.nodesEvaluated;
+        tree.nodesEvaluated = 0; // reset counter
 
         return actionsList.remove(actionsList.size() - 1);
+    }
+
+    @Override
+    public int getSearchCalls() {
+        return totalSearchCalls;
+    }
+
+    @Override
+    public int getNodesEvaluated() {
+        return totalNodesEvaluated;
     }
 
     @Override

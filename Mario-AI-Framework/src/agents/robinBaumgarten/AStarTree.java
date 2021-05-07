@@ -17,6 +17,8 @@ public class AStarTree {
     private ArrayList<boolean[]> currentActionPlan;
     int ticksBeforeReplanning = 0;
 
+    public int nodesEvaluated = 0;
+
     private MarioForwardModel search(MarioTimer timer) {
         SearchNode current = bestPosition;
         boolean currentGood = false;
@@ -25,6 +27,7 @@ public class AStarTree {
                 && ((bestPosition.sceneSnapshot.getMarioFloatPos()[0] - currentSearchStartingMarioXPos < maxRight) || !currentGood)
                 && timer.getRemainingTime() > 0) {
             current = pickBestPos(posPool);
+            nodesEvaluated++;
             if (current == null) {
                 return null;
             }
