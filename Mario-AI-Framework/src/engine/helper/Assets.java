@@ -25,7 +25,7 @@ public class Assets {
     public static Image[][] font;
     public static Image[][] map;
     final static String curDir = System.getProperty("user.dir");
-    final static String img = curDir + "/../img/";
+    final static String img = curDir + File.separator + ".." + File.separator + "img" + File.separator;
 
     public static void init(GraphicsConfiguration gc) {
         try {
@@ -40,7 +40,6 @@ public class Assets {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 
     private static Image getImage(GraphicsConfiguration gc, String imageName) throws IOException {
@@ -52,7 +51,14 @@ public class Assets {
 
         if (source == null) {
             imageName = img + imageName;
-            imageName = imageName.replace('/', '\\');
+            File file = new File(imageName);
+            try {
+                source = ImageIO.read(file);
+            }
+            catch (IOException ignored) { // try with working directory set one folder up
+            }
+        }
+        if (source == null) {
             imageName = imageName.replaceAll("\\\\\\.\\.", "");
             File file = new File(imageName);
             source = ImageIO.read(file);
