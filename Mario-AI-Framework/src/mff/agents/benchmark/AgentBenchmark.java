@@ -32,7 +32,6 @@ public class AgentBenchmark {
         add("astarPlanningDynamic");
         add("robinBaumgarten");
         add("robinBaumgartenSlim");
-        add("robinBaumgartenSlimImproved");
     }};
 
     public static void main(String[] args) throws IOException {
