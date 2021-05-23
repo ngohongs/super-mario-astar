@@ -188,9 +188,6 @@ public class MarioLevelBin {
 
     private static int calculateCutoutIndex(int x, int y, MarioBinData data) {
         int cutoutX = x - getCutoutLeftBorderX(data);
-        // TODO: only for testing
-        if (cutoutX < 0 || cutoutX >= cutoutTileWidth)
-            throw new IllegalStateException("Cutout not wide enough");
         return (getCutoutArrayBeginningIndex(data) + cutoutX * getTileHeight(data) + y) % (cutoutTileWidth * getTileHeight(data));
     }
 }

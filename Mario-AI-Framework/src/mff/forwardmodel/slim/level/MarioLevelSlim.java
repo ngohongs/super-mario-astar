@@ -270,9 +270,6 @@ public class MarioLevelSlim {
 
     private int calculateCutoutIndex(int x, int y) {
         int cutoutX = x - cutoutLeftBorderX;
-        // TODO: only for testing
-        if (cutoutX < 0 || cutoutX >= cutoutTileWidth)
-            throw new IllegalStateException("Cutout not wide enough");
         return (cutoutArrayBeginningIndex + cutoutX * tileHeight + y) % (cutoutTileWidth * this.tileHeight);
     }
 }

@@ -25,6 +25,14 @@ public class MarioGameSlim {
     private MarioRender render = null;
     private MarioAgent agent = null;
 
+    private boolean checkCorrectness = false;
+    private boolean advanceSpeedTest = false;
+
+    public MarioGameSlim(boolean checkCorrectness, boolean advanceSpeedTest) {
+        this.checkCorrectness = checkCorrectness;
+        this.advanceSpeedTest = advanceSpeedTest;
+    }
+
     private int getDelay(int fps) {
         if (fps <= 0) {
             return 0;
@@ -141,21 +149,23 @@ public class MarioGameSlim {
                 slimUpdateTime += end - start;
                 slimUpdateCounter++;
 
-                // create control slim model
-                originalModel = new MarioForwardModel(world.clone());
-                MarioForwardModelSlim controlSlimModel = Converter.originalToSlim(originalModel, levelCutoutTileWidth);
+                if (checkCorrectness) {
+                    // create control slim model
+                    originalModel = new MarioForwardModel(world.clone());
+                    MarioForwardModelSlim controlSlimModel = Converter.originalToSlim(originalModel, levelCutoutTileWidth);
 
-                // test slim model
-                /*if (!slimModel.deepEquals(controlSlimModel)) {
-                    System.out.println("SLIM MODEL NOT EQUAL");
-                    throw new RuntimeException("SLIM MODEL NOT EQUAL");
-                }*/
+                    // test slim model
+                    if (!slimModel.deepEquals(controlSlimModel)) {
+                        System.out.println("SLIM MODEL NOT EQUAL");
+                        throw new RuntimeException("SLIM MODEL NOT EQUAL");
+                    }
 
-                // test slim model clone
-                /*if (!slimClone.deepEquals(controlSlimModel)) {
-                    System.out.println("SLIM MODEL CLONE NOT EQUAL");
-                    throw new RuntimeException("SLIM MODEL CLONE NOT EQUAL");
-                }*/
+                    // test slim model clone
+                    if (!slimClone.deepEquals(controlSlimModel)) {
+                        System.out.println("SLIM MODEL CLONE NOT EQUAL");
+                        throw new RuntimeException("SLIM MODEL CLONE NOT EQUAL");
+                    }
+                }
             }
 
             //render world
@@ -176,16 +186,18 @@ public class MarioGameSlim {
         //System.out.println(world.gameStatus);
 
         double originalUpdateTimeDouble = originalUpdateTime;
-        //System.out.printf("Original update time: %,.3f ms%n", originalUpdateTimeDouble / 1000000d);
-        /*System.out.println("Original update count: " + originalUpdateCounter);
-        double originalUpdateCounterDouble = originalUpdateCounter;
-        System.out.printf("Original time per update: %,.3f ms%n", (originalUpdateTimeDouble / 1000000d) / originalUpdateCounterDouble);*/
-
         double slimUpdateTimeDouble = slimUpdateTime;
-        //System.out.printf("Slim update time: %,.3f ms%n", slimUpdateTimeDouble / 1000000d);
-        /*System.out.println("Slim update count: " + slimUpdateCounter);
-        double slimUpdateCounterDouble = slimUpdateCounter;
-        System.out.printf("Slim time per update: %,.3f ms%n", (slimUpdateTimeDouble / 1000000d) / slimUpdateCounterDouble);*/
+
+        /*
+        System.out.printf("Original update time: %,.3f ms%n", originalUpdateTimeDouble / 1000000d);
+        System.out.println("Original update count: " + originalUpdateCounter);
+        System.out.printf("Original time per update: %,.3f ms%n", (originalUpdateTimeDouble / 1000000d) / (double) originalUpdateCounter);
+
+        System.out.printf("Slim update time: %,.3f ms%n", slimUpdateTimeDouble / 1000000d);
+        System.out.println("Slim update count: " + slimUpdateCounter);
+        System.out.printf("Slim time per update: %,.3f ms%n", (slimUpdateTimeDouble / 1000000d) / (double) slimUpdateCounter);
+        */
+
         TestResult testResult = new TestResult();
         testResult.originalTime = originalUpdateTimeDouble / 1000000d;
         testResult.slimTime = slimUpdateTimeDouble / 1000000d;

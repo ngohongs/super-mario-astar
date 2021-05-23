@@ -526,7 +526,6 @@ public class PerformanceTests {
         System.out.println("shorts - copyMemory: " + time);
 
         // ints, copyMemory
-        //TODO: why length + 4?
         for (int i = 0; i < 10000; i++) {
             unsafe.copyMemory(ints, 0, intsCopy, 0, (ints.length + 4) * 4);
         }
@@ -539,7 +538,6 @@ public class PerformanceTests {
         System.out.println("ints - copyMemory: " + time);
 
         // floats, copyMemory
-        //TODO: why length + 4?
         for (int i = 0; i < 10000; i++) {
             unsafe.copyMemory(floats, 0, floatsCopy, 0, (floats.length + 4) * 4);
         }
@@ -551,7 +549,7 @@ public class PerformanceTests {
         time = end - start;
         System.out.println("floats - copyMemory: " + time);
 
-/*    // TODO: seems like only primitive types can be copied like this - not an enum - LevelPart
+/*      // seems like only primitive types can be copied like this
         // level parts, copyMemory
         for (int i = 0; i < 10000; i++) {
             //unsafe.copyMemory(levelParts, 0, levelPartsCopy, 0, levelParts.length * 4);

@@ -17,7 +17,6 @@ public class Helper {
     }
 
     private static final ArrayList<MarioAction> actionsNoJump = new ArrayList<>() {{
-    	// TODO: no action?
         add(MarioAction.RIGHT_SPEED);
         //add(MarioAction.RIGHT);
         //add(MarioAction.LEFT);
@@ -25,7 +24,6 @@ public class Helper {
     }};
 
     private static final ArrayList<MarioAction> actionsWithJump = new ArrayList<>() {{
-    	// TODO: no action?
         add(MarioAction.RIGHT_SPEED);
         //add(MarioAction.RIGHT);
         //add(MarioAction.LEFT);
