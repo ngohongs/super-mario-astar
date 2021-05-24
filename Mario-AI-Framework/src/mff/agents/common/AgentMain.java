@@ -32,15 +32,14 @@ public class AgentMain {
 
     private static void testLevel() {
         AgentMarioGame game = new AgentMarioGame();
-        game.runGame(new mff.agents.astarDistanceMetric.Agent(), getLevel("./levels/original/lvl-1.txt"),
+        game.runGame(new mff.agents.astar.Agent(), getLevel("./levels/original/lvl-1.txt"),
                 200, 0, true);
     }
 
     private static void testAllOriginalLevels() {
         for (int i = 1; i < 16; i++) {
             AgentMarioGame game = new AgentMarioGame();
-            System.out.print("Level " + i + ": ");
-            game.runGame(new mff.agents.astarDistanceMetric.Agent(), getLevel("./levels/original/lvl-" + i + ".txt"),
+            game.runGame(new mff.agents.astar.Agent(), getLevel("./levels/original/lvl-" + i + ".txt"),
                     200, 0, true);
         }
     }
