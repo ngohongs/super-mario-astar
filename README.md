@@ -21,7 +21,7 @@ I tried to modify the framework to work both and Windows and Linux and to suppor
       - `slim` - which is an improved version of the original forward model
       - `bin` - which is an experimental model that isn't finished
 
-### Interesting entry points of the framework
+### Interesting entry points
 - `src/mff/agents/benchmark/AgentBenchmark`, which runs a benchmark of selected agents and outputs the results to `agent-benchmark` folder in CSV format
 - `src/mff/agents/common/AgentMain`, which can be used to test agents from the `mff` package on different levels
 - `src/mff/forwardmodel/common/PerformanceTests`, which contains various tests of the forward model components
