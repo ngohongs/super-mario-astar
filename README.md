@@ -4,11 +4,28 @@ This project is based on the framework created by [Ahmed Khalifa](https://schola
 ### Requirements
 I tried to modify the framework to work both and Windows and Linux and to support more working directory settings of various IDEs. It is guaranteed to work on Windows 10 with working directory set in the `Mario-AI-Framework` folder, which contains folders such as `src` and `levels`.  Java SDK version 13 might be required.
 
+### Project overview
+
+- `agent-benchmark` - an output folder for agents benchmark results
+- `img` - graphical assets of the game
+- `levels` - original and generated levels
+- `src` - source files of the framework
+  - `agents` - agents from the framework mostly created during competitions
+  - `engine` - original game implementation and forward model
+  - `levelGenerators`
+    -  generators from the framework mostly created during competitions
+    - the `krys` and `noiseBased` generators were created by MFF UK students Jan Holan and Mikuláš Hrdlička as a part of the Procedural Content Generation course
+  - `mff` - the source code of my thesis
+    - `agents` - all the agents created for the thesis + a benchmark environment for them
+    - `forwardmodel` - contains the two new forward models
+      - `slim` - which is an improved version of the original forward model
+      - `bin` - which is an experimental model that isn't finished
+
 ### Interesting entry points of the framework
-- `AgentBenchmark`, which runs a benchmark of selected agents and outputs the results to `agent-benchmark` folder in CSV format
-- `AgentMain`, which can be used to test agents from the `mff` package on different levels
-- `PerformanceTests`, which contains various tests of the forward model components
-- `SlimTest`, which allows a few different things:
+- `src/mff/agents/benchmark/AgentBenchmark`, which runs a benchmark of selected agents and outputs the results to `agent-benchmark` folder in CSV format
+- `src/mff/agents/common/AgentMain`, which can be used to test agents from the `mff` package on different levels
+- `src/mff/forwardmodel/common/PerformanceTests`, which contains various tests of the forward model components
+- `src/mff/forwardmodel/slim/core/SlimTest`, which allows a few different things:
 	- `humanTest` method allows manual playing of levels
 	- `correctnessTest` method will compare world simulation of the original and slim forward models on the 15 original levels
 	- `advanceSpeedTest` method will compare the performance of the `advance` method of original and slim forward models
