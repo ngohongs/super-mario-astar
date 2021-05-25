@@ -36,7 +36,7 @@ public class Assets {
             items = cutImage(gc, "itemsheet.png", 16, 16);
             level = cutImage(gc, "mapsheet.png", 16, 16);
             particles = cutImage(gc, "particlesheet.png", 16, 16);
-            font = cutImage(gc, "font.gif", 8, 8);
+            font = cutImage(gc, "font.png", 8, 8);
         } catch (Exception e) {
             e.printStackTrace();
         }
