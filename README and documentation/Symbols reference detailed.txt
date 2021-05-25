@@ -32,4 +32,3 @@
 - '>': Top right of empty pipe
 - '[': Left of empty pipe
 - ']': Right of empty pipe
-
