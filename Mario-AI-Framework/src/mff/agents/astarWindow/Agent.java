@@ -11,6 +11,7 @@ import java.util.ArrayList;
 public class Agent implements IMarioAgentMFF, IAgentBenchmark {
 
     private ArrayList<boolean[]> actionsList = new ArrayList<>();
+    private float furthestDistance = -1;
     private boolean finished = false;
     private int totalSearchCalls = 0;
     private int totalNodesEvaluated = 0;
@@ -41,9 +42,14 @@ public class Agent implements IMarioAgentMFF, IAgentBenchmark {
             return actionsList.remove(actionsList.size() - 1);
         }
 
-        // always take new actions, because new threats might have been found //TODO not always
-        if (newActionsList.size() != 0)
+        if (tree.furthestNodeDistance > furthestDistance) {
+            furthestDistance = tree.furthestNodeDistance;
             actionsList = newActionsList;
+        }
+
+        // always take new actions, because new threats might have been found //TODO not always
+        //if (newActionsList.size() != 0)
+        //    actionsList = newActionsList;
 
         if (actionsList.size() == 0) // agent failed
             return MarioAction.NO_ACTION.value;
