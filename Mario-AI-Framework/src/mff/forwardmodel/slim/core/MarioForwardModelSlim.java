@@ -12,6 +12,10 @@ public class MarioForwardModelSlim {
         this.world.update(actions);
     }
 
+    public void advanceWindow(boolean[] actions, int rightWindowBorderX) {
+        this.world.updateWindow(actions, rightWindowBorderX);
+    }
+
     public boolean deepEquals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;

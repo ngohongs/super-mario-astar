@@ -18,6 +18,10 @@ public class MarioWorldSlim {
     public static final int LOSE = 2;
     public static final int TIME_OUT = 3;
 
+    // workaround the nonexistence of MarioGame here
+    public static int marioGameWidth = 256;
+    public static int marioGameHeight = 256;
+
     public int gameStatusCode;
     public int pauseTimer;
     public int currentTimer;
@@ -231,10 +235,6 @@ public class MarioWorldSlim {
         MarioUpdateContextSlim updateContext = MarioUpdateContextSlim.get();
         updateContext.world = this;
 
-        // workaround the nonexistence of MarioGame here
-        int marioGameWidth = 256;
-        int marioGameHeight = 256;
-
         this.currentTick += 1;
         this.cameraX = this.mario.x - marioGameWidth / 2;
         if (this.cameraX + marioGameWidth > this.level.width) {
@@ -284,6 +284,156 @@ public class MarioWorldSlim {
                     if (this.level.getBlockValue(x, y) == LevelPart.BULLET_BILL_CANNON.getValue()) {
                         if (this.currentTick % 100 == 0) {
                             addSprite(new BulletBillSlim(x * 16 + 8 + dir * 8, y * 16 + 15, dir), updateContext);
+                        }
+                    }
+                }
+            }
+        }
+
+        updateContext.actions = actions;
+
+        for (MarioSpriteSlim sprite : sprites) {
+            if (!sprite.alive) {
+                continue;
+            }
+            sprite.update(updateContext);
+        }
+        for (MarioSpriteSlim sprite : sprites) {
+            if (!sprite.alive) {
+                continue;
+            }
+            sprite.collideCheck(updateContext);
+        }
+
+        for (ShellSlim shell : updateContext.shellsToCheck) {
+            for (MarioSpriteSlim sprite : sprites) {
+                if (sprite != shell && shell.alive && sprite.alive) {
+                    if (sprite.shellCollideCheck(shell, updateContext)) {
+                        this.removeSprite(sprite, updateContext);
+                    }
+                }
+            }
+        }
+        if (updateContext.shellsToCheck.size() != 0)
+            updateContext.shellsToCheck.clear();
+
+        for (FireballSlim fireball : updateContext.fireballsToCheck) {
+            for (MarioSpriteSlim sprite : sprites) {
+                if (sprite != fireball && fireball.alive && sprite.alive) {
+                    if (sprite.fireballCollideCheck(fireball, updateContext)) {
+                        this.removeSprite(fireball, updateContext);
+                    }
+                }
+            }
+        }
+        if (updateContext.fireballsToCheck.size() != 0)
+            updateContext.fireballsToCheck.clear();
+
+        this.level.update((int) mario.x / 16);
+
+        //sprites.addAll(0, updateContext.addedSprites);
+        for (MarioSpriteSlim newSprite : updateContext.addedSprites) {
+            sprites.add(newSprite);
+        }
+        //sprites.removeAll(updateContext.removedSprites);
+        for (MarioSpriteSlim removedSprite : updateContext.removedSprites) {
+            sprites.remove(removedSprite);
+        }
+
+        if (updateContext.addedSprites.size() != 0)
+            updateContext.addedSprites.clear();
+        if (updateContext.removedSprites.size() != 0)
+            updateContext.removedSprites.clear();
+
+        updateContext.world = null;
+        updateContext.actions = null;
+        updateContext.fireballsOnScreen = 0;
+        MarioUpdateContextSlim.back(updateContext);
+    }
+
+    /**
+     * @param rightWindowBorderX in pixels (position * 16)
+     */
+    public void updateWindow(boolean[] actions, int rightWindowBorderX) {
+        if (this.gameStatusCode != RUNNING) {
+            return;
+        }
+        if (this.pauseTimer > 0) {
+            this.pauseTimer -= 1;
+            return;
+        }
+
+        if (this.currentTimer > 0) {
+            this.currentTimer -= 30;
+            if (this.currentTimer <= 0) {
+                this.currentTimer = 0;
+                this.timeout();
+                return;
+            }
+        }
+
+        MarioUpdateContextSlim updateContext = MarioUpdateContextSlim.get();
+        updateContext.world = this;
+
+        // workaround the nonexistence of MarioGame here
+        int marioGameWidth = 256;
+        int marioGameHeight = 256;
+
+        this.currentTick += 1;
+        this.cameraX = this.mario.x - marioGameWidth / 2;
+        if (this.cameraX + marioGameWidth > this.level.width) {
+            this.cameraX = this.level.width - marioGameWidth;
+        }
+        if (this.cameraX < 0) {
+            this.cameraX = 0;
+        }
+        this.cameraY = this.mario.y - marioGameHeight / 2;
+        if (this.cameraY + marioGameHeight > this.level.height) {
+            this.cameraY = this.level.height - marioGameHeight;
+        }
+        if (this.cameraY < 0) {
+            this.cameraY = 0;
+        }
+
+        updateContext.fireballsOnScreen = 0;
+        for (MarioSpriteSlim sprite : sprites) {
+            // kill all sprites outside of current screen
+            if (sprite.x < cameraX - 8 || sprite.x > cameraX + marioGameWidth + 8 || sprite.y > this.level.height + 32) {
+                if (sprite.getType() == SpriteTypeCommon.MARIO) {
+                    this.lose();
+                }
+                this.removeSprite(sprite, updateContext);
+                continue;
+            }
+            if (sprite.getType() == SpriteTypeCommon.FIREBALL) {
+                updateContext.fireballsOnScreen += 1;
+            }
+        }
+
+        for (int x = (int) cameraX / 16 - 1; x <= (int) (cameraX + marioGameWidth) / 16 + 1; x++) {
+            for (int y = (int) cameraY / 16 - 1; y <= (int) (cameraY + marioGameHeight) / 16 + 1; y++) {
+                int dir = 0;
+                if (x * 16 + 8 > mario.x + 16)
+                    dir = -1;
+                if (x * 16 + 8 < mario.x - 16)
+                    dir = 1;
+
+                /* no new sprites except Bullet Bill in window advance
+
+                SpriteTypeCommon spriteType = level.getSpriteType(x, y);
+                if (spriteType != SpriteTypeCommon.NONE) {
+                    MarioSpriteSlim newSprite = this.spawnEnemy(spriteType, x, y, dir);
+                    this.addSprite(newSprite, updateContext);
+                    level.setBlock(x, y, 0); // remove sprite when it is spawned
+                }
+                */
+
+                if (dir != 0) {
+                    if (this.level.getBlockValue(x, y) == LevelPart.BULLET_BILL_CANNON.getValue()) {
+                        if (this.currentTick % 100 == 0) {
+                            // no new Bullet Bills outside of window
+                            if (x * 16 + 8 <= rightWindowBorderX && x * 16 + 8 >= rightWindowBorderX - (marioGameWidth * 16))
+                                addSprite(new BulletBillSlim(x * 16 + 8 + dir * 8, y * 16 + 15, dir), updateContext);
                         }
                     }
                 }
