@@ -18,6 +18,7 @@ public class AStarTree {
 
     float marioXStart;
     int rightWindowBorderX;
+    int furthestNonEmptyRightX;
     int searchSteps;
 
     static boolean winFound = false;
@@ -37,6 +38,7 @@ public class AStarTree {
 
     	marioXStart = startState.getMarioX();
     	rightWindowBorderX = (int) (marioXStart + (MarioWorldSlim.marioGameWidth / 2));
+    	furthestNonEmptyRightX = findNonEmptyColumn(rightWindowBorderX, startState) * 16;
 
     	furthestNode = getStartNode(startState);
     	furthestNode.cost = calculateCost(startState, furthestNode.nodeDepth);
@@ -44,7 +46,19 @@ public class AStarTree {
     	
     	opened.add(furthestNode);
     }
-    
+
+    private int findNonEmptyColumn(int rightBorderX, MarioForwardModelSlim model) {
+        var level = model.getWorld().level;
+        int rightBorderColumn = rightBorderX / 16;
+        for (int x = rightBorderColumn; x >= rightBorderColumn - (MarioWorldSlim.marioGameWidth / 16 - 1); x--) {
+            for (int y = 0; y < MarioWorldSlim.marioGameHeight / 16; y++) {
+                if (isBlockSafe(level.getBlockValue(x, y)))
+                    return x;
+            }
+        }
+        throw new IllegalStateException("Level empty or check failed.");
+    }
+
     private int getIntState(MarioForwardModelSlim model) {
     	return getIntState((int) model.getMarioX(), (int) model.getMarioY());
     }
@@ -79,9 +93,9 @@ public class AStarTree {
                 furthestNodeDistance = current.state.getMarioX();
             }
 
-            if (current.state.getMarioX() >= rightWindowBorderX && isSafe(current)) { // right window border reached and position is safe
+            if (current.state.getMarioX() >= furthestNonEmptyRightX && isSafe(current)) { // right window border reached and position is safe
                 furthestNode = current;
-                System.out.println("Right border found, X: " + furthestNode.state.getMarioX() + ", Y: " + furthestNode.state.getMarioY()); //TODO
+                //System.out.println("Right border found, X: " + furthestNode.state.getMarioX() + ", Y: " + furthestNode.state.getMarioY()); //TODO
                 if (current.state.getGameStatusCode() == 1) { // finish reached
                     winFound = true;
                     //System.out.println("WIN FOUND");
@@ -142,8 +156,8 @@ public class AStarTree {
             }
 
             if (actionsList.size() == 0) { // no safe path found
-                System.out.println("NO SAFE PATH FOUND"); //TODO
-                actionsList.add(MarioAction.NO_ACTION.value);
+                //System.out.println("NO SAFE PATH FOUND"); //TODO
+                //actionsList.add(MarioAction.NO_ACTION.value);
             }
         }
 

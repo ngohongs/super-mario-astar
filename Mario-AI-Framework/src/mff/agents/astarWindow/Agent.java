@@ -41,8 +41,9 @@ public class Agent implements IMarioAgentMFF, IAgentBenchmark {
             return actionsList.remove(actionsList.size() - 1);
         }
 
-        // always take new actions, because new threats might have been found
-        actionsList = newActionsList;
+        // always take new actions, because new threats might have been found //TODO not always
+        if (newActionsList.size() != 0)
+            actionsList = newActionsList;
 
         if (actionsList.size() == 0) // agent failed
             return MarioAction.NO_ACTION.value;
