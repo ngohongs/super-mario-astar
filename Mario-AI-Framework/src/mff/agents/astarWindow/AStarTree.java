@@ -38,7 +38,10 @@ public class AStarTree {
 
     	marioXStart = startState.getMarioX();
     	rightWindowBorderX = (int) (marioXStart + (MarioWorldSlim.marioGameWidth / 2));
-    	furthestNonEmptyRightX = findNonEmptyColumn(rightWindowBorderX, startState) * 16;
+    	furthestNonEmptyRightX = findNonEmptyColumn(rightWindowBorderX, startState) * 16; // plan to this
+
+        //  dont plan all the way to the border - to allow seeing new enemies soon enough
+        furthestNonEmptyRightX = Math.min(furthestNonEmptyRightX, rightWindowBorderX - (MarioWorldSlim.marioGameWidth / 8));
 
     	furthestNode = getStartNode(startState);
     	furthestNode.cost = calculateCost(startState, furthestNode.nodeDepth);
@@ -95,7 +98,7 @@ public class AStarTree {
 
             if (current.state.getMarioX() >= furthestNonEmptyRightX && isSafe(current)) { // right window border reached and position is safe
                 furthestNode = current;
-                //System.out.println("Right border found, X: " + furthestNode.state.getMarioX() + ", Y: " + furthestNode.state.getMarioY()); //TODO
+                //System.out.println("Right border found, X: " + furthestNode.state.getMarioX() + ", Y: " + furthestNode.state.getMarioY());
                 if (current.state.getGameStatusCode() == 1) { // finish reached
                     winFound = true;
                     //System.out.println("WIN FOUND");
@@ -155,10 +158,12 @@ public class AStarTree {
                 curr = curr.parent;
             }
 
+            /*
             if (actionsList.size() == 0) { // no safe path found
-                //System.out.println("NO SAFE PATH FOUND"); //TODO
-                //actionsList.add(MarioAction.NO_ACTION.value);
+                System.out.println("NO SAFE PATH FOUND");
+                actionsList.add(MarioAction.NO_ACTION.value);
             }
+            */
         }
 
 //        System.out.println("ITERATIONS: " + iterations + " | Best X: " + furthestNode.state.getMarioX()

@@ -1,5 +1,9 @@
 package mff.agents.common;
 
+import engine.core.MarioLevelGenerator;
+import engine.core.MarioLevelModel;
+import engine.core.MarioTimer;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -26,21 +30,32 @@ public class AgentMain {
 
     public static void main(String[] args) {
         //testLevel();
-        testAllOriginalLevels();
+        //testAllOriginalLevels();
+        testGeneratedLevels();
         //testAllAgents();
     }
 
     private static void testLevel() {
         AgentMarioGame game = new AgentMarioGame();
-        game.runGame(new mff.agents.astar.Agent(), getLevel("./levels/original/lvl-1.txt"),
+        game.runGame(new mff.agents.astarWindow.Agent(), getLevel("./levels/original/lvl-10.txt"),
                 200, 0, true);
     }
 
     private static void testAllOriginalLevels() {
         for (int i = 1; i < 16; i++) {
             AgentMarioGame game = new AgentMarioGame();
-            game.runGame(new mff.agents.astar.Agent(), getLevel("./levels/original/lvl-" + i + ".txt"),
-                    200, 0, true);
+            game.runGame(new mff.agents.astarWindow.Agent(), getLevel("./levels/original/lvl-" + i + ".txt"),
+                    200, 0, false);
+        }
+    }
+
+    private static void testGeneratedLevels() {
+        for (int i = 1; i <= 100; i++) {
+            MarioLevelGenerator generator = new levelGenerators.krys.LevelGenerator(i);
+            String level = generator.getGeneratedLevel(new MarioLevelModel(150, 16),
+                    new MarioTimer(5 * 60 * 60 * 1000));
+            AgentMarioGame game = new AgentMarioGame();
+            game.runGame(new mff.agents.astarWindow.Agent(), level, 30, 0, false);
         }
     }
 
@@ -52,6 +67,7 @@ public class AgentMain {
             add(new mff.agents.astarJump.Agent());
             add(new mff.agents.astarPlanning.Agent());
             add(new mff.agents.astarPlanningDynamic.Agent());
+            add(new mff.agents.astarWindow.Agent());
             add(new mff.agents.robinBaumgartenSlim.Agent());
             add(new mff.agents.robinBaumgartenSlimImproved.Agent());
         }};
