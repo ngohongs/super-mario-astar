@@ -375,10 +375,6 @@ public class MarioWorldSlim {
         MarioUpdateContextSlim updateContext = MarioUpdateContextSlim.get();
         updateContext.world = this;
 
-        // workaround the nonexistence of MarioGame here
-        int marioGameWidth = 256;
-        int marioGameHeight = 256;
-
         this.currentTick += 1;
         this.cameraX = this.mario.x - marioGameWidth / 2;
         if (this.cameraX + marioGameWidth > this.level.width) {
@@ -432,7 +428,7 @@ public class MarioWorldSlim {
                     if (this.level.getBlockValue(x, y) == LevelPart.BULLET_BILL_CANNON.getValue()) {
                         if (this.currentTick % 100 == 0) {
                             // no new Bullet Bills outside of window
-                            if (x * 16 + 8 <= rightWindowBorderX && x * 16 + 8 >= rightWindowBorderX - (marioGameWidth * 16))
+                            if (x * 16 + 8 <= rightWindowBorderX && x * 16 + 8 >= rightWindowBorderX - marioGameWidth)
                                 addSprite(new BulletBillSlim(x * 16 + 8 + dir * 8, y * 16 + 15, dir), updateContext);
                         }
                     }
@@ -481,11 +477,9 @@ public class MarioWorldSlim {
 
         this.level.update((int) mario.x / 16);
 
-        //sprites.addAll(0, updateContext.addedSprites);
         for (MarioSpriteSlim newSprite : updateContext.addedSprites) {
             sprites.add(newSprite);
         }
-        //sprites.removeAll(updateContext.removedSprites);
         for (MarioSpriteSlim removedSprite : updateContext.removedSprites) {
             sprites.remove(removedSprite);
         }
