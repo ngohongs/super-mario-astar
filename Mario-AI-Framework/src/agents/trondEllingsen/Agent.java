@@ -55,9 +55,9 @@ public class Agent implements MarioAgent {
     }
 
     private boolean enemyInRange(MarioForwardModel e, Rectangle r) {
-        for (int i = 0; i < e.getEnemiesFloatPos().length; i += 3) {
-            if (r.contains(e.getEnemiesFloatPos()[i + 1] - e.getMarioFloatPos()[0],
-                    e.getMarioFloatPos()[1] - e.getEnemiesFloatPos()[i + 2])) {
+        for (int i = 0; i < e.getEnemiesFloatPosAndType().length; i += 3) {
+            if (r.contains(e.getEnemiesFloatPosAndType()[i + 1] - e.getMarioFloatPos()[0],
+                    e.getMarioFloatPos()[1] - e.getEnemiesFloatPosAndType()[i + 2])) {
                 return true;
             }
         }

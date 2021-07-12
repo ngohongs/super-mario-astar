@@ -37,6 +37,7 @@ public class AStarAgent implements MarioAgent
     
     @Override
 	public void initialize(MarioForwardModel model, MarioTimer timer) {
+    	reset();
 	}
 
     //public boolean[] getAction(Environment observation)

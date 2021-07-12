@@ -541,6 +541,10 @@ public class MarioWorld {
     }
 
     public ArrayList<MarioSprite> getSprites() {
+        return sprites;
+    }
+
+    public ArrayList<MarioSprite> getSpriteClones() {
         ArrayList<MarioSprite> spritesClone = new ArrayList<>();
 
         for (MarioSprite sprite : this.sprites) {

@@ -388,15 +388,26 @@ public class MarioForwardModel {
      * @return an array of 3 floats that contain the enemy type, x position, y
      * position for each enemy sprite
      */
-    public float[] getEnemiesFloatPos() {
+    public float[] getEnemiesFloatPosAndType() {
         ArrayList<MarioSprite> enemiesAlive = this.world.getEnemies();
-        float[] enemyPos = new float[enemiesAlive.size() * 3];
+        float[] enemyPosAndType = new float[enemiesAlive.size() * 3];
         for (int i = 0; i < enemiesAlive.size(); i++) {
-            enemyPos[3 * i] = enemiesAlive.get(i).type.getValue();
-            enemyPos[3 * i + 1] = enemiesAlive.get(i).x;
-            enemyPos[3 * i + 2] = enemiesAlive.get(i).y;
+            enemyPosAndType[3 * i] = enemiesAlive.get(i).type.getValue();
+            enemyPosAndType[3 * i + 1] = enemiesAlive.get(i).x;
+            enemyPosAndType[3 * i + 2] = enemiesAlive.get(i).y;
         }
-        return enemyPos;
+        return enemyPosAndType;
+    }
+
+    public float[] getSpritesFloatPosAndType() {
+        ArrayList<MarioSprite> spritesAlive = this.world.getSprites();
+        float[] spritesPosAndType = new float[spritesAlive.size() * 3];
+        for (int i = 0; i < spritesAlive.size(); i++) {
+            spritesPosAndType[3 * i] = spritesAlive.get(i).type.getValue();
+            spritesPosAndType[3 * i + 1] = spritesAlive.get(i).x;
+            spritesPosAndType[3 * i + 2] = spritesAlive.get(i).y;
+        }
+        return spritesPosAndType;
     }
 
     /**

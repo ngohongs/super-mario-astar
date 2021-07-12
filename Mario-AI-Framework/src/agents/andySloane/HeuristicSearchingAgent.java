@@ -191,7 +191,7 @@ public abstract class HeuristicSearchingAgent implements MarioAgent {
         if (ms == null) {
             // assume one frame of falling before we get an observation :(
             ms = new MarioState(mpos[0], mpos[1], 0.0f, 3.0f);
-            ws = new WorldState(sensors.levelScene, ms, model.getEnemiesFloatPos());
+            ws = new WorldState(sensors.levelScene, ms, model.getEnemiesFloatPosAndType());
         } else {
             if (mpos[0] != pred_x || mpos[1] != pred_y) {
                 if (!epsilon(mpos[0], pred_x) || !epsilon(mpos[1], pred_y)) {
@@ -208,7 +208,7 @@ public abstract class HeuristicSearchingAgent implements MarioAgent {
                 }
             }
             resync(model, !epsilon(mpos[0], pred_x), !epsilon(mpos[1], pred_y));
-            ms.ws.sync(ws, sensors.levelScene, ms, model.getEnemiesFloatPos());
+            ms.ws.sync(ws, sensors.levelScene, ms, model.getEnemiesFloatPosAndType());
             ws = ms.ws;
         }
         // resync these things all the time

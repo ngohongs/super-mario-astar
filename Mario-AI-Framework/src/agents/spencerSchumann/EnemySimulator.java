@@ -40,7 +40,7 @@ public class EnemySimulator {
     // Add new enemies based on the given observation.
     // update(Scene scene) should be called first.
     public void update(MarioForwardModel model) {
-        float[] ep = model.getEnemiesFloatPos();
+        float[] ep = model.getEnemiesFloatPosAndType();
         int i;
         ArrayList<Enemy> newEnemies = new ArrayList<Enemy>();
         for (i = 0; i < ep.length; i += 3) {
