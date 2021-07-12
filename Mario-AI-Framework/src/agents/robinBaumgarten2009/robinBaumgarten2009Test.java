@@ -1,4 +1,4 @@
-package agents.robinBaumgarten2009.astar;
+package agents.robinBaumgarten2009;
 
 import engine.core.MarioGame;
 
