@@ -25,6 +25,8 @@ public class robinBaumgarten2009Test {
         return content;
     }
 
+    // TODO: not finished, missing at least block values conversion and flower enemy adaptation
+
     public static void main(String[] args) {
         MarioGame game = new MarioGame();
         game.runGame(new agents.robinBaumgarten2009.AStarAgent(), getLevel("./levels/original/lvl-1.txt"),
