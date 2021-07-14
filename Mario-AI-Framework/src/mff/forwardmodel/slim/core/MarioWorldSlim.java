@@ -73,9 +73,11 @@ public class MarioWorldSlim {
                 throw new IllegalArgumentException();
         }
 
-        // minimum width because world.update method might look this far
-        if (levelCutoutTileWidth < 27)
+        // minimum width because world.update method might look this far (e.g. isBlocking in enemy move)
+        if (levelCutoutTileWidth < 27) {
             levelCutoutTileWidth = 27;
+            System.out.println("Cutout width increased to 27 to prevent errors.");
+        }
 
         if (this.mario == null) {
             this.mario = new MarioSlim(originalWorld.mario);
