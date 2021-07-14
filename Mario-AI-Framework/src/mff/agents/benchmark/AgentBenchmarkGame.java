@@ -83,7 +83,7 @@ public class AgentBenchmarkGame {
         }
 
         MarioTimerSlim agentTimer;
-        MarioForwardModelSlim slimModel = Converter.originalToSlim(new MarioForwardModel(world.clone()), 0);
+        MarioForwardModelSlim slimModel = Converter.originalToSlim(new MarioForwardModel(world.clone()), 27);
         this.agent.initialize(slimModel);
 
         AgentStats agentStats = new AgentStats();

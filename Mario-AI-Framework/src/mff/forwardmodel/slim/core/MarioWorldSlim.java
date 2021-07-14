@@ -357,6 +357,9 @@ public class MarioWorldSlim {
      * @param rightWindowBorderX in pixels (position * 16)
      */
     public void updateWindow(boolean[] actions, int rightWindowBorderX) {
+        // symmetrical cutout, left from window does not matter that much
+        int leftWindowBorderX = (int) (rightWindowBorderX - (2 * (rightWindowBorderX - mario.x)));
+
         if (this.gameStatusCode != RUNNING) {
             return;
         }
@@ -395,8 +398,8 @@ public class MarioWorldSlim {
 
         updateContext.fireballsOnScreen = 0;
         for (MarioSpriteSlim sprite : sprites) {
-            // kill all sprites outside of current screen
-            if (sprite.x < cameraX - 8 || sprite.x > cameraX + marioGameWidth + 8 || sprite.y > this.level.height + 32) {
+            // kill all sprites outside of selected window
+            if (sprite.x < leftWindowBorderX || sprite.x > rightWindowBorderX || sprite.y > this.level.height + 32) {
                 if (sprite.getType() == SpriteTypeCommon.MARIO) {
                     this.lose();
                 }
@@ -416,7 +419,10 @@ public class MarioWorldSlim {
                 if (x * 16 + 8 < mario.x - 16)
                     dir = 1;
 
-                /* no new sprites except Bullet Bill in window advance
+                // no new sprites outside selected window
+                int pixelX = x * 16;
+                if (pixelX < leftWindowBorderX || pixelX > rightWindowBorderX)
+                    continue;
 
                 SpriteTypeCommon spriteType = level.getSpriteType(x, y);
                 if (spriteType != SpriteTypeCommon.NONE) {
@@ -424,14 +430,11 @@ public class MarioWorldSlim {
                     this.addSprite(newSprite, updateContext);
                     level.setBlock(x, y, 0); // remove sprite when it is spawned
                 }
-                */
 
                 if (dir != 0) {
                     if (this.level.getBlockValue(x, y) == LevelPart.BULLET_BILL_CANNON.getValue()) {
                         if (this.currentTick % 100 == 0) {
-                            // no new Bullet Bills outside of window
-                            if (x * 16 + 8 <= rightWindowBorderX && x * 16 + 8 >= rightWindowBorderX - marioGameWidth)
-                                addSprite(new BulletBillSlim(x * 16 + 8 + dir * 8, y * 16 + 15, dir), updateContext);
+                            addSprite(new BulletBillSlim(x * 16 + 8 + dir * 8, y * 16 + 15, dir), updateContext);
                         }
                     }
                 }

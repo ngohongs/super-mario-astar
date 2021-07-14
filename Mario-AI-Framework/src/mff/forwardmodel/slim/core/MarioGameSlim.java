@@ -87,7 +87,7 @@ public class MarioGameSlim {
         long currentTime = System.currentTimeMillis();
 
         // add slim model to test it
-        int levelCutoutTileWidth = 0;
+        int levelCutoutTileWidth = 27;
         MarioForwardModel originalModel = new MarioForwardModel(world.clone());
         MarioForwardModelSlim slimModel = Converter.originalToSlim(originalModel, levelCutoutTileWidth);
 

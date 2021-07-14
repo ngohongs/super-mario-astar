@@ -108,11 +108,11 @@ public class PerformanceTests {
         long time;
         long duration;
 
-        MarioForwardModelSlim slimModel = Converter.originalToSlim(new MarioForwardModel(world.clone()), 0);
+        MarioForwardModelSlim slimModel = Converter.originalToSlim(new MarioForwardModel(world.clone()), 27);
 
         time = System.currentTimeMillis();
         for (int i = 0; i < 100; i++) {
-            MarioForwardModelSlim test = Converter.originalToSlim(new MarioForwardModel(world.clone()), 0);
+            MarioForwardModelSlim test = Converter.originalToSlim(new MarioForwardModel(world.clone()), 27);
         }
         duration = System.currentTimeMillis() - time;
         System.out.println("Clone + convert: " + duration + " ms");
@@ -323,7 +323,7 @@ public class PerformanceTests {
         setupWorld.update(new boolean[MarioActions.numberOfActions()]);
 
         MarioForwardModel originalModel = new MarioForwardModel(setupWorld.clone());
-        MarioForwardModelSlim slimModel = Converter.originalToSlim(originalModel, 0);
+        MarioForwardModelSlim slimModel = Converter.originalToSlim(originalModel, 27);
         MarioForwardModelBin binModel = Converter.slimToBin(slimModel);
 
         for (int i = 0; i < 1000; i++) {

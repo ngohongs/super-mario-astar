@@ -30,8 +30,8 @@ public class AgentMain {
 
     public static void main(String[] args) {
         //testLevel();
-        //testAllOriginalLevels();
-        testGeneratedLevels();
+        testAllOriginalLevels();
+        //testGeneratedLevels();
         //testAllAgents();
     }
 
@@ -44,8 +44,8 @@ public class AgentMain {
     private static void testAllOriginalLevels() {
         for (int i = 1; i < 16; i++) {
             AgentMarioGame game = new AgentMarioGame();
-            game.runGame(new mff.agents.astarWindow.Agent(), getLevel("./levels/original/lvl-" + i + ".txt"),
-                    200, 0, false);
+            game.runGame(new mff.agents.robinBaumgartenSlimWindowAdvance.Agent(), getLevel("./levels/original/lvl-" + i + ".txt"),
+                    200, 0, true);
         }
     }
 
