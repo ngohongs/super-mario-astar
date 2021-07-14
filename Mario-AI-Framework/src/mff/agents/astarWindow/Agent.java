@@ -42,11 +42,13 @@ public class Agent implements IMarioAgentMFF, IAgentBenchmark {
             return actionsList.remove(actionsList.size() - 1);
         }
 
+        actionsList = newActionsList;
+
         // we need planning to furthest to stick with the plan for some time, else the agent sometimes spins in place
-        if (tree.furthestNodeDistance > furthestDistance) {
-            furthestDistance = tree.furthestNodeDistance;
-            actionsList = newActionsList;
-        }
+//        if (tree.furthestNodeDistance > furthestDistance) {
+//            furthestDistance = tree.furthestNodeDistance;
+//            actionsList = newActionsList;
+//        }
 
         if (actionsList.size() == 0) // agent failed
             return MarioAction.NO_ACTION.value;
