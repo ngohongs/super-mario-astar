@@ -407,10 +407,13 @@ public class MarioWorldSlim {
             this.cameraY = 0;
         }
 
+        float leftKillBorder = Math.max(leftWindowBorderX, cameraX - 64);
+        float rightKillBorder = Math.min(rightWindowBorderX, cameraX + marioGameWidth + 64);
+
         updateContext.fireballsOnScreen = 0;
         for (MarioSpriteSlim sprite : sprites) {
             // kill all sprites outside of selected window
-            if (sprite.x < leftWindowBorderX || sprite.x > rightWindowBorderX || sprite.y > this.level.height + 32) {
+            if (sprite.x < leftKillBorder || sprite.x > rightKillBorder || sprite.y > this.level.height + 32) {
                 if (sprite.getType() == SpriteTypeCommon.MARIO) {
                     this.lose();
                 }
