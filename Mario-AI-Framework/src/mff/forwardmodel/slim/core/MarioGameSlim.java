@@ -2,11 +2,8 @@ package mff.forwardmodel.slim.core;
 
 import java.awt.image.VolatileImage;
 import java.awt.*;
-import java.awt.event.KeyAdapter;
-
 import javax.swing.JFrame;
 
-import agents.human.Agent;
 import engine.core.*;
 import engine.helper.GameStatus;
 import engine.helper.MarioActions;
@@ -44,10 +41,6 @@ public class MarioGameSlim {
 
     private void setAgent(IMarioAgentMFF agent) {
         this.agent = agent;
-    }
-
-    public void playGame(String level, int timer, int marioState) {
-        //runGame(new Agent(), level, timer, marioState, true, 30, 2);
     }
 
     public TestResult runGame(IMarioAgentMFF agent, String level, int timer, int marioState, boolean visuals) {

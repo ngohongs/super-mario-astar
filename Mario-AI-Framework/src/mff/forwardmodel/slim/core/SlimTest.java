@@ -28,14 +28,8 @@ public class SlimTest {
     }
 
     public static void main(String[] args) {
-        //humanTest();
         //correctnessTest();
         advanceSpeedTest();
-    }
-
-    private static void humanTest() {
-        MarioGameSlim game = new MarioGameSlim(false, false);
-        game.playGame(getLevel("./levels/original/lvl-1.txt"), 200, 0);
     }
 
     private static void correctnessTest() {
