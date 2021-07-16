@@ -10,6 +10,8 @@ import agents.human.Agent;
 import engine.core.*;
 import engine.helper.GameStatus;
 import engine.helper.MarioActions;
+import mff.agents.common.IMarioAgentMFF;
+import mff.agents.common.MarioTimerSlim;
 import mff.forwardmodel.common.Converter;
 
 public class MarioGameSlim {
@@ -23,7 +25,7 @@ public class MarioGameSlim {
 
     //visualization
     private MarioRender render = null;
-    private MarioAgent agent = null;
+    private IMarioAgentMFF agent = null;
 
     private boolean checkCorrectness = false;
     private boolean advanceSpeedTest = false;
@@ -40,22 +42,19 @@ public class MarioGameSlim {
         return 1000 / fps;
     }
 
-    private void setAgent(MarioAgent agent) {
+    private void setAgent(IMarioAgentMFF agent) {
         this.agent = agent;
-        if (agent instanceof KeyAdapter) {
-            this.render.addKeyListener((KeyAdapter) this.agent);
-        }
     }
 
     public void playGame(String level, int timer, int marioState) {
-        runGame(new Agent(), level, timer, marioState, true, 30, 2);
+        //runGame(new Agent(), level, timer, marioState, true, 30, 2);
     }
 
-    public TestResult runGame(MarioAgent agent, String level, int timer, int marioState, boolean visuals) {
+    public TestResult runGame(IMarioAgentMFF agent, String level, int timer, int marioState, boolean visuals) {
         return runGame(agent, level, timer, marioState, visuals, visuals ? 30 : 0, 2);
     }
 
-    public TestResult runGame(MarioAgent agent, String level, int timer, int marioState, boolean visuals, int fps, float scale) {
+    public TestResult runGame(IMarioAgentMFF agent, String level, int timer, int marioState, boolean visuals, int fps, float scale) {
         JFrame window = null;
         if (visuals) {
             window = new JFrame("Mario AI Framework");
@@ -102,21 +101,23 @@ public class MarioGameSlim {
             this.render.addFocusListener(this.render);
         }
 
-        MarioTimer agentTimer = new MarioTimer(MarioGameSlim.maxTime);
-        this.agent.initialize(new MarioForwardModel(world.clone()), agentTimer);
+        MarioTimerSlim agentTimer;
+        this.agent.initialize(slimModel);
 
         long originalUpdateTime = 0;
         long slimUpdateTime = 0;
+        long slimWindowUpdateTime = 0;
 
         long originalUpdateCounter = 0;
         long slimUpdateCounter = 0;
+        long slimWindowUpdateCounter = 0;
 
         while (world.gameStatus == GameStatus.RUNNING) {
             if (!this.pause) {
 
                 //get actions
-                agentTimer = new MarioTimer(MarioGameSlim.maxTime);
-                boolean[] actions = this.agent.getActions(new MarioForwardModel(world.clone()), agentTimer);
+                agentTimer = new MarioTimerSlim(maxTime);
+                boolean[] actions = this.agent.getActions(slimModel.clone(), agentTimer);
 
                 // create a copy to prevent actions from changing during updates
                 boolean[] actionsCopy = new boolean[5];
@@ -137,6 +138,16 @@ public class MarioGameSlim {
                 long end = System.nanoTime();
                 originalUpdateTime += end - start;
                 originalUpdateCounter++;
+
+                // clone slim model for advanceWindow speed test
+                MarioForwardModelSlim slimCloneAdvanceWindowTest = slimModel.clone();
+                // call advanceWindow and save result - use the same window size as Robin Baumgarten agent
+                int rightBorderX = (int) (slimCloneAdvanceWindowTest.getMarioX() + 176);
+                start = System.nanoTime();
+                slimCloneAdvanceWindowTest.advanceWindow(actionsCopy, rightBorderX);
+                end = System.nanoTime();
+                slimWindowUpdateTime += end - start;
+                slimWindowUpdateCounter++;
 
                 // clone slim model and advance it
                 MarioForwardModelSlim slimClone = slimModel.clone();
@@ -187,6 +198,7 @@ public class MarioGameSlim {
 
         double originalUpdateTimeDouble = originalUpdateTime;
         double slimUpdateTimeDouble = slimUpdateTime;
+        double slimWindowUpdateTimeDouble = slimWindowUpdateTime;
 
         /*
         System.out.printf("Original update time: %,.3f ms%n", originalUpdateTimeDouble / 1000000d);
@@ -201,6 +213,7 @@ public class MarioGameSlim {
         TestResult testResult = new TestResult();
         testResult.originalTime = originalUpdateTimeDouble / 1000000d;
         testResult.slimTime = slimUpdateTimeDouble / 1000000d;
+        testResult.slimWindowTime = slimWindowUpdateTimeDouble / 1000000d;
         return testResult;
     }
 }
@@ -208,4 +221,5 @@ public class MarioGameSlim {
 class TestResult {
     public double originalTime;
     public double slimTime;
+    public double slimWindowTime;
 }
