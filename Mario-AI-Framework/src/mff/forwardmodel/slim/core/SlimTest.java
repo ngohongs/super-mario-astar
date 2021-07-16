@@ -25,8 +25,8 @@ public class SlimTest {
 
     public static void main(String[] args) {
         //humanTest();
-        //correctnessTest();
-        advanceSpeedTest();
+        correctnessTest();
+        //advanceSpeedTest();
     }
 
     private static void humanTest() {
@@ -37,7 +37,7 @@ public class SlimTest {
     private static void correctnessTest() {
         for (int i = 1; i < 16; i++) {
             MarioGameSlim game = new MarioGameSlim(true, false);
-            game.runGame(new agents.robinBaumgarten.Agent(), getLevel("./levels/original/lvl-" + i + ".txt"), 200, 0, true);
+            game.runGame(new agents.robinBaumgarten.Agent(), getLevel("./levels/original/lvl-" + i + ".txt"), 200, 0, false);
         }
     }
 

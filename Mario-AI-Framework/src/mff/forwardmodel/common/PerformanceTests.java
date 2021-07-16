@@ -88,12 +88,12 @@ public class PerformanceTests {
 
     public static void main(String[] args) {
         //testArrayCopies();
-        //testClones();
+        testClones();
         //testArraysCreation();
         //testOneArrayVsFour();
         //testOneArrayVsTwo();
         //testCopySpeedDiff();
-        testCloneAndConvertVsAdvance();
+        //testCloneAndConvertVsAdvance();
     }
 
     private static void testCloneAndConvertVsAdvance() {
@@ -324,9 +324,10 @@ public class PerformanceTests {
 
         MarioForwardModel originalModel = new MarioForwardModel(setupWorld.clone());
         MarioForwardModelSlim slimModel = Converter.originalToSlim(originalModel, 27);
+        MarioForwardModelSlim slimModelWindow = Converter.originalToSlim(originalModel, 27);
         MarioForwardModelBin binModel = Converter.slimToBin(slimModel);
 
-        for (int i = 0; i < 1000; i++) {
+        for (int i = 0; i < 100000; i++) {
             originalModel.clone();
         }
         long time = System.currentTimeMillis();
@@ -340,11 +341,11 @@ public class PerformanceTests {
         System.out.print(String.format("%,.0f", 1000000 / (duration / 1000.0)));
         System.out.println(" clones");
 
-        for (int i = 0; i < 1000; i++) {
+        for (int i = 0; i < 1000000; i++) {
             slimModel.clone();
         }
         time = System.currentTimeMillis();
-        for (int i = 0; i < 1000000; i++) {
+        for (int i = 0; i < 10000000; i++) {
             slimModel.clone();
         }
         duration = System.currentTimeMillis() - time;
@@ -352,7 +353,22 @@ public class PerformanceTests {
         System.out.println("SLIM MODEL");
         System.out.println("TIME: " + duration + " ms");
         System.out.print("Clones per second: ");
-        System.out.print(String.format("%,.0f", 1000000 / (duration / 1000.0)));
+        System.out.print(String.format("%,.0f", 10000000 / (duration / 1000.0)));
+        System.out.println(" clones");
+
+        for (int i = 0; i < 1000000; i++) {
+            slimModelWindow.clone();
+        }
+        time = System.currentTimeMillis();
+        for (int i = 0; i < 10000000; i++) {
+            slimModelWindow.clone();
+        }
+        duration = System.currentTimeMillis() - time;
+        System.out.println("--------------");
+        System.out.println("SLIM WINDOW MODEL");
+        System.out.println("TIME: " + duration + " ms");
+        System.out.print("Clones per second: ");
+        System.out.print(String.format("%,.0f", 10000000 / (duration / 1000.0)));
         System.out.println(" clones");
 
         for (int i = 0; i < 1000; i++) {

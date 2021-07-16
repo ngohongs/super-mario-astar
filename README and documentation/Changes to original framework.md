@@ -11,7 +11,8 @@
 	
 - MarioWorld
 	- spawning reworked, getSprites
-
+	- new sprites are now added to the end of the sprite list, not the beginning (for speed and consistency)
+	
 - BulletBill
 	- missing alive in clone
 

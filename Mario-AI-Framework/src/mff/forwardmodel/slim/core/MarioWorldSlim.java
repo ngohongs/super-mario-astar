@@ -132,7 +132,7 @@ public class MarioWorldSlim {
     private boolean areSpritesEqual(ArrayList<MarioSpriteSlim> sprites1, ArrayList<MarioSpriteSlim> sprites2) {
         for (MarioSpriteSlim sprite1 : sprites1) {
             boolean found = false;
-            System.out.println("  Comparing sprite " + sprite1);
+            System.out.println("  Comparing sprite " + sprite1 + ", sprite type: " + sprite1.getType());
             for (MarioSpriteSlim sprite2 : sprites2) {
                 if (sprite1.deepEquals(sprite2)) {
                     found = true;
@@ -141,7 +141,8 @@ public class MarioWorldSlim {
             }
             if (!found) {
                 System.out.println("SPRITES NOT EQUAL");
-                System.out.println("    Sprite not equal: " + sprite1);
+                System.out.println("    Sprite not equal: " + sprite1 + ", sprite type: "
+                        + sprite1.getType() + ", sprite X: " + sprite1.x);
                 return false;
             }
         }
@@ -180,9 +181,9 @@ public class MarioWorldSlim {
     public ArrayList<MarioSpriteSlim> getEnemies() {
         ArrayList<MarioSpriteSlim> enemies = new ArrayList<>();
         for (MarioSpriteSlim sprite : sprites) {
-                if (this.isEnemy(sprite)) {
-                    enemies.add(sprite);
-                }
+            if (this.isEnemy(sprite)) {
+                enemies.add(sprite);
+            }
         }
         return enemies;
     }
@@ -267,21 +268,33 @@ public class MarioWorldSlim {
             }
         }
 
+        // sprites spawning, sufficient to check right column
+        int rightColumnX = (int) (cameraX + marioGameWidth) / 16 + 1;
+
+        int dir = 0;
+        if (rightColumnX * 16 + 8 > mario.x + 16)
+            dir = -1;
+        if (rightColumnX * 16 + 8 < mario.x - 16)
+            dir = 1;
+
+        for (int y = (int) cameraY / 16 - 1; y <= (int) (cameraY + marioGameHeight) / 16 + 1; y++) {
+            SpriteTypeCommon spriteType = level.getSpriteType(rightColumnX, y);
+            if (spriteType != SpriteTypeCommon.NONE) {
+                MarioSpriteSlim newSprite = this.spawnEnemy(spriteType, rightColumnX, y, dir);
+                this.addSprite(newSprite, updateContext);
+                level.setBlock(rightColumnX, y, 0); // remove sprite when it is spawned
+            }
+        }
+
+        // Bullet Bills spawning, check for cannons
         for (int x = (int) cameraX / 16 - 1; x <= (int) (cameraX + marioGameWidth) / 16 + 1; x++) {
+            dir = 0;
+            if (x * 16 + 8 > mario.x + 16)
+                dir = -1;
+            if (x * 16 + 8 < mario.x - 16)
+                dir = 1;
+
             for (int y = (int) cameraY / 16 - 1; y <= (int) (cameraY + marioGameHeight) / 16 + 1; y++) {
-                int dir = 0;
-                if (x * 16 + 8 > mario.x + 16)
-                    dir = -1;
-                if (x * 16 + 8 < mario.x - 16)
-                    dir = 1;
-
-                SpriteTypeCommon spriteType = level.getSpriteType(x, y);
-                if (spriteType != SpriteTypeCommon.NONE) {
-                    MarioSpriteSlim newSprite = this.spawnEnemy(spriteType, x, y, dir);
-                    this.addSprite(newSprite, updateContext);
-                    level.setBlock(x, y, 0); // remove sprite when it is spawned
-                }
-
                 if (dir != 0) {
                     if (this.level.getBlockValue(x, y) == LevelPart.BULLET_BILL_CANNON.getValue()) {
                         if (this.currentTick % 100 == 0) {
@@ -333,11 +346,9 @@ public class MarioWorldSlim {
 
         this.level.update((int) mario.x / 16);
 
-        //sprites.addAll(0, updateContext.addedSprites);
         for (MarioSpriteSlim newSprite : updateContext.addedSprites) {
             sprites.add(newSprite);
         }
-        //sprites.removeAll(updateContext.removedSprites);
         for (MarioSpriteSlim removedSprite : updateContext.removedSprites) {
             sprites.remove(removedSprite);
         }
@@ -411,26 +422,33 @@ public class MarioWorldSlim {
             }
         }
 
-        for (int x = (int) cameraX / 16 - 1; x <= (int) (cameraX + marioGameWidth) / 16 + 1; x++) {
+        // no new sprites outside selected window
+        int fromX = Math.max((int) cameraX / 16 - 1, leftWindowBorderX / 16);
+        int toX = Math.min((int) (cameraX + marioGameWidth) / 16 + 1, rightWindowBorderX / 16);
+
+        int dir = 0;
+        if (toX * 16 + 8 > mario.x + 16)
+            dir = -1;
+        if (toX * 16 + 8 < mario.x - 16)
+            dir = 1;
+
+        for (int y = (int) cameraY / 16 - 1; y <= (int) (cameraY + marioGameHeight) / 16 + 1; y++) {
+            SpriteTypeCommon spriteType = level.getSpriteType(toX, y);
+            if (spriteType != SpriteTypeCommon.NONE) {
+                MarioSpriteSlim newSprite = this.spawnEnemy(spriteType, toX, y, dir);
+                this.addSprite(newSprite, updateContext);
+                level.setBlock(toX, y, 0); // remove sprite when it is spawned
+            }
+        }
+
+        for (int x = fromX; x <= toX; x++) {
+            dir = 0;
+            if (x * 16 + 8 > mario.x + 16)
+                dir = -1;
+            if (x * 16 + 8 < mario.x - 16)
+                dir = 1;
+
             for (int y = (int) cameraY / 16 - 1; y <= (int) (cameraY + marioGameHeight) / 16 + 1; y++) {
-                int dir = 0;
-                if (x * 16 + 8 > mario.x + 16)
-                    dir = -1;
-                if (x * 16 + 8 < mario.x - 16)
-                    dir = 1;
-
-                // no new sprites outside selected window
-                int pixelX = x * 16;
-                if (pixelX < leftWindowBorderX || pixelX > rightWindowBorderX)
-                    continue;
-
-                SpriteTypeCommon spriteType = level.getSpriteType(x, y);
-                if (spriteType != SpriteTypeCommon.NONE) {
-                    MarioSpriteSlim newSprite = this.spawnEnemy(spriteType, x, y, dir);
-                    this.addSprite(newSprite, updateContext);
-                    level.setBlock(x, y, 0); // remove sprite when it is spawned
-                }
-
                 if (dir != 0) {
                     if (this.level.getBlockValue(x, y) == LevelPart.BULLET_BILL_CANNON.getValue()) {
                         if (this.currentTick % 100 == 0) {

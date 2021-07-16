@@ -437,7 +437,7 @@ public class MarioWorld {
         }
         fireballsToCheck.clear();
 
-        sprites.addAll(0, addedSprites);
+        sprites.addAll(addedSprites);
         sprites.removeAll(removedSprites);
         addedSprites.clear();
         removedSprites.clear();
