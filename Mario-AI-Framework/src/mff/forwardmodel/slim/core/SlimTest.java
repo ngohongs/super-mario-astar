@@ -51,7 +51,12 @@ public class SlimTest {
                 level = getLevel("./levels/original/lvl-" + i + ".txt");
             } else if (i < 26) {
                 MarioLevelGenerator generator = new levelGenerators.notch.LevelGenerator();
-                level = generator.getGeneratedLevel(new MarioLevelModel(150, 16), new MarioTimer(5 * 60 * 60 * 1000));
+                try {
+                    level = generator.getGeneratedLevel(new MarioLevelModel(150, 16), new MarioTimer(5 * 60 * 60 * 1000));
+                } catch (IllegalArgumentException e) {
+                    System.out.println("Level generator failed.");
+                    continue;
+                }
             } else {
                 MarioLevelGenerator generator = new levelGenerators.benWeber.LevelGenerator();
                 level = generator.getGeneratedLevel(new MarioLevelModel(150, 16), new MarioTimer(5 * 60 * 60 * 1000));
