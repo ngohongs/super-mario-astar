@@ -44,10 +44,39 @@ public class AgentBenchmark {
             logWriter.write("level,win/fail,% travelled,run time,game ticks,planning time,total plannings,nodes evaluated\n");
 
             warmup(agentType);
-            testOriginalLevels(agentType, logWriter);
-            testKrysLevels(agentType, logWriter);
+            //testOriginalLevels(agentType, logWriter);
+            //testKrysLevels(agentType, logWriter);
+            testFrameworkLevels(agentType, logWriter, "ge");
 
             logWriter.close();
+        }
+    }
+
+    private static void testFrameworkLevels(String agentType, FileWriter log, String levelsName) throws IOException {
+        AgentStats agentStats;
+        if (!agentType.equals("robinBaumgarten")) {
+            for (int i = 1; i <= 100; i++) {
+                System.out.println(agentType + "-" + levelsName + "-" + i);
+                String level = getLevel("./levels/" + levelsName + "/lvl-" + i + ".txt");
+                AgentBenchmarkGame game = new AgentBenchmarkGame();
+                IMarioAgentMFF agent = getNewAgent(agentType);
+                // only 30 seconds to speed-up timeout if agent is stuck
+                agentStats = game.runGame(agent, level, 30, 0, false);
+                agentStats.level = levelsName + "-" + i;
+                printStats(log, agentStats);
+            }
+        }
+        else {
+            for (int i = 1; i <= 100; i++) {
+                System.out.println(agentType + "-" + levelsName + "-" + i);
+                String level = getLevel("./levels/" + levelsName + "/lvl-" + i + ".txt");
+                OriginalAgentBenchmarkGame game = new OriginalAgentBenchmarkGame();
+                MarioAgent agent = new agents.robinBaumgarten.Agent();
+                // only 30 seconds to speed-up timeout if agent is stuck
+                agentStats = game.runGame(agent, level, 30, 0, false);
+                agentStats.level = levelsName + "-" + i;
+                printStats(log, agentStats);
+            }
         }
     }
 
