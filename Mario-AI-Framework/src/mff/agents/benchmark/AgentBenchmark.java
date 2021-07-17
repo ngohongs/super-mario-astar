@@ -27,11 +27,11 @@ public class AgentBenchmark {
     }
 
     private static final ArrayList<String> agents = new ArrayList<>() {{
-        add("astar");
-        add("astarDistanceMetric");
-        add("astarPlanningDynamic");
         add("robinBaumgarten");
-        add("robinBaumgartenSlim");
+        add("robinBaumgartenSlimWindowAdvance");
+        add("astar");
+        add("astarPlanningDynamic");
+        add("astarWindow");
     }};
 
     public static void main(String[] args) throws IOException {
@@ -160,10 +160,14 @@ public class AgentBenchmark {
                 return new mff.agents.astarDistanceMetric.Agent();
             case "astarPlanningDynamic":
                 return new mff.agents.astarPlanningDynamic.Agent();
+            case "astarWindow":
+                return new mff.agents.astarWindow.Agent();
             case "robinBaumgartenSlim":
                 return new mff.agents.robinBaumgartenSlim.Agent();
             case "robinBaumgartenSlimImproved":
                 return new mff.agents.robinBaumgartenSlimImproved.Agent();
+            case "robinBaumgartenSlimWindowAdvance":
+                return new mff.agents.robinBaumgartenSlimWindowAdvance.Agent();
             default:
                 throw new IllegalArgumentException("Agent not supported.");
         }
