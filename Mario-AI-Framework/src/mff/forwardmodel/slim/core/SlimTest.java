@@ -35,7 +35,7 @@ public class SlimTest {
     private static void correctnessTest() {
         for (int i = 1; i < 16; i++) {
             MarioGameSlim game = new MarioGameSlim(true, false);
-            game.runGame(new mff.agents.astar.Agent(), getLevel("./levels/original/lvl-" + i + ".txt"), 200, 0, true);
+            game.runGame(new mff.agents.astar.Agent(), getLevel("./levels/original/lvl-" + i + ".txt"), 200, 0, false);
         }
     }
 
@@ -57,11 +57,11 @@ public class SlimTest {
                 level = generator.getGeneratedLevel(new MarioLevelModel(150, 16), new MarioTimer(5 * 60 * 60 * 1000));
             }
 
-            for (int j = 0; j < 2; j++) {
+            for (int j = 0; j < 10; j++) {
                 MarioGameSlim game = new MarioGameSlim(false, true);
                 game.runGame(new mff.agents.astar.Agent(), level, 200, 0, false);
             }
-            for (int k = 0; k < 10; k++) {
+            for (int k = 0; k < 100; k++) {
                 MarioGameSlim game = new MarioGameSlim(false, true);
                 TestResult testResult = game.runGame(new mff.agents.astar.Agent(), level, 200, 0, false);
                 originalTime += testResult.originalTime;
