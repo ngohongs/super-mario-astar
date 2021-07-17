@@ -34,21 +34,35 @@ public class AgentBenchmark {
         add("astarWindow");
     }};
 
+    private static final ArrayList<String> levels = new ArrayList<>() {{
+        add("ge");
+        add("hopper");
+        add("notch");
+        add("notchParam");
+        add("notchParamRand");
+        add("ore");
+        add("patternCount");
+        add("patternOccur");
+        add("patternWeightCount");
+    }};
+
     public static void main(String[] args) throws IOException {
-        for (var agentType : agents) {
-            File log = prepareLog("agent-benchmark" + File.separator + agentType + ".csv");
-            if (log == null)
-                return;
-            FileWriter logWriter = new FileWriter(log);
+        for (String level : levels) {
+            for (var agentType : agents) {
+                File log = prepareLog("agent-benchmark" + File.separator + agentType + "-" + level + ".csv");
+                if (log == null)
+                    return;
+                FileWriter logWriter = new FileWriter(log);
 
-            logWriter.write("level,win/fail,% travelled,run time,game ticks,planning time,total plannings,nodes evaluated\n");
+                logWriter.write("level,win/fail,% travelled,run time,game ticks,planning time,total plannings,nodes evaluated\n");
 
-            warmup(agentType);
-            //testOriginalLevels(agentType, logWriter);
-            //testKrysLevels(agentType, logWriter);
-            testFrameworkLevels(agentType, logWriter, "ge");
+                warmup(agentType);
+                //testOriginalLevels(agentType, logWriter);
+                //testKrysLevels(agentType, logWriter);
+                testFrameworkLevels(agentType, logWriter, level);
 
-            logWriter.close();
+                logWriter.close();
+            }
         }
     }
 
