@@ -7,10 +7,13 @@ import mff.forwardmodel.bin.core.MarioForwardModelBin;
 import mff.forwardmodel.slim.core.MarioForwardModelSlim;
 import sun.misc.Unsafe;
 
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Arrays;
 
 /**
@@ -86,7 +89,7 @@ public class PerformanceTests {
         return content;
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         //testArrayCopies();
         testClones();
         //testArraysCreation();
@@ -313,99 +316,162 @@ public class PerformanceTests {
         System.out.println("Million array copies: " + (System.currentTimeMillis() - time));
     }
 
-    private static void testClones() {
-        String level = getLevel("./levels/original/lvl-1.txt");
-        MarioWorld setupWorld = new MarioWorld(null);
-        setupWorld.visuals = false;
-        setupWorld.initializeLevel(level, 1000 * 200);
-        setupWorld.mario.isLarge = false;
-        setupWorld.mario.isFire = false;
-        setupWorld.update(new boolean[MarioActions.numberOfActions()]);
+    private static File prepareLog(String name) throws IOException {
+        File log = new File(name);
+        if (log.exists()) {
+            if (!log.delete()) {
+                System.out.println("Can't delete file: " + log.getName());
+                return null;
+            }
+        }
+        if (!log.createNewFile()) {
+            System.out.println("Can't create file: " + log.getName());
+            return null;
+        }
+        return log;
+    }
 
-        MarioForwardModel originalModel = new MarioForwardModel(setupWorld.clone());
-        MarioForwardModelSlim slimModel = Converter.originalToSlim(originalModel, 27);
-        MarioForwardModelSlim slimModelWindow = Converter.originalToSlim(originalModel, 27);
-        MarioForwardModelBin binModel = Converter.slimToBin(slimModel);
+    private static final ArrayList<String> levelTypes = new ArrayList<>() {{
+        add("original");
+        add("krys");
+        add("ge");
+        add("hopper");
+        add("notch");
+        add("notchParam");
+        add("notchParamRand");
+        add("ore");
+        add("patternCount");
+        add("patternOccur");
+        add("patternWeightCount");
+    }};
 
-        for (int i = 0; i < 100000; i++) {
-            originalModel.clone();
-        }
-        long time = System.currentTimeMillis();
-        for (int i = 0; i < 1000000; i++) {
-            originalModel.clone();
-        }
-        long duration = System.currentTimeMillis() - time;
-        System.out.println("ORIGINAL MODEL");
-        System.out.println("TIME: " + duration + " ms");
-        System.out.print("Clones per second: ");
-        System.out.print(String.format("%,.0f", 1000000 / (duration / 1000.0)));
-        System.out.println(" clones");
+    private static void testClones() throws IOException {
+        for (String levelType : levelTypes) {
+                File logOrig = prepareLog("clone-benchmark" + File.separator + "orig-" + levelType + ".csv");
+                File logSlim = prepareLog("clone-benchmark" + File.separator + "slim-" + levelType + ".csv");
 
-        for (int i = 0; i < 1000000; i++) {
-            slimModel.clone();
-        }
-        time = System.currentTimeMillis();
-        for (int i = 0; i < 10000000; i++) {
-            slimModel.clone();
-        }
-        duration = System.currentTimeMillis() - time;
-        System.out.println("--------------");
-        System.out.println("SLIM MODEL");
-        System.out.println("TIME: " + duration + " ms");
-        System.out.print("Clones per second: ");
-        System.out.print(String.format("%,.0f", 10000000 / (duration / 1000.0)));
-        System.out.println(" clones");
+                assert logOrig != null;
+                FileWriter logOrigWriter = new FileWriter(logOrig);
+                assert logSlim != null;
+                FileWriter logSlimWriter = new FileWriter(logSlim);
 
-        for (int i = 0; i < 1000000; i++) {
-            slimModelWindow.clone();
-        }
-        time = System.currentTimeMillis();
-        for (int i = 0; i < 10000000; i++) {
-            slimModelWindow.clone();
-        }
-        duration = System.currentTimeMillis() - time;
-        System.out.println("--------------");
-        System.out.println("SLIM WINDOW MODEL");
-        System.out.println("TIME: " + duration + " ms");
-        System.out.print("Clones per second: ");
-        System.out.print(String.format("%,.0f", 10000000 / (duration / 1000.0)));
-        System.out.println(" clones");
+                testOriginalClones(logOrigWriter, levelType);
+                testSlimClones(logSlimWriter, levelType);
 
-        for (int i = 0; i < 1000; i++) {
-            binModel.clone();
+                logOrigWriter.close();
+                logSlimWriter.close();
         }
-        time = System.currentTimeMillis();
-        for (int i = 0; i < 1000000; i++) {
-            binModel.clone();
-        }
-        duration = System.currentTimeMillis() - time;
-        System.out.println("--------------");
-        System.out.println("BIN MODEL");
-        System.out.println("TIME: " + duration + " ms");
-        System.out.print("Clones per second: ");
-        System.out.print(String.format("%,.0f", 1000000 / (duration / 1000.0)));
-        System.out.println(" clones");
+//            for (int i = 0; i < 1000000; i++) {
+//                slimModelWindow.clone();
+//            }
+//            time = System.currentTimeMillis();
+//            for (int i = 0; i < 10000000; i++) {
+//                slimModelWindow.clone();
+//            }
+//            duration = System.currentTimeMillis() - time;
+//            System.out.println("--------------");
+//            System.out.println("SLIM WINDOW MODEL");
+//            System.out.println("TIME: " + duration + " ms");
+//            System.out.print("Clones per second: ");
+//            System.out.print(String.format("%,.0f", 10000000 / (duration / 1000.0)));
+//            System.out.println(" clones");
+//        }
 
-        // pooling test
-        /*
-        time = System.currentTimeMillis();
-        for (int j = 0; j < 10; j++) {
-            LinkedList<MarioForwardModelBin> binModelsList = new LinkedList<>();
+//            for (int i = 0; i < 1000; i++) {
+//                binModel.clone();
+//            }
+//            time = System.currentTimeMillis();
+//            for (int i = 0; i < 1000000; i++) {
+//                binModel.clone();
+//            }
+//            duration = System.currentTimeMillis() - time;
+//            System.out.println("--------------");
+//            System.out.println("BIN MODEL");
+//            System.out.println("TIME: " + duration + " ms");
+//            System.out.print("Clones per second: ");
+//            System.out.print(String.format("%,.0f", 1000000 / (duration / 1000.0)));
+//            System.out.println(" clones");
+    }
+
+    private static void testOriginalClones(FileWriter log, String levelType) throws IOException {
+        int levelCount;
+        if (levelType.equals("original"))
+            levelCount = 15;
+        else
+            levelCount = 100;
+
+        for (int j = 1; j <= levelCount; j++) {
+            System.out.println("original-" + levelType + "-" + j);
+
+            String level = getLevel("./levels/" + levelType + "/lvl-" + j + ".txt");
+
+            MarioWorld setupWorld = new MarioWorld(null);
+            setupWorld.visuals = true;
+            setupWorld.initializeLevel(level, 1000 * 200);
+            setupWorld.mario.isLarge = false;
+            setupWorld.mario.isFire = false;
+            setupWorld.update(new boolean[MarioActions.numberOfActions()]);
+
+            MarioForwardModel originalModel = new MarioForwardModel(setupWorld.clone());
+
             for (int i = 0; i < 100000; i++) {
-                binModelsList.add(binModel.clone());
+                originalModel.clone();
             }
-            for (MarioForwardModelBin binModelFromList : binModelsList) {
-                binModelFromList.returnArrays();
+            long time = System.currentTimeMillis();
+            for (int i = 0; i < 1000000; i++) {
+                originalModel.clone();
+            }
+            long duration = System.currentTimeMillis() - time;
+
+            log.write(levelType + "-" + j + "," + duration + "\n");
+
+            System.gc();
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException ignored) {
             }
         }
-        duration = System.currentTimeMillis() - time;
-        System.out.println("--------------");
-        System.out.println("BIN MODEL - ARRAY POOLING");
-        System.out.println("TIME: " + duration + " ms");
-        System.out.print("Clones per second: ");
-        System.out.print(String.format("%,.0f", 1000000 / (duration / 1000.0)));
-        System.out.println(" clones");
-        */
+    }
+
+    private static void testSlimClones(FileWriter log, String levelType) throws IOException {
+        int levelCount;
+        if (levelType.equals("original"))
+            levelCount = 15;
+        else
+            levelCount = 100;
+
+        for (int j = 1; j <= levelCount; j++) {
+            System.out.println("slim-" + levelType + "-" + j);
+
+            String level = getLevel("./levels/" + levelType + "/lvl-" + j + ".txt");
+
+            MarioWorld setupWorld = new MarioWorld(null);
+            setupWorld.visuals = true;
+            setupWorld.initializeLevel(level, 1000 * 200);
+            setupWorld.mario.isLarge = false;
+            setupWorld.mario.isFire = false;
+            setupWorld.update(new boolean[MarioActions.numberOfActions()]);
+
+            MarioForwardModel originalModel = new MarioForwardModel(setupWorld.clone());
+            MarioForwardModelSlim slimModel = Converter.originalToSlim(originalModel, 27);
+
+            for (int i = 0; i < 1000000; i++) {
+                slimModel.clone();
+            }
+            long time = System.currentTimeMillis();
+            for (int i = 0; i < 10000000; i++) {
+                slimModel.clone();
+            }
+            long duration = System.currentTimeMillis() - time;
+
+            log.write(levelType + "-" + j + "," + duration + "\n");
+
+            System.gc();
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException ignored) {
+            }
+        }
     }
 
     private static void testArrayCopies() {
