@@ -33,10 +33,12 @@ import static engine.helper.TileFeature.*;
 public class GridSearch {
     private static final int MAX_JUMP_HEIGHT = 4;
     private final PriorityQueue<GridSearchNode> opened = new PriorityQueue<>();
-    private final HashMap<Integer, Integer> visitedStates = new HashMap<>();
+    private final HashMap<Integer, Float> visitedStates = new HashMap<>();
 
     // [0,0] at top left
     private final int[][] levelTiles;
+
+    int totalNodesVisited = 0;
 
     public GridSearch(int[][] levelTiles, int marioTileX, int marioTileY) {
         this.levelTiles = levelTiles;
@@ -46,23 +48,27 @@ public class GridSearch {
     public ArrayList<GridSearchNode> findGridPath() {
         while (opened.size() > 0) {
             GridSearchNode current = opened.remove();
+            totalNodesVisited++;
 
-            if (finished(current))
+            if (finished(current)) {
+                System.out.println("total nodes visited: " + totalNodesVisited);
                 return recoverFullPath(current);
+            }
 
             ArrayList<GridMove> possibleMoves = getPossibleMoves(current);
 
             for (GridMove move : possibleMoves) {
                 GridSearchNode newState = advance(current, move);
 
-                int newStateCost = calculateCost(newState);
+                float newStateCost = calculateCost(newState);
 
                 int newStateCode = getStateCode(newState);
-                int newStateOldCost = visitedStates.getOrDefault(newStateCode, -1);
+                float newStateOldCost = visitedStates.getOrDefault(newStateCode, -1f);
                 if (newStateOldCost >= 0 && newStateOldCost <= newStateCost)
                     continue;
 
                 visitedStates.put(newStateCode, newStateCost);
+                newState.cost = newStateCost;
                 opened.add(newState);
             }
         }
@@ -70,8 +76,8 @@ public class GridSearch {
         throw new IllegalStateException("Level is not solvable!");
     }
 
-    private int calculateCost(GridSearchNode newState) {
-        return newState.depth; // TODO
+    private float calculateCost(GridSearchNode newState) {
+        return newState.depth + 1f * (levelTiles.length - newState.tileX);
     }
 
     private int getStateCode(GridSearchNode newState) {

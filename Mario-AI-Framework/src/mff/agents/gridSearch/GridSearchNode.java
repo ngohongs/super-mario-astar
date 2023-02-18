@@ -2,6 +2,7 @@ package mff.agents.gridSearch;
 
 public class GridSearchNode implements Comparable<GridSearchNode> {
     public int depth;
+    public float cost;
     public GridSearchNode parent;
 
     public int tileX;
@@ -20,6 +21,6 @@ public class GridSearchNode implements Comparable<GridSearchNode> {
 
     @Override
     public int compareTo(GridSearchNode other) {
-        return Integer.compare(this.depth, other.depth);
+        return Float.compare(this.cost, other.cost);
     }
 }

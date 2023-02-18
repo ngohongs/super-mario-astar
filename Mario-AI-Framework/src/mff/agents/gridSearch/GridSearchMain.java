@@ -20,5 +20,7 @@ public class GridSearchMain {
 
         GridSearch gridSearch = new GridSearch(levelTiles, marioTileX, marioTileY);
         ArrayList<GridSearchNode> resultPath = gridSearch.findGridPath();
+
+        GridPathVisualizer.visualizePath(level, levelTiles, resultPath);
     }
 }
