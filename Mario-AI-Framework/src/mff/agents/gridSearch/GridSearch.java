@@ -38,7 +38,7 @@ public class GridSearch {
     // [0,0] at top left
     private final int[][] levelTiles;
 
-    int totalNodesVisited = 0;
+    public int totalNodesVisited = 0;
 
     public GridSearch(int[][] levelTiles, int marioTileX, int marioTileY) {
         this.levelTiles = levelTiles;
@@ -50,10 +50,8 @@ public class GridSearch {
             GridSearchNode current = opened.remove();
             totalNodesVisited++;
 
-            if (finished(current)) {
-                System.out.println("total nodes visited: " + totalNodesVisited);
+            if (finished(current))
                 return recoverFullPath(current);
-            }
 
             ArrayList<GridMove> possibleMoves = getPossibleMoves(current);
 

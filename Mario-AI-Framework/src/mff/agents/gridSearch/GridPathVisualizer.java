@@ -11,8 +11,9 @@ public class GridPathVisualizer {
             levelTilesWithPath[node.tileX][node.tileY] = 42;
         }
 
-        StringBuilder sb = new StringBuilder(level.length());
-        CharacterIterator it = new StringCharacterIterator(level);
+        String l = level.stripTrailing();
+        StringBuilder sb = new StringBuilder(l.length());
+        CharacterIterator it = new StringCharacterIterator(l);
         int char_counter = 0;
         for (char c = it.first(); c != CharacterIterator.DONE; c = it.next()) {
             if (levelTilesWithPath[char_counter % levelTiles.length][char_counter / levelTiles.length] == 42)
