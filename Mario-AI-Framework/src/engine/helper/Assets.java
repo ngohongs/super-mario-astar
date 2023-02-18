@@ -61,7 +61,23 @@ public class Assets {
         if (source == null) {
             imageName = imageName.replaceAll("\\\\\\.\\.", "");
             File file = new File(imageName);
-            source = ImageIO.read(file);
+            try {
+                source = ImageIO.read(file);
+            }
+            catch (IOException ignored) { // try with working directory set one folder down
+
+            }
+        }
+        if (source == null) {
+            String[] pathParts = imageName.split("img");
+            imageName = pathParts[0] + "Mario-AI-Framework" + File.separator + "img" + pathParts[1];
+            File file = new File(imageName);
+            try {
+                source = ImageIO.read(file);
+            } catch (IOException e) {
+                System.out.println("Can't find sprite sheet, check it's path in regards to working directory.");
+                throw e;
+            }
         }
         if (source == null) {
             File file = new File(imageName);
