@@ -1,0 +1,6 @@
+.idea
+out
+*.iml
+Mario-AI-Framework/agent-benchmark
+Mario-AI-Framework/clone-benchmark
+Mario-AI-Framework/levels/test
