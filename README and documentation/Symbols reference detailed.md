@@ -1,5 +1,4 @@
 - 'M': Mario Starting Position, not having it will force the engine to start at x = 0 and the first ground floor.
-
 - 'F': Mario finish line, not having it will force the engine to end at x = levelWidth and the first ground floor.
 - 'y': Spiky - turtle with spikes running on land
 - 'Y': Winged Spiky - turtle with spikes running and jumping
@@ -27,7 +26,7 @@
 - 'L': 1 up Block - brick with mushroom that adds a life
 - 'o': Coin
 - 't': Empty Pipe
-- 'T': Pipe with Piranaha Plant in it - must be 2 block iwde
+- 'T': Pipe with Piranaha Plant in it - must be 2 blocks wide
 - '<': Top left of empty pipe
 - '>': Top right of empty pipe
 - '[': Left of empty pipe
