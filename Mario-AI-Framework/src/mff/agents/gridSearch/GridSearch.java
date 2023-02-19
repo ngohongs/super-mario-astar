@@ -29,7 +29,7 @@ import static engine.helper.TileFeature.*;
 
 // TODO: check big Mario
 // TODO: allow only JUMP action in my A* (and no action to allow free fall?)
-// for now, let's use "2 tile start physics" everywhere
+// TODO: for now, let's use "2 tile start physics" everywhere
 public class GridSearch {
     private static final int MAX_JUMP_HEIGHT = 4;
     private final PriorityQueue<GridSearchNode> opened = new PriorityQueue<>();
@@ -39,6 +39,7 @@ public class GridSearch {
     private final int[][] levelTiles;
 
     public int totalNodesVisited = 0;
+    public boolean success = false;
 
     public GridSearch(int[][] levelTiles, int marioTileX, int marioTileY) {
         this.levelTiles = levelTiles;
@@ -51,12 +52,18 @@ public class GridSearch {
     }
 
     public ArrayList<GridSearchNode> findGridPath() {
+        GridSearchNode furthest = opened.peek();
         while (opened.size() > 0) {
             GridSearchNode current = opened.remove();
             totalNodesVisited++;
 
-            if (finished(current))
+            if (current.tileX > furthest.tileX)
+                furthest = current;
+
+            if (finished(current)) {
+                success = true;
                 return recoverFullPath(current);
+            }
 
             ArrayList<GridMove> possibleMoves = getPossibleMoves(current);
 
@@ -76,7 +83,8 @@ public class GridSearch {
             }
         }
 
-        throw new IllegalStateException("Level is not solvable!");
+        return recoverFullPath(furthest);
+//        throw new IllegalStateException("Level is not solvable!");
     }
 
     private float calculateCost(GridSearchNode newState) {
@@ -268,11 +276,11 @@ public class GridSearch {
             }
             case UP_HORIZONTAL_LAST_MOVE_HORIZONTAL -> {
                 switch (move) {
-                    case RIGHT -> {
-                        throw new IllegalStateException("Can't move right in UP_HORIZONTAL_LAST_MOVE_HORIZONTAL.");
-                    }
-                    case LEFT -> {
-                        throw new IllegalStateException("Can't move left in UP_HORIZONTAL_LAST_MOVE_HORIZONTAL.");
+                    case RIGHT, LEFT -> {
+                        // longer horizontal jump
+                        next.jumpDirection = current.jumpDirection;
+                        next.jumpState = GridJumpState.TOP_MOVED_HORIZONTAL_TWICE;
+                        next.jumpUpTravelled = 0;
                     }
                     case UP -> {
                         next.jumpDirection = current.jumpDirection;
@@ -576,6 +584,11 @@ public class GridSearch {
                 // start falling down
                 if (isBelowFree(current))
                     possibleMoves.add(GridMove.DOWN);
+                // longer horizontal jump, go to state TOP_MOVED_HORIZONTAL_TWICE
+                if (current.jumpDirection == GridJumpDirection.RIGHT && isRightFree(current))
+                    possibleMoves.add(GridMove.RIGHT);
+                if (current.jumpDirection == GridJumpDirection.LEFT && isLeftFree(current))
+                    possibleMoves.add(GridMove.LEFT);
             }
             case TOP_MOVED_HORIZONTAL, DOWN_HORIZONTAL_LAST_MOVE_DOWN -> {
                 // move horizontally

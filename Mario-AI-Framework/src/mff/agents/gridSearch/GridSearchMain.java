@@ -27,5 +27,8 @@ public class GridSearchMain {
             System.out.println("Total nodes visited: " + gridSearch.totalNodesVisited);
             GridPathVisualizer.visualizePath(level, levelTiles, resultPath);
         }
+
+        if (!gridSearch.success)
+            GridPathVisualizer.visualizePath(level, levelTiles, resultPath);
     }
 }

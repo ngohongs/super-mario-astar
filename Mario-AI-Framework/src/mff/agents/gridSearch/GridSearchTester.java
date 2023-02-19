@@ -16,7 +16,7 @@ public class GridSearchTester {
     }
 
     private static void testGeneratedLevels() {
-        for (String levelGenerator : levelGenerators){
+        for (String levelGenerator : levelGenerators) {
             for (int i = 1; i <= 100; i++) {
                 System.out.println("Testing grid search for: " + levelGenerator + "-" + i);
                 GridSearchMain.findGridPathForLevel("./levels/" + levelGenerator + "/lvl-" + i + ".txt", false);
@@ -25,15 +25,15 @@ public class GridSearchTester {
     }
 
     private static final ArrayList<String> levelGenerators = new ArrayList<>() {{
-//        add("krys"); // TODO
+        add("krys"); // TODO
         add("ge");
         add("hopper");
         add("notch");
         add("notchParam");
         add("notchParamRand");
         add("ore");
-//        add("patternCount"); // TODO
-//        add("patternOccur"); // TODO
-//        add("patternWeightCount"); // TODO
+        add("patternCount");
+        add("patternOccur");
+        add("patternWeightCount");
     }};
 }
