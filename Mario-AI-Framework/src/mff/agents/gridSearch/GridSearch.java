@@ -42,6 +42,11 @@ public class GridSearch {
 
     public GridSearch(int[][] levelTiles, int marioTileX, int marioTileY) {
         this.levelTiles = levelTiles;
+
+        // Mario not placed in level layout and original framework did not find a proper start location
+        if (marioTileY == -1)
+            marioTileY = 0;
+
         opened.add(new GridSearchNode(marioTileX, marioTileY, 0, null));
     }
 
@@ -156,7 +161,10 @@ public class GridSearch {
             case WALKED_OFF_AN_EDGE -> {
                 switch (move) {
                     case RIGHT, LEFT -> {
-                        throw new IllegalStateException("Can't move to the side when walking off an edge.");
+                        // allow small jump over a 1 wide pit (special case with ceiling just above us)
+                        next.jumpDirection = GridJumpDirection.UNDEFINED;
+                        next.jumpState = GridJumpState.ON_GROUND;
+                        next.jumpUpTravelled = 0;
                     }
                     case UP -> {
                         next.jumpDirection = GridJumpDirection.UNDEFINED;
@@ -492,6 +500,10 @@ public class GridSearch {
         // if falling, can only move in the direction in which the jump was initiated, or straight down
         // jump direction can be undefined - just falling, init of jumping on top of a block in the same column
 
+        // died in a pit
+        if (current.tileY == 15)
+            return new ArrayList<>();
+
         var possibleMoves = new ArrayList<GridMove>();
 
         switch (current.jumpState) {
@@ -513,6 +525,11 @@ public class GridSearch {
                 // consider it a start of a fall
                 if (isBelowFree(current))
                     possibleMoves.add(GridMove.DOWN);
+                // allow small jump over a 1 wide pit (special case with ceiling just above us)
+                if (isRightFree(current) && !isFree(current.tileX + 1, current.tileY + 1, GridMove.DOWN))
+                    possibleMoves.add(GridMove.RIGHT);
+                if (isLeftFree(current) && !isFree(current.tileX - 1, current.tileY + 1, GridMove.DOWN))
+                    possibleMoves.add(GridMove.LEFT);
             }
             case STRAIGHT_UP -> {
                 // continue straight up
@@ -523,6 +540,7 @@ public class GridSearch {
                     possibleMoves.add(GridMove.RIGHT);
                 if (current.jumpDirection == GridJumpDirection.LEFT && isLeftFree(current))
                     possibleMoves.add(GridMove.LEFT);
+                // jump up on the same column
                 if (current.jumpDirection == GridJumpDirection.UNDEFINED) {
                     if (isRightFree(current))
                         possibleMoves.add(GridMove.RIGHT);
@@ -530,7 +548,21 @@ public class GridSearch {
                         possibleMoves.add(GridMove.LEFT);
                 }
             }
-            case UP_HORIZONTAL_LAST_MOVE_UP, TOP -> {
+            case TOP -> {
+                // move horizontally
+                if (current.jumpDirection == GridJumpDirection.RIGHT && isRightFree(current))
+                    possibleMoves.add(GridMove.RIGHT);
+                if (current.jumpDirection == GridJumpDirection.LEFT && isLeftFree(current))
+                    possibleMoves.add(GridMove.LEFT);
+                // jump up on the same column
+                if (current.jumpDirection == GridJumpDirection.UNDEFINED) {
+                    if (isRightFree(current))
+                        possibleMoves.add(GridMove.RIGHT);
+                    if (isLeftFree(current))
+                        possibleMoves.add(GridMove.LEFT);
+                }
+            }
+            case UP_HORIZONTAL_LAST_MOVE_UP -> {
                 // move horizontally
                 if (current.jumpDirection == GridJumpDirection.RIGHT && isRightFree(current))
                     possibleMoves.add(GridMove.RIGHT);
@@ -588,16 +620,20 @@ public class GridSearch {
             // BLOCK_LOWER = blocks from above (pass through platforms)
             // BLOCK_ALL   = solid blocks
             ArrayList<TileFeature> tileFeatures = getTileType(levelTiles[tileX][tileY]);
+            int tileValue = levelTiles[tileX][tileY];
 
             switch (move) {
                 case LEFT, RIGHT -> {
-                    return !tileFeatures.contains(TileFeature.BLOCK_ALL);
+                    return !tileFeatures.contains(TileFeature.BLOCK_ALL) &&
+                            tileValue != 48 && tileValue != 49;
                 }
                 case DOWN -> {
-                    return !(tileFeatures.contains(BLOCK_LOWER) || tileFeatures.contains(BLOCK_ALL));
+                    return !(tileFeatures.contains(BLOCK_LOWER) || tileFeatures.contains(BLOCK_ALL)) &&
+                            tileValue != 48 && tileValue != 49;
                 }
                 case UP -> {
-                    return !(tileFeatures.contains(BLOCK_UPPER) || tileFeatures.contains(BLOCK_ALL));
+                    return !(tileFeatures.contains(BLOCK_UPPER) || tileFeatures.contains(BLOCK_ALL)) &&
+                            tileValue != 48 && tileValue != 49;
                 }
                 default -> throw new IllegalStateException("GridMove has forbidden value.");
             }
