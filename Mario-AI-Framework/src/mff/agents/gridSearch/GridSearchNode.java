@@ -11,6 +11,7 @@ public class GridSearchNode implements Comparable<GridSearchNode> {
     public GridJumpDirection jumpDirection = GridJumpDirection.UNDEFINED;
     public GridJumpState jumpState = GridJumpState.ON_GROUND;
     public int jumpUpTravelled = 0;
+    public int horizontalJumpBoostLeft = 0;
 
     public GridSearchNode(int tileX, int tileY, int depth, GridSearchNode parent) {
         this.tileX = tileX;

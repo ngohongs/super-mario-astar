@@ -32,6 +32,7 @@ import static engine.helper.TileFeature.*;
 // TODO: for now, let's use "2 tile start physics" everywhere
 public class GridSearch {
     private static final int MAX_JUMP_HEIGHT = 4;
+    private int horizontalJumpBoost = 0;
     private final PriorityQueue<GridSearchNode> opened = new PriorityQueue<>();
     private final HashMap<Integer, Float> visitedStates = new HashMap<>();
 
@@ -49,6 +50,13 @@ public class GridSearch {
             marioTileY = 0;
 
         opened.add(new GridSearchNode(marioTileX, marioTileY, 0, null));
+    }
+
+    public GridSearch(int[][] levelTiles, int marioTileX, int marioTileY, int horizontalJumpBoost) {
+        this(levelTiles, marioTileX, marioTileY);
+        this.horizontalJumpBoost = horizontalJumpBoost;
+        assert opened.peek() != null;
+        opened.peek().horizontalJumpBoostLeft = this.horizontalJumpBoost;
     }
 
     public ArrayList<GridSearchNode> findGridPath() {
@@ -126,6 +134,7 @@ public class GridSearch {
             case UP   -> tileY = current.tileY - 1;
         }
         GridSearchNode next = new GridSearchNode(tileX, tileY, current.depth + 1, current);
+        next.horizontalJumpBoostLeft = current.horizontalJumpBoostLeft;
 
         switch (current.jumpState) {
             case ON_GROUND -> {
@@ -279,7 +288,12 @@ public class GridSearch {
                     case RIGHT, LEFT -> {
                         // longer horizontal jump
                         next.jumpDirection = current.jumpDirection;
-                        next.jumpState = GridJumpState.TOP_MOVED_HORIZONTAL_TWICE;
+                        if (current.horizontalJumpBoostLeft == 0) {
+                            next.jumpState = GridJumpState.TOP_MOVED_HORIZONTAL_FINAL;
+                        } else {
+                            next.jumpState = GridJumpState.TOP_MOVED_HORIZONTAL;
+                            next.horizontalJumpBoostLeft = current.horizontalJumpBoostLeft - 1;
+                        }
                         next.jumpUpTravelled = 0;
                     }
                     case UP -> {
@@ -342,11 +356,17 @@ public class GridSearch {
             case TOP_MOVED_HORIZONTAL -> {
                 switch (move) {
                     case RIGHT -> {
-                        if (isBelowFree(next)) {
+                        if (isBelowFree(next) && current.horizontalJumpBoostLeft == 0) {
                             // continue the jump
                             next.jumpDirection = GridJumpDirection.RIGHT;
-                            next.jumpState = GridJumpState.TOP_MOVED_HORIZONTAL_TWICE;
+                            next.jumpState = GridJumpState.TOP_MOVED_HORIZONTAL_FINAL;
                             next.jumpUpTravelled = 0;
+                        } else if (isBelowFree(next) && current.horizontalJumpBoostLeft > 0) {
+                            // horizontal boost
+                            next.jumpDirection = GridJumpDirection.RIGHT;
+                            next.jumpState = GridJumpState.TOP_MOVED_HORIZONTAL;
+                            next.jumpUpTravelled = 0;
+                            next.horizontalJumpBoostLeft = current.horizontalJumpBoostLeft - 1;
                         } else {
                             // land
                             next.jumpDirection = GridJumpDirection.UNDEFINED;
@@ -355,11 +375,17 @@ public class GridSearch {
                         }
                     }
                     case LEFT -> {
-                        if (isBelowFree(next)) {
+                        if (isBelowFree(next) && current.horizontalJumpBoostLeft == 0) {
                             // continue the jump
                             next.jumpDirection = GridJumpDirection.LEFT;
-                            next.jumpState = GridJumpState.TOP_MOVED_HORIZONTAL_TWICE;
+                            next.jumpState = GridJumpState.TOP_MOVED_HORIZONTAL_FINAL;
                             next.jumpUpTravelled = 0;
+                        } else if (isBelowFree(next) && current.horizontalJumpBoostLeft > 0) {
+                            // horizontal boost
+                            next.jumpDirection = GridJumpDirection.LEFT;
+                            next.jumpState = GridJumpState.TOP_MOVED_HORIZONTAL;
+                            next.jumpUpTravelled = 0;
+                            next.horizontalJumpBoostLeft = current.horizontalJumpBoostLeft - 1;
                         } else {
                             // land
                             next.jumpDirection = GridJumpDirection.UNDEFINED;
@@ -371,6 +397,7 @@ public class GridSearch {
                         throw new IllegalStateException("Can't jump up from TOP_MOVED_HORIZONTAL state.");
                     }
                     case DOWN -> {
+                        next.horizontalJumpBoostLeft = this.horizontalJumpBoost;
                         if (!isBelowFree(next)) {
                             next.jumpDirection = GridJumpDirection.UNDEFINED;
                             next.jumpState = GridJumpState.ON_GROUND;
@@ -383,7 +410,7 @@ public class GridSearch {
                     }
                 }
             }
-            case TOP_MOVED_HORIZONTAL_TWICE -> {
+            case TOP_MOVED_HORIZONTAL_FINAL -> {
                 switch (move) {
                     case RIGHT -> {
                         throw new IllegalStateException("Can't move right from TOP_MOVED_HORIZONTAL_TWICE state.");
@@ -521,6 +548,8 @@ public class GridSearch {
             }
         }
 
+        if (next.jumpState == GridJumpState.ON_GROUND)
+            next.horizontalJumpBoostLeft = this.horizontalJumpBoost;
         return next;
     }
 
@@ -620,7 +649,7 @@ public class GridSearch {
                 if (isBelowFree(current))
                     possibleMoves.add(GridMove.DOWN);
             }
-            case TOP_MOVED_HORIZONTAL_TWICE, DOWN_HORIZONTAL_LAST_MOVE_HORIZONTAL -> {
+            case TOP_MOVED_HORIZONTAL_FINAL, DOWN_HORIZONTAL_LAST_MOVE_HORIZONTAL -> {
                 // start or continue falling down
                 if (isBelowFree(current))
                     possibleMoves.add(GridMove.DOWN);
