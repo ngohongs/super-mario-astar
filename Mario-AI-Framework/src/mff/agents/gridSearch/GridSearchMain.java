@@ -28,7 +28,9 @@ public class GridSearchMain {
             GridPathVisualizer.visualizePath(level, levelTiles, resultPath);
         }
 
-        if (!gridSearch.success)
+        if (!gridSearch.success) {
+            System.out.println("Grid search failed:");
             GridPathVisualizer.visualizePath(level, levelTiles, resultPath);
+        }
     }
 }
