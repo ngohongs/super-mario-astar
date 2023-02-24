@@ -410,10 +410,30 @@ public class GridSearch {
             case STRAIGHT_DOWN -> {
                 switch (move) {
                     case RIGHT -> {
-                        throw new IllegalStateException("Can't move right from STRAIGHT_DOWN state.");
+                        if (isBelowFree(next)) {
+                            // continue the jump
+                            next.jumpDirection = GridJumpDirection.RIGHT;
+                            next.jumpState = GridJumpState.DOWN_HORIZONTAL_LAST_MOVE_HORIZONTAL;
+                            next.jumpUpTravelled = 0;
+                        } else {
+                            // land
+                            next.jumpDirection = GridJumpDirection.UNDEFINED;
+                            next.jumpState = GridJumpState.ON_GROUND;
+                            next.jumpUpTravelled = 0;
+                        }
                     }
                     case LEFT -> {
-                        throw new IllegalStateException("Can't move left from STRAIGHT_DOWN state.");
+                        if (isBelowFree(next)) {
+                            // continue the jump
+                            next.jumpDirection = GridJumpDirection.LEFT;
+                            next.jumpState = GridJumpState.DOWN_HORIZONTAL_LAST_MOVE_HORIZONTAL;
+                            next.jumpUpTravelled = 0;
+                        } else {
+                            // land
+                            next.jumpDirection = GridJumpDirection.UNDEFINED;
+                            next.jumpState = GridJumpState.ON_GROUND;
+                            next.jumpUpTravelled = 0;
+                        }
                     }
                     case UP -> {
                         throw new IllegalStateException("Can't jump up from STRAIGHT_DOWN state.");
@@ -600,10 +620,20 @@ public class GridSearch {
                 if (isBelowFree(current))
                     possibleMoves.add(GridMove.DOWN);
             }
-            case TOP_MOVED_HORIZONTAL_TWICE, STRAIGHT_DOWN, DOWN_HORIZONTAL_LAST_MOVE_HORIZONTAL -> {
+            case TOP_MOVED_HORIZONTAL_TWICE, DOWN_HORIZONTAL_LAST_MOVE_HORIZONTAL -> {
                 // start or continue falling down
                 if (isBelowFree(current))
                     possibleMoves.add(GridMove.DOWN);
+            }
+            case STRAIGHT_DOWN -> {
+                // continue falling straight down
+                if (isBelowFree(current))
+                    possibleMoves.add(GridMove.DOWN);
+                // add horizontal movement to the fall
+                if (isRightFree(current))
+                    possibleMoves.add(GridMove.RIGHT);
+                if (isLeftFree(current))
+                    possibleMoves.add(GridMove.LEFT);
             }
         }
         return  possibleMoves;
