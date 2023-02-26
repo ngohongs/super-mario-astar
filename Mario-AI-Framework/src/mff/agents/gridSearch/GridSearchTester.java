@@ -25,7 +25,7 @@ public class GridSearchTester {
     }
 
     private static final ArrayList<String> levelGenerators = new ArrayList<>() {{
-        add("krys"); // TODO
+        add("krys");
         add("ge");
         add("hopper");
         add("notch");
