@@ -2,24 +2,31 @@ package mff.agents.astarGrid;
 
 import mff.agents.astarHelper.MarioAction;
 import mff.agents.benchmark.IAgentBenchmark;
+import mff.agents.common.IGridHeuristic;
 import mff.agents.common.IMarioAgentMFF;
 import mff.agents.common.MarioTimerSlim;
 import mff.forwardmodel.slim.core.MarioForwardModelSlim;
 
 import java.util.ArrayList;
 
-public class Agent implements IMarioAgentMFF, IAgentBenchmark {
+public class Agent implements IMarioAgentMFF, IAgentBenchmark, IGridHeuristic {
 
     private ArrayList<boolean[]> actionsList = new ArrayList<>();
     private float furthestDistance = -1;
     private boolean finished = false;
     private int totalSearchCalls = 0;
     private int totalNodesEvaluated = 0;
+    private int[][] levelTilesWithPath;
 
     @Override
     public void initialize(MarioForwardModelSlim model) {
         AStarTree.winFound = false;
         AStarTree.exitTileX = model.getWorld().level.exitTileX * 16;
+    }
+
+    @Override
+    public void receiveLevelWithPath(int[][] levelTilesWithPath) {
+        this.levelTilesWithPath = levelTilesWithPath;
     }
 
     @Override
@@ -31,7 +38,7 @@ public class Agent implements IMarioAgentMFF, IAgentBenchmark {
                 return actionsList.remove(actionsList.size() - 1);
         }
 
-        AStarTree tree = new AStarTree(model, 3);
+        AStarTree tree = new AStarTree(model, 3, levelTilesWithPath);
         ArrayList<boolean[]> newActionsList = tree.search(timer);
         totalSearchCalls++;
         this.totalNodesEvaluated += tree.nodesEvaluated;

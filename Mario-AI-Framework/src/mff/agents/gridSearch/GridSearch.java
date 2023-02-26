@@ -19,7 +19,11 @@ package mff.agents.gridSearch;
 //  can't go through from the top
 //  can pass from sides and walk in them
 
+import engine.core.MarioEvent;
+import engine.core.MarioWorld;
 import engine.helper.TileFeature;
+import mff.LevelLoader;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -57,6 +61,36 @@ public class GridSearch {
         this.horizontalJumpBoost = horizontalJumpBoost;
         assert opened.peek() != null;
         opened.peek().horizontalJumpBoostLeft = this.horizontalJumpBoost;
+    }
+
+    public static GridSearch initGridSearch(String levelPath) {
+        String level = LevelLoader.getLevel(levelPath);
+        MarioEvent[] killEvents = new MarioEvent[0];
+        MarioWorld world = new MarioWorld(killEvents);
+        world.initializeLevel(level, 1000000);
+        int[][] levelTiles = world.level.getLevelTiles();
+        int marioTileX = world.level.marioTileX;
+        int marioTileY = world.level.marioTileY;
+        return new GridSearch(levelTiles, marioTileX, marioTileY);
+    }
+
+    public static GridSearch initGridSearch(String levelPath, int horizontalJumpBoost) {
+        String level = LevelLoader.getLevel(levelPath);
+        MarioEvent[] killEvents = new MarioEvent[0];
+        MarioWorld world = new MarioWorld(killEvents);
+        world.initializeLevel(level, 1000000);
+        int[][] levelTiles = world.level.getLevelTiles();
+        int marioTileX = world.level.marioTileX;
+        int marioTileY = world.level.marioTileY;
+        return new GridSearch(levelTiles, marioTileX, marioTileY, horizontalJumpBoost);
+    }
+
+    public int[][] markGridPathInLevelTiles(ArrayList<GridSearchNode> path) {
+        int[][] result = new int[this.levelTiles.length][this.levelTiles[0].length];
+        for (GridSearchNode node : path) {
+            result[node.tileX][node.tileY] = 1;
+        }
+        return result;
     }
 
     public ArrayList<GridSearchNode> findGridPath() {

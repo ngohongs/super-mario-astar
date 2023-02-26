@@ -12,6 +12,8 @@ import java.util.HashMap;
 import java.util.PriorityQueue;
 
 public class AStarTree {
+    private int[][] levelTilesWithPath;
+
     public SearchNode furthestNode;
     public float furthestNodeDistance;
 
@@ -30,8 +32,9 @@ public class AStarTree {
      */
     HashMap<Integer, Float> visitedStates = new HashMap<>();
     
-    public AStarTree(MarioForwardModelSlim startState, int searchSteps) {
+    public AStarTree(MarioForwardModelSlim startState, int searchSteps, int[][] levelTilesWithPath) {
     	this.searchSteps = searchSteps;
+        this.levelTilesWithPath = levelTilesWithPath;
 
     	marioXStart = startState.getMarioX();
 
@@ -60,8 +63,62 @@ public class AStarTree {
     
     private float calculateCost(MarioForwardModelSlim nextState, int nodeDepth) {
         float timeToFinish = (exitTileX - nextState.getMarioX()) / maxMarioSpeedX;
-        return nodeDepth + timeToFinish * 1.1f;
+        float distanceFromGridPathCost = calculateDistanceFromGridPathCost(nextState);
+        return nodeDepth + timeToFinish + distanceFromGridPathCost;
 	}
+
+    private float calculateDistanceFromGridPathCost(MarioForwardModelSlim nextState) {
+        int distanceFromGridPath = calculateDistanceFromGridPath(nextState);
+        if (distanceFromGridPath <= 5)
+            return 0;
+        else
+            return (distanceFromGridPath - 5) * 10;
+    }
+
+    private int calculateDistanceFromGridPath(MarioForwardModelSlim nextState) {
+        int marioTileX = (int) (nextState.getMarioX() / 16);
+        int marioTileY = (int) (nextState.getMarioY() / 16);
+        if (marioTileX >= 0 && marioTileX < levelTilesWithPath.length &&
+            marioTileY >= 0 && marioTileY < levelTilesWithPath[0].length)
+                if (levelTilesWithPath[marioTileX][marioTileY] == 1)
+                    return 0;
+
+        int distance = 1;
+        do {
+            // upper and lower side
+            for (int x = marioTileX - distance; x <= marioTileX + distance; x++) {
+                if (x < 0 || x >= levelTilesWithPath.length)
+                    continue;
+
+                int y = marioTileY - distance;
+                if (y >= 0 && y < levelTilesWithPath[0].length)
+                    if (levelTilesWithPath[x][y] == 1)
+                        return distance;
+
+                y = marioTileY + distance;
+                if (y >= 0 && y < levelTilesWithPath[0].length)
+                    if (levelTilesWithPath[x][y] == 1)
+                        return distance;
+            }
+            // left and right side
+            for (int y = marioTileY - distance + 1; y <= marioTileY + distance - 1; y++) {
+                if (y < 0 || y >= levelTilesWithPath[0].length)
+                    continue;
+
+                int x = marioTileX - distance;
+                if (x >= 0 && x < levelTilesWithPath.length)
+                    if (levelTilesWithPath[x][y] == 1)
+                        return distance;
+
+                x = marioTileX + distance;
+                if (x >= 0 && x < levelTilesWithPath.length)
+                    if (levelTilesWithPath[x][y] == 1)
+                        return distance;
+            }
+            distance++;
+        } while (distance < 64);
+        throw new IllegalStateException("Something seems wrong, distance to grid path shouldn't be this big.");
+    }
 
     public ArrayList<boolean[]> search(MarioTimerSlim timer) {
         while (opened.size() > 0 && timer.getRemainingTime() > 0) {
