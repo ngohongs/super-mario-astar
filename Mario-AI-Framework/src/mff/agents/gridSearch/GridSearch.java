@@ -96,7 +96,7 @@ public class GridSearch {
     }
 
     private float calculateCost(GridSearchNode newState) {
-        return newState.depth + 1f * (levelTiles.length - newState.tileX);
+        return newState.depth + 1f * (levelTiles.length - newState.tileX) - newState.horizontalJumpBoostLeft;
     }
 
     private int getStateCode(GridSearchNode newState) {
