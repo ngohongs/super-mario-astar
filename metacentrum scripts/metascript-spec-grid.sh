@@ -16,7 +16,6 @@ do
           sed -i "s/DFPAP=[0-9]\+\.[0-9]\+/DFPAP=$dfpap/" script-spec-grid.sh;
           #qsub script-spec-grid.sh;
           cat script-spec-grid.sh;
-        done
       done
     done
   done
