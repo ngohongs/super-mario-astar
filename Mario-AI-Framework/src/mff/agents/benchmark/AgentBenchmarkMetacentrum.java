@@ -11,14 +11,13 @@ import mff.agents.common.IMarioAgentMFF;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
 import java.util.Locale;
 
 import static mff.agents.astarGrid.AStarGridHelper.giveLevelTilesWithPath;
+import static mff.LevelLoader.getLevel;
 
 public class AgentBenchmarkMetacentrum {
 
@@ -268,23 +267,5 @@ public class AgentBenchmarkMetacentrum {
             default:
                 throw new IllegalArgumentException("Agent not supported.");
         }
-    }
-
-    private static String getLevel(String filepath) {
-        String content = "";
-        try {
-            content = new String(Files.readAllBytes(Paths.get(filepath)));
-            return content;
-        } catch (IOException ignored) {
-            // try with working directory set one folder down
-        }
-        try {
-            content = new String(Files.readAllBytes(Paths.get("." + filepath)));
-        }
-        catch (IOException e) {
-            System.out.println("Level couldn't be loaded, please check the path provided with regards to your working directory.");
-            System.exit(1);
-        }
-        return content;
     }
 }
