@@ -14,4 +14,17 @@ public class AStarGridHelper {
         int[][] levelTilesWithPath = gridSearch.markGridPathInLevelTiles(gridPath);
         ((IGridHeuristic) agent).receiveLevelWithPath(levelTilesWithPath);
     }
+
+    public static void showLevelTilesPath(String levelPath) {
+        GridSearch gridSearch = GridSearch.initGridSearch(levelPath);
+        ArrayList<GridSearchNode> gridPath = gridSearch.findGridPath();
+        int[][] levelTilesWithPath = gridSearch.markGridPathInLevelTiles(gridPath);
+
+        for (int height = 0; height < levelTilesWithPath[0].length; height++) {
+            for (int[] column : levelTilesWithPath) {
+                System.out.print(column[height]);
+            }
+            System.out.println();
+        }
+    }
 }

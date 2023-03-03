@@ -26,12 +26,18 @@ public class AStarTree {
 
     public int nodesEvaluated = 0;
 
+    public static float NODE_DEPTH_WEIGHT = 1f;
+    public static float TIME_TO_FINISH_WEIGHT = 1.1f;
+    public static float DISTANCE_FROM_PATH_TOLERANCE = 5;
+    public static float DISTANCE_FROM_PATH_ADDITIVE_PENALTY = 0;
+    public static float DISTANCE_FROM_PATH_MULTIPLICATIVE_PENALTY = 10;
+
     PriorityQueue<SearchNode> opened = new PriorityQueue<>(new CompareByCost());
     /**
      * INT STATE -> STATE COST
      */
     HashMap<Integer, Float> visitedStates = new HashMap<>();
-    
+
     public AStarTree(MarioForwardModelSlim startState, int searchSteps, int[][] levelTilesWithPath) {
     	this.searchSteps = searchSteps;
         this.levelTilesWithPath = levelTilesWithPath;
@@ -64,15 +70,19 @@ public class AStarTree {
     private float calculateCost(MarioForwardModelSlim nextState, int nodeDepth) {
         float timeToFinish = (exitTileX - nextState.getMarioX()) / maxMarioSpeedX;
         float distanceFromGridPathCost = calculateDistanceFromGridPathCost(nextState);
-        return nodeDepth + timeToFinish + distanceFromGridPathCost;
+        return NODE_DEPTH_WEIGHT * nodeDepth
+                + TIME_TO_FINISH_WEIGHT * timeToFinish
+                + distanceFromGridPathCost;
 	}
 
     private float calculateDistanceFromGridPathCost(MarioForwardModelSlim nextState) {
         int distanceFromGridPath = calculateDistanceFromGridPath(nextState);
-        if (distanceFromGridPath <= 5)
+        if (distanceFromGridPath <= DISTANCE_FROM_PATH_TOLERANCE)
             return 0;
         else
-            return (distanceFromGridPath - 5) * 10;
+            return (distanceFromGridPath - DISTANCE_FROM_PATH_TOLERANCE)
+                    * DISTANCE_FROM_PATH_MULTIPLICATIVE_PENALTY
+                    + DISTANCE_FROM_PATH_ADDITIVE_PENALTY;
     }
 
     private int calculateDistanceFromGridPath(MarioForwardModelSlim nextState) {
