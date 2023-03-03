@@ -53,48 +53,51 @@ public class AgentBenchmarkMetacentrum {
     }};
 
     public static void main(String[] args) throws IOException {
-        try {
-            AStarTree.NODE_DEPTH_WEIGHT = Float.parseFloat(args[0]);
-            AStarTree.TIME_TO_FINISH_WEIGHT = Float.parseFloat(args[1]);
-            AStarTree.DISTANCE_FROM_PATH_TOLERANCE = Float.parseFloat(args[2]);
-            AStarTree.DISTANCE_FROM_PATH_ADDITIVE_PENALTY = Float.parseFloat(args[3]);
-            AStarTree.DISTANCE_FROM_PATH_MULTIPLICATIVE_PENALTY = Float.parseFloat(args[4]);
-        } catch (Exception e) {
-            System.out.println("Meta parameters not set successfully.");
-            throw e;
-        }
+        float[] DFPMPs = { 0.00f, 1.00f, 2.00f, 3.00f, 5.00f, 7.00f, 10.00f, 20.00f, 50.00f };
+        for (float DFPMP : DFPMPs) {
+            try {
+                AStarTree.NODE_DEPTH_WEIGHT = Float.parseFloat(args[0]);
+                AStarTree.TIME_TO_FINISH_WEIGHT = Float.parseFloat(args[1]);
+                AStarTree.DISTANCE_FROM_PATH_TOLERANCE = Float.parseFloat(args[2]);
+                AStarTree.DISTANCE_FROM_PATH_ADDITIVE_PENALTY = Float.parseFloat(args[3]);
+                AStarTree.DISTANCE_FROM_PATH_MULTIPLICATIVE_PENALTY = DFPMP;
+            } catch (Exception e) {
+                System.out.println("Meta parameters not set successfully.");
+                throw e;
+            }
 
-        for (var agentType : agents) {
-            for (String level : levels) {
-                File log = prepareLog("agent-benchmark" + File.separator + agentType + "-" + level
-                        + "-NDW-" + AStarTree.NODE_DEPTH_WEIGHT
-                        + "-TTFW-" + AStarTree.TIME_TO_FINISH_WEIGHT
-                        + "-DFPT-" + AStarTree.DISTANCE_FROM_PATH_TOLERANCE
-                        + "-DFPAP-" + AStarTree.DISTANCE_FROM_PATH_ADDITIVE_PENALTY
-                        + "-DFPMP-" + AStarTree.DISTANCE_FROM_PATH_MULTIPLICATIVE_PENALTY
-                        + ".csv");
+            for (var agentType : agents) {
+                for (String level : levels) {
+                    File log = prepareLog("agent-benchmark" + File.separator + agentType + "-" + level
+                            + "-NDW-" + AStarTree.NODE_DEPTH_WEIGHT
+                            + "-TTFW-" + AStarTree.TIME_TO_FINISH_WEIGHT
+                            + "-DFPT-" + AStarTree.DISTANCE_FROM_PATH_TOLERANCE
+                            + "-DFPAP-" + AStarTree.DISTANCE_FROM_PATH_ADDITIVE_PENALTY
+                            + "-DFPMP-" + AStarTree.DISTANCE_FROM_PATH_MULTIPLICATIVE_PENALTY
+                            + ".csv");
 
-                if (log == null)
-                    return;
-                FileWriter logWriter = new FileWriter(log);
+                    if (log == null)
+                        return;
+                    FileWriter logWriter = new FileWriter(log);
 
-                logWriter.write("NDW:" + AStarTree.NODE_DEPTH_WEIGHT + "\n");
-                logWriter.write("TTFW:" + AStarTree.TIME_TO_FINISH_WEIGHT + "\n");
-                logWriter.write("DFPT:" + AStarTree.DISTANCE_FROM_PATH_TOLERANCE + "\n");
-                logWriter.write("DFPAP:" + AStarTree.DISTANCE_FROM_PATH_ADDITIVE_PENALTY + "\n");
-                logWriter.write("DFPMP:" + AStarTree.DISTANCE_FROM_PATH_MULTIPLICATIVE_PENALTY + "\n");
-                logWriter.write("level,win/fail,% travelled,run time,game ticks,planning time,total plannings,nodes evaluated,most backtracked nodes\n");
+                    logWriter.write("NDW:" + AStarTree.NODE_DEPTH_WEIGHT + "\n");
+                    logWriter.write("TTFW:" + AStarTree.TIME_TO_FINISH_WEIGHT + "\n");
+                    logWriter.write("DFPT:" + AStarTree.DISTANCE_FROM_PATH_TOLERANCE + "\n");
+                    logWriter.write("DFPAP:" + AStarTree.DISTANCE_FROM_PATH_ADDITIVE_PENALTY + "\n");
+                    logWriter.write("DFPMP:" + AStarTree.DISTANCE_FROM_PATH_MULTIPLICATIVE_PENALTY + "\n");
+                    logWriter.write("level,win/fail,% travelled,run time,game ticks,planning time,total plannings,nodes evaluated,most backtracked nodes\n");
 
-                warmup(agentType);
+                    warmup(agentType);
 
-                if (level.equals("original"))
-                    testOriginalLevels(agentType, logWriter);
-                else if (level.equals("krys"))
-                    testKrysLevels(agentType, logWriter);
-                else
-                    testFrameworkLevels(agentType, logWriter, level);
+                    if (level.equals("original"))
+                        testOriginalLevels(agentType, logWriter);
+                    else if (level.equals("krys"))
+                        testKrysLevels(agentType, logWriter);
+                    else
+                        testFrameworkLevels(agentType, logWriter, level);
 
-                logWriter.close();
+                    logWriter.close();
+                }
             }
         }
     }
