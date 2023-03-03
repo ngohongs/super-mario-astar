@@ -22,12 +22,12 @@ import static mff.agents.astarGrid.AStarGridHelper.giveLevelTilesWithPath;
 
 public class AgentBenchmarkMetacentrum {
 
-    private static final DecimalFormat twoFractionDigitsCommaSeparator;
+    private static final DecimalFormat twoFractionDigitsDotSeparator;
 
     static {
         DecimalFormatSymbols symbols = new DecimalFormatSymbols(Locale.getDefault());
         symbols.setDecimalSeparator('.');
-        twoFractionDigitsCommaSeparator = new DecimalFormat("0.00", symbols);
+        twoFractionDigitsDotSeparator = new DecimalFormat("0.00", symbols);
     }
 
     private static final ArrayList<String> agents = new ArrayList<>() {{
@@ -84,7 +84,7 @@ public class AgentBenchmarkMetacentrum {
                 logWriter.write("DFPT:" + AStarTree.DISTANCE_FROM_PATH_TOLERANCE + "\n");
                 logWriter.write("DFPAP:" + AStarTree.DISTANCE_FROM_PATH_ADDITIVE_PENALTY + "\n");
                 logWriter.write("DFPMP:" + AStarTree.DISTANCE_FROM_PATH_MULTIPLICATIVE_PENALTY + "\n");
-                logWriter.write("level,win/fail,% travelled,run time,game ticks,planning time,total plannings,nodes evaluated\n");
+                logWriter.write("level,win/fail,% travelled,run time,game ticks,planning time,total plannings,nodes evaluated,most backtracked nodes\n");
 
                 warmup(agentType);
 
@@ -113,7 +113,7 @@ public class AgentBenchmarkMetacentrum {
                 // only 30 seconds to speed-up timeout if agent is stuck
                 agentStats = game.runGame(agent, level, 30, 0, false);
                 agentStats.level = levelsName + "-" + i;
-                printStats(log, agentStats);
+                printStats(log, agentStats, ((IAgentBenchmarkBacktrack) agent).getMostBacktrackedNodes());
             }
         }
         else {
@@ -125,7 +125,7 @@ public class AgentBenchmarkMetacentrum {
                 // only 30 seconds to speed-up timeout if agent is stuck
                 agentStats = game.runGame(agent, level, 30, 0, false);
                 agentStats.level = levelsName + "-" + i;
-                printStats(log, agentStats);
+                printStats(log, agentStats, 0);
             }
         }
     }
@@ -146,7 +146,7 @@ public class AgentBenchmarkMetacentrum {
                 // only 30 seconds to speed-up timeout if agent is stuck
                 agentStats = game.runGame(agent, level, 30, 0, false);
                 agentStats.level = "Krys-" + i;
-                printStats(log, agentStats);
+                printStats(log, agentStats, ((IAgentBenchmarkBacktrack) agent).getMostBacktrackedNodes());
             }
         }
         else {
@@ -160,7 +160,7 @@ public class AgentBenchmarkMetacentrum {
                 // only 30 seconds to speed-up timeout if agent is stuck
                 agentStats = game.runGame(agent, level, 30, 0, false);
                 agentStats.level = "Krys-" + i;
-                printStats(log, agentStats);
+                printStats(log, agentStats, 0);
             }
         }
     }
@@ -177,7 +177,7 @@ public class AgentBenchmarkMetacentrum {
                 String level = getLevel("./levels/original/lvl-" + i + ".txt");
                 agentStats = game.runGame(agent, level,200, 0, false);
                 agentStats.level = "Mario-" + i;
-                printStats(log, agentStats);
+                printStats(log, agentStats, ((IAgentBenchmarkBacktrack) agent).getMostBacktrackedNodes());
             }
         }
         else {
@@ -188,7 +188,7 @@ public class AgentBenchmarkMetacentrum {
                 String level = getLevel("./levels/original/lvl-" + i + ".txt");
                 agentStats = game.runGame(agent, level, 200, 0, false);
                 agentStats.level = "Mario-" + i;
-                printStats(log, agentStats);
+                printStats(log, agentStats, 0);
             }
         }
     }
@@ -211,15 +211,16 @@ public class AgentBenchmarkMetacentrum {
         }
     }
 
-    private static void printStats(FileWriter writer, AgentStats stats) throws IOException {
+    private static void printStats(FileWriter writer, AgentStats stats, int mostBacktrackedNodes) throws IOException {
         writer.write(stats.level + ','
                 + stats.win + ','
-                + twoFractionDigitsCommaSeparator.format(stats.percentageTravelled) + ','
+                + twoFractionDigitsDotSeparator.format(stats.percentageTravelled) + ','
                 + stats.runTime + ','
                 + stats.totalGameTicks + ','
                 + stats.totalPlanningTime + ','
                 + stats.searchCalls + ','
-                + stats.nodesEvaluated + '\n'
+                + stats.nodesEvaluated + ','
+                + mostBacktrackedNodes + '\n'
         );
     }
 
