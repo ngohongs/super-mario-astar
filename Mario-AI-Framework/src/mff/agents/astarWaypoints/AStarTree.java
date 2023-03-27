@@ -156,7 +156,7 @@ public class AStarTree {
                 nodesBeforeNewFarthestX++;
             }
 
-            if (current.state.getMarioX() < furthestNodeTowardsWaypointDistanceFromWaypoint) {
+            if (Math.abs(currentGoalWaypoint.x - current.state.getMarioX()) < furthestNodeTowardsWaypointDistanceFromWaypoint) {
                 furthestNodeTowardsWaypoint = current;
                 furthestNodeTowardsWaypointDistanceFromWaypoint = Math.abs(currentGoalWaypoint.x - current.state.getMarioX());
             }
