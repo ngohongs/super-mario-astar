@@ -13,7 +13,6 @@ import mff.forwardmodel.slim.core.MarioForwardModelSlim;
 import java.util.ArrayList;
 
 public class Agent implements IMarioAgentMFF, IAgentBenchmark, IGridHeuristic, IAgentBenchmarkBacktrack, IGridWaypoints {
-
     private ArrayList<boolean[]> actionsList = new ArrayList<>();
     private float bestDistanceToNextWaypoint = Float.MAX_VALUE;
     private int bestWaypointBeingFollowed = -1;
@@ -22,16 +21,15 @@ public class Agent implements IMarioAgentMFF, IAgentBenchmark, IGridHeuristic, I
     private int totalNodesEvaluated = 0;
     private int mostBacktrackedNodes = 0;
     private int[][] levelTilesWithPath;
-    private ArrayList<GridSearchNode> gridPath;
 
     @Override
     public void initialize(MarioForwardModelSlim model) {
         AStarTree.winFound = false;
         AStarTree.exitTileX = model.getWorld().level.exitTileX * 16;
-        initializeWaypoints();
+        initializeWaypoints(AStarTree.gridPath);
     }
 
-    private void initializeWaypoints() {
+    private void initializeWaypoints(ArrayList<GridSearchNode> gridPath) {
         int waypointsSpacing = AStarTree.WAYPOINT_DENSITY - 1;
         for (GridSearchNode node : gridPath) {
             waypointsSpacing++;
@@ -56,7 +54,7 @@ public class Agent implements IMarioAgentMFF, IAgentBenchmark, IGridHeuristic, I
 
     @Override
     public void receiveGridPath(ArrayList<GridSearchNode> gridPath) {
-        this.gridPath = gridPath;
+        AStarTree.gridPath = gridPath;
     }
 
     @Override
@@ -88,13 +86,10 @@ public class Agent implements IMarioAgentMFF, IAgentBenchmark, IGridHeuristic, I
                 actionsList = newActionsList;
         }
 
-        if (actionsList.size() == 0) { // TODO edit: didn't find a way further yet, take new actions to prevent stopping
-//            actionsList = newActionsList;
-            throw new IllegalStateException("path further not found");
+        if (actionsList.size() == 0) {
+            // TODO: change from exception to return of NO_ACTION
+            throw new IllegalStateException("Path further not found!");
         }
-
-//        if (actionsList.size() == 0) // agent failed
-//            return MarioAction.NO_ACTION.value;
 
         return actionsList.remove(actionsList.size() - 1);
     }

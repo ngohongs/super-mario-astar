@@ -5,6 +5,7 @@ import mff.agents.astarHelper.Helper;
 import mff.agents.astarHelper.MarioAction;
 import mff.agents.astarHelper.SearchNode;
 import mff.agents.common.MarioTimerSlim;
+import mff.agents.gridSearch.GridSearchNode;
 import mff.forwardmodel.slim.core.MarioForwardModelSlim;
 
 import java.util.ArrayList;
@@ -17,6 +18,7 @@ public class AStarTree {
     public static final int WAYPOINT_DENSITY = 16;
     public static final int WAYPOINT_DISTANCE_TOLERANCE = 16;
     public static ArrayList<Waypoint> waypoints = new ArrayList<>();
+    public static ArrayList<GridSearchNode> gridPath;
 
     public Waypoint currentGoalWaypoint = waypoints.get(0);
     public int currentGoalWaypointIndex = 0;
@@ -37,9 +39,9 @@ public class AStarTree {
     private int nodesBeforeNewFarthestX = 0;
 
     public static float NODE_DEPTH_WEIGHT = 1f;
-    public static float TIME_TO_FINISH_WEIGHT = 1.5f;
+    public static float TIME_TO_FINISH_WEIGHT = 2f;
     public static float DISTANCE_FROM_PATH_TOLERANCE = 1;
-    public static float DISTANCE_FROM_PATH_ADDITIVE_PENALTY = 0;
+    public static float DISTANCE_FROM_PATH_ADDITIVE_PENALTY = 50;
     public static float DISTANCE_FROM_PATH_MULTIPLICATIVE_PENALTY = 7;
 
     PriorityQueue<SearchNode> opened = new PriorityQueue<>(new CompareByCost());
@@ -62,7 +64,7 @@ public class AStarTree {
     	
     	opened.add(furthestNodeTowardsWaypoint);
     }
-    
+
     private int getIntState(MarioForwardModelSlim model) {
     	return getIntState((int) model.getMarioX(), (int) model.getMarioY());
     }
@@ -139,12 +141,16 @@ public class AStarTree {
                         return distance;
             }
             distance++;
-        } while (distance < 64);
+        } while (distance < 300);
         throw new IllegalStateException("Something seems wrong, distance to grid path shouldn't be this big.");
     }
 
     public ArrayList<boolean[]> search(MarioTimerSlim timer) {
-        while (opened.size() > 0 && timer.getRemainingTime() > 0) {
+        // TODO: solve with time limit
+        //  implement iterative search à la astarPlanningDynamic
+        //  save waypoint to follow, do something like isSafe() on returned positions
+        //  isSafe() probably implements as "is Mario on ground?"
+        while (opened.size() > 0 /*&& timer.getRemainingTime() > 0*/) {
             SearchNode current = opened.remove();
             nodesEvaluated++;
 
@@ -156,9 +162,10 @@ public class AStarTree {
                 nodesBeforeNewFarthestX++;
             }
 
-            if (Math.abs(currentGoalWaypoint.x - current.state.getMarioX()) < furthestNodeTowardsWaypointDistanceFromWaypoint) {
+            if (Math.abs(current.state.getMarioX() - currentGoalWaypoint.x) < furthestNodeTowardsWaypointDistanceFromWaypoint
+                && Math.abs((currentGoalWaypoint.y + 15) - current.state.getMarioY()) < 8) {
                 furthestNodeTowardsWaypoint = current;
-                furthestNodeTowardsWaypointDistanceFromWaypoint = Math.abs(currentGoalWaypoint.x - current.state.getMarioX());
+                furthestNodeTowardsWaypointDistanceFromWaypoint = Math.abs(current.state.getMarioX() - currentGoalWaypoint.x);
             }
 
             if (current.state.getGameStatusCode() == 1) {
@@ -169,7 +176,7 @@ public class AStarTree {
 
             if (Math.abs(current.state.getMarioX() - currentGoalWaypoint.x) <= WAYPOINT_DISTANCE_TOLERANCE) {
                 if (currentGoalWaypointIndex != waypoints.size() - 1) {
-                    deleteGridPathToCurrentWaypoint();
+                    deleteLeveTilesPathToCurrentWaypoint();
                     currentGoalWaypointIndex++;
                     currentGoalWaypoint = waypoints.get(currentGoalWaypointIndex);
                     furthestNodeTowardsWaypoint = current;
@@ -214,8 +221,13 @@ public class AStarTree {
         return actionsList;
     }
 
-    private void deleteGridPathToCurrentWaypoint() {
+    private void deleteLeveTilesPathToCurrentWaypoint() {
+        for (GridSearchNode node : gridPath) {
+            levelTilesWithPath[node.tileX][node.tileY] = 0;
 
+            if (node.tileX * 16 == currentGoalWaypoint.x && node.tileY * 16 == currentGoalWaypoint.y)
+                return;
+        }
     }
 
     static class Waypoint {
