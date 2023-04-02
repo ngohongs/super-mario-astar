@@ -1,4 +1,4 @@
-package mff.agents.astarGrid;
+package mff.agents.common;
 
 import mff.agents.common.IGridHeuristic;
 import mff.agents.common.IMarioAgentMFF;
@@ -13,6 +13,12 @@ public class AStarGridHelper {
         ArrayList<GridSearchNode> gridPath = gridSearch.findGridPath();
         int[][] levelTilesWithPath = gridSearch.markGridPathInLevelTiles(gridPath);
         ((IGridHeuristic) agent).receiveLevelWithPath(levelTilesWithPath);
+    }
+
+    public static void giveGridPath(IMarioAgentMFF agent, String levelPath) {
+        GridSearch gridSearch = GridSearch.initGridSearch(levelPath);
+        ArrayList<GridSearchNode> gridPath = gridSearch.findGridPath();
+        ((IGridWaypoints) agent).receiveGridPath(gridPath);
     }
 
     public static void showLevelTilesPath(String levelPath) {
