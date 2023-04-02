@@ -19,12 +19,6 @@ import static engine.helper.TileFeature.BLOCK_LOWER;
 public class Agent implements IMarioAgentMFF, IAgentBenchmark, IGridHeuristic, IAgentBenchmarkBacktrack, IGridWaypoints {
     private ArrayList<boolean[]> actionsList = new ArrayList<>();
     private AStarTree tree;
-//    private boolean findTempPlan = true;
-//    private boolean startNewFinishSearch;
-//    private boolean finalPlanExtracted;
-//    private boolean winFoundDuringTempSearch;
-//    private float bestDistanceToNextWaypoint = Float.MAX_VALUE;
-//    private int bestWaypointBeingFollowed = -1;
     private boolean finished = false;
     private int totalSearchCalls = 0;
 
@@ -72,60 +66,6 @@ public class Agent implements IMarioAgentMFF, IAgentBenchmark, IGridHeuristic, I
 
     @Override
     public boolean[] getActions(MarioForwardModelSlim model, MarioTimerSlim timer) {
-//        if (tree != null && tree.winFound) {
-//            if (actionsList.size() == 0) {
-//                if (!finalPlanExtracted && !winFoundDuringTempSearch) {
-//                    finalPlanExtracted = true;
-//                    actionsList = tree.getPlanToFinish();
-//                    return actionsList.remove(actionsList.size() - 1);
-//                }
-//                return MarioAction.NO_ACTION.value;
-//            }
-//            else {
-//                return actionsList.remove(actionsList.size() - 1);
-//            }
-//        }
-//
-//        if (actionsList.size() == 0) {
-//            findTempPlan = true;
-//        }
-//
-//        if (findTempPlan) {
-//            findTempPlan = false;
-//            tree = new AStarTree();
-//            tree.initPlanAhead(model, 3, levelTilesWithPath);
-//            tree.planAhead(timer);
-//            totalSearchCalls++;
-//            totalNodesEvaluated += tree.nodesEvaluated;
-//            if (tree.winFound) {
-//                actionsList = tree.getPlanToFinish();
-//                winFoundDuringTempSearch = true;
-//            }
-//            else {
-//                actionsList = tree.getTempSafePlan();
-//            }
-//            startNewFinishSearch = true;
-//            assert actionsList.size() != 0;
-//            return actionsList.remove(actionsList.size() - 1);
-//        }
-//
-//        if (startNewFinishSearch) {
-//            startNewFinishSearch = false;
-//            tree = new AStarTree();
-//            for (int i = 0; i < actionsList.size(); i++) {
-//                model.advance(actionsList.get(actionsList.size() - (1 + i)));
-//            }
-//            tree.initPlanToFinish(model, 3, levelTilesWithPath);
-//        }
-//
-//        assert tree != null;
-//        tree.planToFinish(timer);
-//        totalSearchCalls++;
-//        totalNodesEvaluated += tree.nodesEvaluated;
-//        tree.nodesEvaluated = 0;
-//
-//        return actionsList.remove(actionsList.size() - 1);
-
         if (finished) {
             if (actionsList.size() == 0)
                 return MarioAction.NO_ACTION.value;
@@ -151,8 +91,7 @@ public class Agent implements IMarioAgentMFF, IAgentBenchmark, IGridHeuristic, I
         }
 
         if (actionsList.size() == 0) {
-            // TODO: change from exception to return of NO_ACTION
-            throw new IllegalStateException("Path further not found!");
+            return MarioAction.NO_ACTION.value;
         }
 
         return actionsList.remove(actionsList.size() - 1);
@@ -175,6 +114,6 @@ public class Agent implements IMarioAgentMFF, IAgentBenchmark, IGridHeuristic, I
 
     @Override
     public String getAgentName() {
-        return "MFF AStar Agent";
+        return "MFF A* Waypoints Agent";
     }
 }

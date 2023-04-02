@@ -84,6 +84,6 @@ public class Agent implements IMarioAgentMFF, IAgentBenchmark, IGridHeuristic, I
 
     @Override
     public String getAgentName() {
-        return "MFF AStar Agent";
+        return "MFF A* Grid Agent";
     }
 }

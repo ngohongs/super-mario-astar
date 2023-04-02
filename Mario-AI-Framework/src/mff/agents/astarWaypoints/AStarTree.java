@@ -13,15 +13,18 @@ import java.util.HashMap;
 import java.util.PriorityQueue;
 
 public class AStarTree {
+    public final int SEARCH_STEPS = 3;
     public static int[][] levelTilesWithPath;
     public static final int WAYPOINT_DENSITY = 8;
-    public static final int WAYPOINT_DISTANCE_TOLERANCE = 16;
+    public static final int WAYPOINT_HORIZONTAL_DISTANCE_TOLERANCE = 16;
+    public static final int WAYPOINT_VERTICAL_DISTANCE_TOLERANCE = 4;
     public static ArrayList<Waypoint> waypoints = new ArrayList<>();
     public static ArrayList<GridSearchNode> gridPath;
 
     public Waypoint currentGoalWaypoint = waypoints.get(0);
     public int currentGoalWaypointIndex = 0;
 
+    private SearchNode furthestWaypointNode;
     public SearchNode furthestNodeTowardsWaypoint;
     public float furthestNodeTowardsWaypointDistanceFromWaypoint;
 
@@ -49,26 +52,20 @@ public class AStarTree {
     HashMap<Integer, Float> visitedStates = new HashMap<>();
 
     public void initNewSearch(MarioForwardModelSlim startState) {
+        visitedStates = new HashMap<>();
+
         marioXStart = startState.getMarioX();
 
+        furthestWaypointNode = null;
         furthestNodeTowardsWaypoint = getStartNode(startState);
         furthestNodeTowardsWaypoint.cost = calculateCost(startState, furthestNodeTowardsWaypoint.nodeDepth);
-        furthestNodeTowardsWaypointDistanceFromWaypoint = Math.abs(currentGoalWaypoint.x - furthestNodeTowardsWaypoint.state.getMarioX());
+        furthestNodeTowardsWaypointDistanceFromWaypoint = Math.abs(currentGoalWaypoint.x - furthestNodeTowardsWaypoint.state.getMarioX())
+                + Math.abs(currentGoalWaypoint.y - furthestNodeTowardsWaypoint.state.getMarioY());
 
         farthestReachedX = (int) furthestNodeTowardsWaypoint.state.getMarioX();
 
         opened.clear();
         opened.add(furthestNodeTowardsWaypoint);
-
-        System.out.println("total waypoints: " + waypoints.size());
-        System.out.println("current waypoint: " + currentGoalWaypointIndex);
-//        for (int height = 0; height < levelTilesWithPath[0].length; height++) {
-//            for (int[] column : levelTilesWithPath) {
-//                System.out.print(column[height]);
-//            }
-//            System.out.println();
-//        }
-        System.out.println();
     }
 
     private int getIntState(MarioForwardModelSlim model) {
@@ -88,7 +85,7 @@ public class AStarTree {
     }
     
     private float calculateCost(MarioForwardModelSlim nextState, int nodeDepth) {
-//        float timeToFinish = (exitTileX - nextState.getMarioX()) / maxMarioSpeedX;
+        // TODO: take vertical distance into consideration?
         float timeToFinish = Math.abs(currentGoalWaypoint.x - nextState.getMarioX()) / maxMarioSpeedX;
         float distanceFromGridPathCost = calculateDistanceFromGridPathCost(nextState);
         return NODE_DEPTH_WEIGHT * nodeDepth
@@ -152,10 +149,6 @@ public class AStarTree {
     }
 
     public ArrayList<boolean[]> search(MarioTimerSlim timer) {
-        //  implement iterative search à la astarPlanningDynamic
-        //  save waypoint to follow, do something like isSafe() on returned positions
-        //  isSafe() probably implements as "is Mario on ground?"
-        int searchSteps = 3;
         while (opened.size() > 0 && timer.getRemainingTime() > 0) {
             SearchNode current = opened.remove();
             nodesEvaluated++;
@@ -168,25 +161,33 @@ public class AStarTree {
                 nodesBeforeNewFarthestX++;
             }
 
-            if (Math.abs(current.state.getMarioX() - currentGoalWaypoint.x) < furthestNodeTowardsWaypointDistanceFromWaypoint
-                && Math.abs((currentGoalWaypoint.y + 15) - current.state.getMarioY()) < 8) {
-                furthestNodeTowardsWaypoint = current;
-                furthestNodeTowardsWaypointDistanceFromWaypoint = Math.abs(current.state.getMarioX() - currentGoalWaypoint.x);
+            if (Math.abs(currentGoalWaypoint.x - current.state.getMarioX()) + Math.abs(currentGoalWaypoint.y - current.state.getMarioY())
+                < furthestNodeTowardsWaypointDistanceFromWaypoint) {
+                    furthestNodeTowardsWaypoint = current;
+                    furthestNodeTowardsWaypointDistanceFromWaypoint
+                            = Math.abs(currentGoalWaypoint.x - current.state.getMarioX())
+                            + Math.abs(currentGoalWaypoint.y - current.state.getMarioY());
             }
 
             if (current.state.getGameStatusCode() == 1) {
-                furthestNodeTowardsWaypoint = current;
+                furthestWaypointNode = current;
                 winFound = true;
                 break;
             }
 
-            if (Math.abs(current.state.getMarioX() - currentGoalWaypoint.x) <= WAYPOINT_DISTANCE_TOLERANCE && isSafe(current)) {
+            // Mario y on the ground is the lowest pixel of the tile (tile_y_index * 16 + 15)
+            if (Math.abs(currentGoalWaypoint.x - current.state.getMarioX()) <= WAYPOINT_HORIZONTAL_DISTANCE_TOLERANCE &&
+                Math.abs((currentGoalWaypoint.y + 15) - current.state.getMarioY()) <= WAYPOINT_VERTICAL_DISTANCE_TOLERANCE &&
+                isSafe(current)) {
+
                 if (currentGoalWaypointIndex != waypoints.size() - 1) {
                     deleteLevelTilesPathToCurrentWaypoint();
                     currentGoalWaypointIndex++;
                     currentGoalWaypoint = waypoints.get(currentGoalWaypointIndex);
+                    furthestWaypointNode = current;
                     furthestNodeTowardsWaypoint = current;
-                    furthestNodeTowardsWaypointDistanceFromWaypoint = Math.abs(currentGoalWaypoint.x - current.state.getMarioX());
+                    furthestNodeTowardsWaypointDistanceFromWaypoint = Math.abs(currentGoalWaypoint.x - current.state.getMarioX())
+                            + Math.abs(currentGoalWaypoint.y - current.state.getMarioY());
                 }
             }
 
@@ -194,7 +195,7 @@ public class AStarTree {
             for (MarioAction action : actions) {
                 MarioForwardModelSlim newState = current.state.clone();
 
-                for (int i = 0; i < searchSteps; i++) {
+                for (int i = 0; i < SEARCH_STEPS; i++) {
                     newState.advance(action.value);
                 }
 
@@ -215,18 +216,20 @@ public class AStarTree {
 
         ArrayList<boolean[]> actionsList = new ArrayList<>();
 
-        SearchNode curr = furthestNodeTowardsWaypoint;
+        SearchNode curr = furthestWaypointNode != null ? furthestWaypointNode : furthestNodeTowardsWaypoint;
 
-        // return path to the furthest safe state
-        while (curr.parent != null) {
-            if (isSafe(curr))
-                break;
-            else
-                curr = curr.parent;
+        // return path to the furthest safe state, note that the win state is not necessarily safe, but we don't care
+        if (!winFound) {
+            while (curr.parent != null) {
+                if (isSafe(curr))
+                    break;
+                else
+                    curr = curr.parent;
+            }
         }
 
         while (curr.parent != null) {
-            for (int i = 0; i < searchSteps; i++) {
+            for (int i = 0; i < SEARCH_STEPS; i++) {
                 actionsList.add(curr.marioAction.value);
             }
             curr = curr.parent;

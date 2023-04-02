@@ -725,6 +725,8 @@ public class GridSearch {
             // BLOCK_UPPER = blocks from below (invisible blocks)
             // BLOCK_LOWER = blocks from above (pass through platforms)
             // BLOCK_ALL   = solid blocks
+            // 48          = invisible one up block
+            // 49          = invisible coin block
             ArrayList<TileFeature> tileFeatures = getTileType(levelTiles[tileX][tileY]);
             int tileValue = levelTiles[tileX][tileY];
 
