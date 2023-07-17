@@ -23,6 +23,10 @@ The framework works on Windows (tested on Win 10/11), but should also work on Li
       - `slim` - which is an improved version of the original forward model
       - `bin` - which is an experimental model that isn't finished
 
+### Experiment results
+
+Some of the experiment results (those that could be reasonably uploaded) are present in the ` Experiment-Results` folder.
+
 ### Interesting entry points
 
 - `src/mff/HumanPlaytesting.java`, which allows you to play any level you want manually.
