@@ -11,8 +11,8 @@ public class GridSearchMain {
         findGridPathForLevel("./levels/original/lvl-1.txt", 0, true);
     }
 
-    public static void findGridPathForLevel(String levelName, int horizontalJumpBoost, boolean verbose) {
-        String level = LevelLoader.getLevel(levelName);
+    public static void findGridPathForLevel(String levelPath, int horizontalJumpBoost, boolean verbose) {
+        String level = LevelLoader.getLevel(levelPath);
         MarioEvent[] killEvents = new MarioEvent[0];
         MarioWorld world = new MarioWorld(killEvents);
         world.initializeLevel(level, 1000000);

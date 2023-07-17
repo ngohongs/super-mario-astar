@@ -16,7 +16,7 @@ import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
 import java.util.Locale;
 
-import static mff.agents.astarGrid.AStarGridHelper.giveLevelTilesWithPath;
+import static mff.agents.common.AStarGridHelper.giveLevelTilesWithPath;
 import static mff.LevelLoader.getLevel;
 
 public class AgentBenchmarkMetacentrum {
@@ -32,10 +32,10 @@ public class AgentBenchmarkMetacentrum {
     private static final ArrayList<String> agents = new ArrayList<>() {{
 //        add("robinBaumgarten");
 //        add("robinBaumgartenSlimWindowAdvance");
-        add("astar");
+//        add("astar");
 //        add("astarPlanningDynamic");
 //        add("astarWindow");
-//        add("astarGrid");
+        add("astarGrid");
     }};
 
     private static final ArrayList<String> levels = new ArrayList<>() {{
@@ -53,38 +53,38 @@ public class AgentBenchmarkMetacentrum {
     }};
 
     public static void main(String[] args) throws IOException {
-//        float[] DFPMPs = { 0.00f, 1.00f, 2.00f, 3.00f, 5.00f, 7.00f, 10.00f, 20.00f, 50.00f };
-//        for (float DFPMP : DFPMPs) {
-//            try {
-//                AStarTree.NODE_DEPTH_WEIGHT = Float.parseFloat(args[0]);
-//                AStarTree.TIME_TO_FINISH_WEIGHT = Float.parseFloat(args[1]);
-//                AStarTree.DISTANCE_FROM_PATH_TOLERANCE = Float.parseFloat(args[2]);
-//                AStarTree.DISTANCE_FROM_PATH_ADDITIVE_PENALTY = Float.parseFloat(args[3]);
-//                AStarTree.DISTANCE_FROM_PATH_MULTIPLICATIVE_PENALTY = DFPMP;
-//            } catch (Exception e) {
-//                System.out.println("Meta parameters not set successfully.");
-//                throw e;
-//            }
+        float[] DFPMPs = { 0.00f, 1.00f, 2.00f, 3.00f, 5.00f, 7.00f, 10.00f, 20.00f, 50.00f };
+        for (float DFPMP : DFPMPs) {
+            try {
+                AStarTree.NODE_DEPTH_WEIGHT = Float.parseFloat(args[0]);
+                AStarTree.TIME_TO_FINISH_WEIGHT = Float.parseFloat(args[1]);
+                AStarTree.DISTANCE_FROM_PATH_TOLERANCE = Float.parseFloat(args[2]);
+                AStarTree.DISTANCE_FROM_PATH_ADDITIVE_PENALTY = Float.parseFloat(args[3]);
+                AStarTree.DISTANCE_FROM_PATH_MULTIPLICATIVE_PENALTY = DFPMP;
+            } catch (Exception e) {
+                System.out.println("Meta parameters not set successfully.");
+                throw e;
+            }
 
             for (var agentType : agents) {
                 for (String level : levels) {
                     File log = prepareLog("agent-benchmark" + File.separator + agentType + "-" + level
-//                            + "-NDW-" + AStarTree.NODE_DEPTH_WEIGHT
-//                            + "-TTFW-" + AStarTree.TIME_TO_FINISH_WEIGHT
-//                            + "-DFPT-" + AStarTree.DISTANCE_FROM_PATH_TOLERANCE
-//                            + "-DFPAP-" + AStarTree.DISTANCE_FROM_PATH_ADDITIVE_PENALTY
-//                            + "-DFPMP-" + AStarTree.DISTANCE_FROM_PATH_MULTIPLICATIVE_PENALTY
+                            + "-NDW-" + AStarTree.NODE_DEPTH_WEIGHT
+                            + "-TTFW-" + AStarTree.TIME_TO_FINISH_WEIGHT
+                            + "-DFPT-" + AStarTree.DISTANCE_FROM_PATH_TOLERANCE
+                            + "-DFPAP-" + AStarTree.DISTANCE_FROM_PATH_ADDITIVE_PENALTY
+                            + "-DFPMP-" + AStarTree.DISTANCE_FROM_PATH_MULTIPLICATIVE_PENALTY
                             + ".csv");
 
                     if (log == null)
                         return;
                     FileWriter logWriter = new FileWriter(log);
 
-//                    logWriter.write("NDW:" + AStarTree.NODE_DEPTH_WEIGHT + "\n");
-//                    logWriter.write("TTFW:" + AStarTree.TIME_TO_FINISH_WEIGHT + "\n");
-//                    logWriter.write("DFPT:" + AStarTree.DISTANCE_FROM_PATH_TOLERANCE + "\n");
-//                    logWriter.write("DFPAP:" + AStarTree.DISTANCE_FROM_PATH_ADDITIVE_PENALTY + "\n");
-//                    logWriter.write("DFPMP:" + AStarTree.DISTANCE_FROM_PATH_MULTIPLICATIVE_PENALTY + "\n");
+                    logWriter.write("NDW:" + AStarTree.NODE_DEPTH_WEIGHT + "\n");
+                    logWriter.write("TTFW:" + AStarTree.TIME_TO_FINISH_WEIGHT + "\n");
+                    logWriter.write("DFPT:" + AStarTree.DISTANCE_FROM_PATH_TOLERANCE + "\n");
+                    logWriter.write("DFPAP:" + AStarTree.DISTANCE_FROM_PATH_ADDITIVE_PENALTY + "\n");
+                    logWriter.write("DFPMP:" + AStarTree.DISTANCE_FROM_PATH_MULTIPLICATIVE_PENALTY + "\n");
                     logWriter.write("level,win/fail,% travelled,run time,game ticks,planning time,total plannings,nodes evaluated,most backtracked nodes\n");
 
                     warmup(agentType);
@@ -99,7 +99,7 @@ public class AgentBenchmarkMetacentrum {
                     logWriter.close();
                 }
             }
-//        }
+        }
     }
 
     private static void testFrameworkLevels(String agentType, FileWriter log, String levelsName) throws IOException {
@@ -137,9 +137,6 @@ public class AgentBenchmarkMetacentrum {
         if (!agentType.equals("robinBaumgarten")) {
             for (int i = 1; i <= 100; i++) {
                 System.out.println(agentType + "-" + "krys" + "-" + i);
-//                MarioLevelGenerator generator = new levelGenerators.krys.LevelGenerator(i);
-//                String level = generator.getGeneratedLevel(new MarioLevelModel(150, 16),
-//                        new MarioTimer(5 * 60 * 60 * 1000));
                 String level = getLevel("./levels/krys/lvl-" + i + ".txt");
                 AgentBenchmarkGame game = new AgentBenchmarkGame();
                 IMarioAgentMFF agent = getNewAgent(agentType);
