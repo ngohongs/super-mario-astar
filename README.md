@@ -55,6 +55,10 @@ Before attempting to run the full search, be warned that it requires almost 1000
 
 If you still want to rerun the experiment, run the `Metacentrum-Scripts/metascript-spec-grid.sh` script, uncommenting the `qsub` line, while having the `Metacentrum-Scripts/script-spec-grid.sh` script in the same folder. All of this should be done on the front node of some computational grid that supports the `qsub` command (e.g. MetaCentrum). The rest of the repository also needs to be present at a specific location, check (and update) the scripts if needed for this to match.
 
+### Disclaimer
+
+The results that you obtain while running experiments might differ from the ones stated in our works. The reason is that the agents' performance is influenced by the hardware capabilities that they are run on. To obtain interpretable results, make sure to run all agents that you compare on the same hardware, the relative results should stay the same.
+
 ### Copyrights
 This framework is not endorsed by Nintendo and is only intended for research purposes. Mario is a Nintendo character which the authors don't own any rights to. Nintendo is also the sole owner of all the graphical assets in the game. Any use of this framework is expected to be on a non-commercial basis. The framework updates were created by David Šosvald as a bachelor and a master thesis at the Faculty of Mathematics and Physics of Charles University. The framework was created by [Ahmed Khalifa](https://scholar.google.com/citations?user=DRcyg5kAAAAJ&hl=en), based on the original Mario AI Framework by [Sergey Karakovskiy](https://scholar.google.se/citations?user=6cEAqn8AAAAJ&hl=en), [Noor Shaker](https://scholar.google.com/citations?user=OK9tw1AAAAAJ&hl=en), and [Julian Togelius](https://scholar.google.com/citations?user=lr4I9BwAAAAJ&hl=en), which in turn was based on [Infinite Mario Bros](https://fantendo.fandom.com/wiki/Infinite_Mario_Bros.) by Markus Persson.
 
