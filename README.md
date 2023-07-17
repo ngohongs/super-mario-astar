@@ -1,34 +1,59 @@
 ### Introduction
-This project is based on the framework created by [Ahmed Khalifa](https://scholar.google.com/citations?user=DRcyg5kAAAAJ&hl=en), which can be found [here](https://github.com/amidos2006/Mario-AI-Framework). As a part of my bachelor thesis, I created a better forward model for this framework, and to prove its funtionality, I built a few intelligent agents on top of it.
+This project is based on the framework created by [Ahmed Khalifa](https://scholar.google.com/citations?user=DRcyg5kAAAAJ&hl=en), which can be found [here](https://github.com/amidos2006/Mario-AI-Framework). As a part of my bachelor thesis, I created a better forward model for this framework, and to prove its functionality, I built a few intelligent agents on top of it.
+
+The work on this project was continued as a part of my diploma thesis, where I created even better agents, especially the `astarGrid` agent (also referred to as `MFF A* Grid`) and the `astarWaypoints` (`MFF A* Waypoints`) agent.
 
 ### Requirements
-I tried to modify the framework to work both and Windows and Linux and to support more working directory settings of various IDEs. It is guaranteed to work on Windows 10 with working directory set in the `Mario-AI-Framework` folder, which contains folders such as `src` and `levels`.  Java SDK version 13 might be required.
+The framework works on Windows (tested on Win 10/11), but should also work on Linux (not tested). I tried to support different working directory settings of various IDEs. It is guaranteed to work with working directory set in the `Mario-AI-Framework` folder, which contains folders such as `src` and `levels`.  Java OpenJDK 17 might be required, but the framework probably runs on earlier versions too.
 
 ### Project overview
 
-- `agent-benchmark` - an output folder for agents benchmark results
+- `agent-benchmark` - an output folder for agents' benchmark results (created by the program when a benchmark is run)
 - `img` - graphical assets of the game
-- `levels` - original and generated levels
+- `levels` - original, generated and test levels
 - `src` - source files of the framework
   - `agents` - agents from the framework mostly created during competitions
   - `engine` - original game implementation and forward model
   - `levelGenerators`
     -  generators from the framework mostly created during competitions
     - the `krys` and `noiseBased` generators were created by MFF UK students Jan Holan and Mikuláš Hrdlička as a part of the Procedural Content Generation course
-  - `mff` - the source code of my thesis
-    - `agents` - all the agents created for the thesis + a benchmark environment for them
+  - `mff` - the source code of my theses
+    - `agents` - all the agents created for the theses + a benchmark environment for them; newly only contains the implementation of grid-level search
     - `forwardmodel` - contains the two new forward models
       - `slim` - which is an improved version of the original forward model
       - `bin` - which is an experimental model that isn't finished
 
 ### Interesting entry points
-- `src/mff/agents/benchmark/AgentBenchmark`, which runs a benchmark of selected agents and outputs the results to `agent-benchmark` folder in CSV format
-- `src/mff/agents/common/AgentMain`, which can be used to test agents from the `mff` package on different levels
-- `src/mff/forwardmodel/common/PerformanceTests`, which contains various tests of the forward model components
-- `src/mff/forwardmodel/slim/core/SlimTest`, which allows a few different things:
-	- `humanTest` method allows manual playing of levels
-	- `correctnessTest` method will compare world simulation of the original and slim forward models on the 15 original levels
-	- `advanceSpeedTest` method will compare the performance of the `advance` method of original and slim forward models
+
+- `src/mff/HumanPlaytesting.java`, which allows you to play any level you want manually.
+
+- `src/mff/agents/common/AgentMain.java`, which shows how to set up and run various agents on a given level or a set of levels, including the `MFF A*`, `MFF A* Grid` and `MFF A* Waypoints` agents; it can also be used to ensure that the benchmark class correctly collects data.
+
+- `src/mff/agents/gridSearch/GridSearchMain.java`, which allows the visualisation of grid path.
+
+- `src/mff/agents/benchmark/AgentBenchmarkMetacentrum.java`, which is used for the parameter search for `MFF A* Grid`, please refer to the `Parameter search` section before using this class.
+
+### How to run
+
+In the `Mario-AI-Framework` folder, run:
+
+- javac -cp src `your-desired-entry-point`
+  - e.g. javac -cp src src/mff/agents/common/AgentMain.java
+
+followed by:
+
+- java -cp src `your-desired-entry-point`.java
+  - e.g. java -cp src src/mff/agents/common/AgentMain.java
+
+this particular example runs the `MFF A* Waypoints` agent on the showcase maze level.
+
+### Parameter search
+
+As mentioned above, the `src/mff/agents/benchmark/AgentBenchmarkMetacentrum.java` class allows running the parameter search for `MFF A* Grid`, but the usage is not trivial.
+
+Before attempting to run the full search, be warned that it requires almost 1000 days of CPU time and approximately 2 real-time days (if run on MetaCentrum and with enough computational nodes available). It also generates so many output files that opening the folder with them has the potential to crash Windows File Explorer (if I remember correctly, it generated ~200 000 files).
+
+If you still want to rerun the experiment, run the `metacentrum scripts/metascript-spec-grid.sh` script, uncommenting the `qsub` line, while having the `metacentrum scripts/script-spec-grid.sh` script in the same folder. All of this should be done on the front node of some computational grid that supports the `qsub` command (e.g. MetaCentrum). The rest of the repository also needs to be present at a specific location, check (and update) the scripts if needed for this to match.
 
 ### Copyrights
-This framework is not endorsed by Nintendo and is only intended for research purposes. Mario is a Nintendo character which the authors don't own any rights to. Nintendo is also the sole owner of all the graphical assets in the game. Any use of this framework is expected to be on a non-commercial basis. This framework update was created by David Šosvald as a bachelor thesis at the Faculty of Mathematics and Physics of Charles University. The framework was created by [Ahmed Khalifa](https://scholar.google.com/citations?user=DRcyg5kAAAAJ&hl=en), based on the original Mario AI Framework by [Sergey Karakovskiy](https://scholar.google.se/citations?user=6cEAqn8AAAAJ&hl=en), [Noor Shaker](https://scholar.google.com/citations?user=OK9tw1AAAAAJ&hl=en), and [Julian Togelius](https://scholar.google.com/citations?user=lr4I9BwAAAAJ&hl=en), which in turn was based on [Infinite Mario Bros](https://fantendo.fandom.com/wiki/Infinite_Mario_Bros.) by Markus Persson.
+This framework is not endorsed by Nintendo and is only intended for research purposes. Mario is a Nintendo character which the authors don't own any rights to. Nintendo is also the sole owner of all the graphical assets in the game. Any use of this framework is expected to be on a non-commercial basis. The framework updates were created by David Šosvald as a bachelor and a master thesis at the Faculty of Mathematics and Physics of Charles University. The framework was created by [Ahmed Khalifa](https://scholar.google.com/citations?user=DRcyg5kAAAAJ&hl=en), based on the original Mario AI Framework by [Sergey Karakovskiy](https://scholar.google.se/citations?user=6cEAqn8AAAAJ&hl=en), [Noor Shaker](https://scholar.google.com/citations?user=OK9tw1AAAAAJ&hl=en), and [Julian Togelius](https://scholar.google.com/citations?user=lr4I9BwAAAAJ&hl=en), which in turn was based on [Infinite Mario Bros](https://fantendo.fandom.com/wiki/Infinite_Mario_Bros.) by Markus Persson.
