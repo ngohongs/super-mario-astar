@@ -15,8 +15,12 @@ public class AgentMain {
         //testLevel();
         //testLevelGrid();
         //testLevelBenchmark();
-        testLevelWaypoints();
-        //testAllOriginalLevels();
+        //testLevelWaypoints();
+
+        testAllOriginalLevels();
+        //testAllOriginalLevelsGrid();
+        //testAllKrysLevelsGrid();
+
         //testGeneratedLevels();
         //testAllAgents();
     }
@@ -83,6 +87,39 @@ public class AgentMain {
                     200, 0, true);
         }
     }
+
+    private static void testAllOriginalLevelsGrid() {
+        for (int i = 1; i < 16; i++) {
+            AgentMarioGame game = new AgentMarioGame();
+            String levelPath = "./levels/original/lvl-" + i + ".txt";
+            IMarioAgentMFF astarGridAgent = new mff.agents.astarGrid.Agent();
+            AStarTree.NODE_DEPTH_WEIGHT = 1f;
+            AStarTree.TIME_TO_FINISH_WEIGHT = 2f;
+            AStarTree.DISTANCE_FROM_PATH_TOLERANCE = 2f;
+            AStarTree.DISTANCE_FROM_PATH_ADDITIVE_PENALTY = 5f;
+            AStarTree.DISTANCE_FROM_PATH_MULTIPLICATIVE_PENALTY = 7f;
+            AStarGridHelper.giveLevelTilesWithPath(astarGridAgent, levelPath);
+            game.runGame(astarGridAgent, LevelLoader.getLevel(levelPath),
+                    200, 0, true);
+        }
+    }
+
+    private static void testAllKrysLevelsGrid() {
+        for (int i = 1; i <= 100; i++) {
+            AgentMarioGame game = new AgentMarioGame();
+            String levelPath = "./levels/krys/lvl-" + i + ".txt";
+            IMarioAgentMFF astarGridAgent = new mff.agents.astarGrid.Agent();
+            AStarTree.NODE_DEPTH_WEIGHT = 1f;
+            AStarTree.TIME_TO_FINISH_WEIGHT = 2f;
+            AStarTree.DISTANCE_FROM_PATH_TOLERANCE = 2f;
+            AStarTree.DISTANCE_FROM_PATH_ADDITIVE_PENALTY = 5f;
+            AStarTree.DISTANCE_FROM_PATH_MULTIPLICATIVE_PENALTY = 7f;
+            AStarGridHelper.giveLevelTilesWithPath(astarGridAgent, levelPath);
+            game.runGame(astarGridAgent, LevelLoader.getLevel(levelPath),
+                    200, 0, true);
+        }
+    }
+
 
     private static void testGeneratedLevels() {
         for (int i = 1; i <= 100; i++) {
