@@ -62,31 +62,31 @@ public class MyAgentBenchmarkMetacentrum {
         }
 
         for (var agentType : agents) {
+            File log = prepareLog("agent-benchmark" + File.separator + agentType +
+                    + "-TTFW-" + AStarTree.TIME_TO_FINISH_WEIGHT
+                    + "-SS-" + AStarTree.SEARCH_STEPS
+                    + ".csv");
+
+            if (log == null)
+                return;
+            FileWriter logWriter = new FileWriter(log);
+
+            logWriter.write("TTFW:" + AStarTree.TIME_TO_FINISH_WEIGHT + "\n");
+            logWriter.write("SS:" + AStarTree.SEARCH_STEPS + "\n");
+            logWriter.write("level,win/fail,% travelled,run time,game ticks,planning time,total plannings,nodes evaluated,most backtracked nodes\n");
+
+            warmup(agentType);
+
             for (String level : levels) {
-                File log = prepareLog("agent-benchmark" + File.separator + agentType + "-" + level
-                        + "-TTFW-" + AStarTree.TIME_TO_FINISH_WEIGHT
-                        + "-SS-" + AStarTree.SEARCH_STEPS
-                        + ".csv");
-
-                if (log == null)
-                    return;
-                FileWriter logWriter = new FileWriter(log);
-
-                logWriter.write("TTFW:" + AStarTree.TIME_TO_FINISH_WEIGHT + "\n");
-                logWriter.write("SS:" + AStarTree.SEARCH_STEPS + "\n");
-                logWriter.write("level,win/fail,% travelled,run time,game ticks,planning time,total plannings,nodes evaluated,most backtracked nodes\n");
-
-                warmup(agentType);
-
                 if (level.equals("original"))
                     testOriginalLevels(agentType, logWriter, 15);
                 else if (level.equals("krys"))
                     testKrysLevels(agentType, logWriter, 15);
                 else
                     testFrameworkLevels(agentType, logWriter, level, 15);
-
-                logWriter.close();
             }
+
+            logWriter.close();
         }
     }
 
