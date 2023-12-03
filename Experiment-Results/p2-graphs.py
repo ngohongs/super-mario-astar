@@ -52,7 +52,7 @@ plt.ylabel('Window Size (WS)')
 plt.gca().invert_yaxis()
 
 # Save heatmap
-plt.savefig('p1-win-heatmap.png')
+plt.savefig('p2-win-heatmap.png')
 
 # Plot heatmap for average run time
 plt.figure(figsize=(10, 8))
@@ -66,4 +66,4 @@ plt.ylabel('Window Size (WS)')
 plt.gca().invert_yaxis()
 
 # Save heatmap
-plt.savefig('p1-run-time-heatmap.png')
+plt.savefig('p2-run-time-heatmap.png')
