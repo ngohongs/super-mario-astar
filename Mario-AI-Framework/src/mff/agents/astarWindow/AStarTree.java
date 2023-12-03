@@ -26,6 +26,8 @@ public class AStarTree {
     static float exitTileX;
 
     public int nodesEvaluated = 0;
+    public int mostBacktrackedNodes = 0;
+    private int nodesBeforeNewFarthestX = 0;
     public static int SEARCH_STEPS = 3;
     public static float WINDOW_SIZE = 176;
 
@@ -94,8 +96,12 @@ public class AStarTree {
             nodesEvaluated++;
 
             if (current.state.getMarioX() > furthestNodeDistance) {
+                mostBacktrackedNodes = Math.max(nodesBeforeNewFarthestX, mostBacktrackedNodes);
                 furthestNode = current;
                 furthestNodeDistance = current.state.getMarioX();
+                nodesBeforeNewFarthestX = 0;
+            } else {
+                nodesBeforeNewFarthestX++;
             }
 
             if (current.state.getMarioX() >= rightWindowBorderX && isSafe(current)) { // right window border reached and position is safe
