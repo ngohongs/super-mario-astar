@@ -6,7 +6,7 @@
 #PBS -o /auto/vestec1-elixir/home/ngohongs/job_logs
 
 DATADIR=/auto/vestec1-elixir/home/ngohongs/repo/super-mario-astar
-RESULTDIR=/auto/vestec2-elixir/home/ngohongs/results/astar/p2
+RESULTDIR=/auto/vestec1-elixir/home/ngohongs/results/astar/p2
 ROOT=/auto/vestec1-elixir/home/ngohongs
 
 echo "$PBS_JOBID is running on node `hostname -f` in a scratch directory $SCRATCHDIR" >> $DATADIR/jobs_info.txt
