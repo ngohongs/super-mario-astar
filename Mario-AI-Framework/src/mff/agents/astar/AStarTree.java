@@ -26,6 +26,8 @@ public class AStarTree {
     public int mostBacktrackedNodes = 0;
     private int farthestReachedX;
     private int nodesBeforeNewFarthestX = 0;
+    public static float TIME_TO_FINISH_WEIGHT = 1.1f;
+    public static int SEARCH_STEPS = 3;
 
     PriorityQueue<SearchNode> opened = new PriorityQueue<>(new CompareByCost());
     /**
@@ -34,7 +36,7 @@ public class AStarTree {
     HashMap<Integer, Float> visitedStates = new HashMap<>();
     
     public AStarTree(MarioForwardModelSlim startState, int searchSteps) {
-    	this.searchSteps = searchSteps;
+    	this.searchSteps = SEARCH_STEPS;
 
     	marioXStart = startState.getMarioX();
 
@@ -68,7 +70,7 @@ public class AStarTree {
     private float calculateCost(MarioForwardModelSlim nextState, int nodeDepth) {
         float timeToFinish = (exitTileX - nextState.getMarioX()) / maxMarioSpeedX;
         timeToFinish *= 1.1;
-        return nodeDepth + timeToFinish;
+        return nodeDepth + TIME_TO_FINISH_WEIGHT * timeToFinish;
 	}
     
     public ArrayList<boolean[]> search(MarioTimerSlim timer) {
