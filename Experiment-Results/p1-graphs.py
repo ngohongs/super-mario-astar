@@ -61,7 +61,7 @@ plt.title('Average Run Time Heatmap in seconds')
 
 # Set x and y labels
 plt.xlabel('Search Steps (SS)')
-plt.ylabel('Window Size (WS)')
+plt.ylabel('Time to Finish Weight (TTFW)')
 
 plt.gca().invert_yaxis()
 
