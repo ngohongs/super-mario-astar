@@ -26,6 +26,8 @@ public class AStarTree {
     static float exitTileX;
 
     public int nodesEvaluated = 0;
+    public static int SEARCH_STEPS = 3;
+    public static float WINDOW_SIZE = 176;
 
     PriorityQueue<SearchNode> opened = new PriorityQueue<>(new CompareByCost());
     /**
@@ -34,10 +36,10 @@ public class AStarTree {
     HashMap<Integer, Float> visitedStates = new HashMap<>();
     
     public AStarTree(MarioForwardModelSlim startState, int searchSteps) {
-    	this.searchSteps = searchSteps;
+    	this.searchSteps = SEARCH_STEPS;
 
     	marioXStart = startState.getMarioX();
-    	rightWindowBorderX = (int) (marioXStart + 176);
+    	rightWindowBorderX = (int) (marioXStart + WINDOW_SIZE);
     	//furthestNonEmptyRightX = findNonEmptyColumn(rightWindowBorderX, startState) * 16; // plan to this
 
         //  dont plan all the way to the border - to allow seeing new enemies soon enough
