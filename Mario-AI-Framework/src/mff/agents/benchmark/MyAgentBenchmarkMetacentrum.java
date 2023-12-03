@@ -62,7 +62,7 @@ public class MyAgentBenchmarkMetacentrum {
         }
 
         for (var agentType : agents) {
-            File log = prepareLog("agent-benchmark" + File.separator + agentType +
+            File log = prepareLog("agent-benchmark" + File.separator + agentType
                     + "-TTFW-" + AStarTree.TIME_TO_FINISH_WEIGHT
                     + "-SS-" + AStarTree.SEARCH_STEPS
                     + ".csv");
