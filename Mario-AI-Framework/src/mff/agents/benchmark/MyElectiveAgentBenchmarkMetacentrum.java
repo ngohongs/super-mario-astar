@@ -32,9 +32,9 @@ public class MyElectiveAgentBenchmarkMetacentrum {
     private static final ArrayList<String> agents = new ArrayList<>() {{
 //        add("robinBaumgarten");
 //        add("robinBaumgartenSlimWindowAdvance");
-        add("astar");
+//        add("astar");
 //        add("astarPlanningDynamic");
-//        add("astarWindow");
+        add("astarWindow");
 //        add("astarGrid");
     }};
 
